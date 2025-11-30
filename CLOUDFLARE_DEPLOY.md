@@ -1,11 +1,18 @@
 # Cloudflare Pages Deployment Fix
 
 ## Problem
-The deployment is failing with: "Missing entry-point to Worker script or to assets directory"
+The deployment is failing because `npx wrangler deploy` is for Cloudflare Workers, not Pages.
 
 ## Solution
 
-### Option 1: Remove Custom Deploy Command (Recommended)
+### Option 1: Use Correct Pages Command (If Deploy Command Required)
+If you must use a custom deploy command, use the **Pages** command:
+
+**Deploy command**: `npx wrangler pages deploy .next`
+
+**OR** (Recommended) Remove the deploy command entirely:
+
+### Option 2: Remove Custom Deploy Command (Recommended)
 1. Go to your Cloudflare Pages dashboard
 2. Navigate to your project: **plus100app**
 3. Go to **Settings** → **Builds & deployments**
@@ -16,19 +23,13 @@ The deployment is failing with: "Missing entry-point to Worker script or to asse
 8. **Build output directory** should be: `.next` (or leave empty for auto-detection)
 9. Save and redeploy
 
-### Option 2: If You Need Custom Deploy Command
-If you must keep a custom deploy command, update your Cloudflare Pages settings:
-- **Build command**: `npm run build`
-- **Build output directory**: `.next`
-- **Deploy command**: Leave empty (Cloudflare will handle it automatically)
-
 ## Why This Happens
-Cloudflare Pages is trying to use `npx wrangler deploy` which is for Cloudflare Workers, not Next.js applications. Next.js apps on Cloudflare Pages should use the automatic deployment system, not Wrangler directly.
+- `npx wrangler deploy` is for **Cloudflare Workers**
+- `npx wrangler pages deploy` is for **Cloudflare Pages**
+- For Next.js on Cloudflare Pages, you typically don't need a deploy command at all - Cloudflare handles it automatically
 
-## Alternative: Static Export (If Needed)
-If you need a static export, update `next.config.js` to include:
-```js
-output: 'export'
-```
-Then set **Build output directory** to `out` in Cloudflare Pages settings.
+## Correct Settings
+- **Build command**: `npm run build`
+- **Build output directory**: `.next` (or leave empty)
+- **Deploy command**: (empty) OR `npx wrangler pages deploy .next` if required
 
