@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Heart, Users, Calendar, Sparkles, BarChart3, TrendingUp, Clock } from 'lucide-react'
+import { Heart, Users, Calendar, Star, BarChart3, TrendingUp, Clock } from 'lucide-react'
 
 type TabType = 'dashboard' | 'services' | 'appointments' | 'clients'
 
@@ -160,7 +160,7 @@ export default function SpaPage() {
 
   const tabs = [
     { id: 'dashboard' as TabType, label: 'Tableau de bord', icon: BarChart3 },
-    { id: 'services' as TabType, label: 'Services', icon: Sparkles },
+    { id: 'services' as TabType, label: 'Services', icon: Star },
     { id: 'appointments' as TabType, label: 'Rendez-vous', icon: Calendar },
     { id: 'clients' as TabType, label: 'Clients', icon: Users },
   ]
@@ -210,7 +210,7 @@ export default function SpaPage() {
                     <p className="text-xs sm:text-sm text-gray-600">Services</p>
                     <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{services.length}</p>
                   </div>
-                  <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-rose-500" />
+                  <Star className="w-8 h-8 sm:w-10 sm:h-10 text-rose-500" />
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg border border-rose-100 p-4 sm:p-6">

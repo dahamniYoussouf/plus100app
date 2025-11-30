@@ -2,17 +2,17 @@
 'use client'
 
 import { useState } from 'react'
-import { IconType } from 'lucide-react'
+import { LucideIcon } from 'lucide-react'
 
 interface TemplateProps {
   title: string
   description: string
-  icon: IconType
+  icon: LucideIcon
   color: string
   bgColor: string
   iconColor: string
   features: string[]
-  stats: { label: string; value: string; icon: IconType }[]
+  stats: { label: string; value: string; icon: LucideIcon }[]
 }
 
 export default function TemplatePage({

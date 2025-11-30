@@ -75,7 +75,7 @@ export default function MosquePage() {
       const sample: Event[] = [
         { id: '1', title: 'Cours de Tajwid', description: 'Cours de récitation du Coran', type: 'course', date: new Date(), time: '18:00', location: 'Salle principale', attendees: 25, status: 'upcoming' },
         { id: '2', title: 'Conférence Ramadan', description: 'Conférence sur les bienfaits du jeûne', type: 'conference', date: new Date(), time: '19:30', location: 'Salle principale', attendees: 50, status: 'upcoming' },
-        { id: '3', title: 'Mariage', description: 'Cérémonie de mariage', type: 'ceremony', date: new Date(), time: '14:00', location: 'Salle événements', attendees: 100, status: 'scheduled' },
+        { id: '3', title: 'Mariage', description: 'Cérémonie de mariage', type: 'ceremony', date: new Date(), time: '14:00', location: 'Salle événements', attendees: 100, status: 'upcoming' },
       ]
       setEvents(sample)
       localStorage.setItem('mosque-events', JSON.stringify(sample))

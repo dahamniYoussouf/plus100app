@@ -185,7 +185,7 @@ export default function NutritionPage() {
 
   const activeClients = clients.length
   const activePlans = mealPlans.filter(p => p.status === 'active').length
-  const clientsWithProgress = progress.length > 0 ? [...new Set(progress.map(p => p.clientId))].length : 0
+  const clientsWithProgress = progress.length > 0 ? Array.from(new Set(progress.map(p => p.clientId))).length : 0
   const avgWeightLoss = clients.reduce((sum, c) => {
     const progressRecords = progress.filter(p => p.clientId === c.id).sort((a, b) => a.date.getTime() - b.date.getTime())
     if (progressRecords.length >= 2) {

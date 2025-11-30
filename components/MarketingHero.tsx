@@ -12,7 +12,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
-import { Mic, MicOff, Volume2, Sparkles, Zap, TrendingUp, Users, Award } from 'lucide-react'
+import { Mic, MicOff, Volume2, Star, Zap, TrendingUp, Users, Award } from 'lucide-react'
 
 interface Message {
   id: number
@@ -199,7 +199,7 @@ export default function MarketingHero() {
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <Sparkles className="text-blue-400" size={20} />
+            <Star className="text-blue-400" size={20} />
             <span className="text-blue-300 text-sm font-semibold">Agent Vocal Interactif</span>
           </motion.div>
           

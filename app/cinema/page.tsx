@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Film, Calendar, Ticket, Users, BarChart3, TrendingUp, Clock, Video } from 'lucide-react'
+import { Film, Calendar, Ticket, Users, BarChart3, TrendingUp, Clock, Play } from 'lucide-react'
 
 type TabType = 'dashboard' | 'movies' | 'sessions' | 'bookings'
 
@@ -166,7 +166,7 @@ export default function CinemaPage() {
                     <p className="text-xs sm:text-sm text-gray-600">À l'Affiche</p>
                     <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{nowShowing}</p>
                   </div>
-                  <Video className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" />
+                  <Play className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" />
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4 sm:p-6">

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Heart, Users, Calendar, FileText, BarChart3, Syringe, Activity } from 'lucide-react'
+import { Heart, Users, Calendar, FileText, BarChart3, Droplet, Activity } from 'lucide-react'
 
 type TabType = 'dashboard' | 'animals' | 'appointments' | 'vaccinations'
 
@@ -103,7 +103,7 @@ export default function VetPage() {
     { id: 'dashboard' as TabType, label: 'Tableau de bord', icon: BarChart3 },
     { id: 'animals' as TabType, label: 'Animaux', icon: Heart },
     { id: 'appointments' as TabType, label: 'Consultations', icon: Calendar },
-    { id: 'vaccinations' as TabType, label: 'Vaccinations', icon: Syringe },
+    { id: 'vaccinations' as TabType, label: 'Vaccinations', icon: Droplet },
   ]
 
   const todayAppointments = appointments.filter(a => {
@@ -166,7 +166,7 @@ export default function VetPage() {
                     <p className="text-xs sm:text-sm text-gray-600">Vaccinations</p>
                     <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{vaccinations.length}</p>
                   </div>
-                  <Syringe className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
+                  <Droplet className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg border border-pink-100 p-4 sm:p-6">
@@ -294,7 +294,7 @@ export default function VetPage() {
             </div>
             {vaccinations.length === 0 ? (
               <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 text-center">
-                <Syringe className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <Droplet className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600">Aucune vaccination enregistrée</p>
               </div>
             ) : (

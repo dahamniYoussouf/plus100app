@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Bot, Sparkles, Palette, Settings, Eye, Save, Play, X, CheckCircle, Plus, Trash2, Zap, Database, Shield, Code, Globe, FileText, Workflow, Brain, BarChart3, Mail, Calendar, Cloud, Lock, AlertTriangle, Target, Copy, Download, Upload } from 'lucide-react'
+import { Bot, Star, Palette, Settings, Eye, Save, Play, X, CheckCircle, Plus, Trash2, Zap, Database, Shield, Code, Globe, FileText, Workflow, Brain, BarChart3, Mail, Calendar, Cloud, Lock, AlertTriangle, Target, Copy, Download, Upload } from 'lucide-react'
 import Link from 'next/link'
 
 interface AgentConfig {
@@ -159,7 +159,7 @@ export default function CreateAgentPage() {
 
   const steps = [
     { id: 1, name: 'Basique', icon: Bot },
-    { id: 2, name: 'Personnalité', icon: Sparkles },
+    { id: 2, name: 'Personnalité', icon: Star },
     { id: 3, name: 'Compétences', icon: Settings },
     { id: 4, name: 'Apparence', icon: Palette },
     { id: 5, name: 'Fonctionnalités', icon: Eye },
@@ -286,7 +286,7 @@ export default function CreateAgentPage() {
                 className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6"
               >
                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                  <Sparkles className="text-purple-600" />
+                  <Star className="text-purple-600" />
                   Personnalité
                 </h2>
 

@@ -12,7 +12,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
-import { Send, Bot, User, X, Minimize2, Maximize2, MessageSquare, Monitor, Sparkles, Zap, Briefcase, CheckCircle, Clock, Search, ExternalLink, TrendingUp, MapPin, DollarSign } from 'lucide-react'
+import { Send, Bot, User, X, Minimize2, Maximize2, MessageSquare, Monitor, Star, Zap, Briefcase, CheckCircle, Clock, Search, ExternalLink, TrendingUp, MapPin, DollarSign } from 'lucide-react'
 
 interface Message {
   id: number
@@ -29,7 +29,7 @@ interface AgentResult {
 }
 
 interface JobOffer {
-  id: number
+  id: number | string
   title: string
   company: string
   location: string
@@ -292,7 +292,7 @@ export default function InternalAgent() {
       
       return {
         text: 'Recherche d\'offres d\'emploi en cours...',
-        result: null,
+        result: undefined,
       }
     }
 
@@ -301,7 +301,7 @@ export default function InternalAgent() {
       if (jobOffers.length === 0) {
         return {
           text: 'Aucune offre trouvée. Recherchez d\'abord des offres avec "recherche offres" ou "offres emploi".',
-          result: null,
+          result: undefined,
         }
       }
       
@@ -325,7 +325,7 @@ export default function InternalAgent() {
       
       return {
         text: `Envoi de candidatures à ${jobOffers.length} offres en cours...`,
-        result: null,
+        result: undefined,
       }
     }
 
@@ -413,7 +413,7 @@ export default function InternalAgent() {
     // Par défaut
     return {
       text: 'Je peux vous aider avec : compétences, projets, code, expérience, offres d\'emploi, candidatures. Que souhaitez-vous savoir ?',
-      result: null,
+      result: undefined,
     }
   }
 
@@ -649,7 +649,7 @@ export default function InternalAgent() {
                       <p className="text-sm">{message.text}</p>
                       {message.result && (
                         <div className="mt-2 pt-2 border-t border-gray-200">
-                          <Sparkles size={14} className="text-blue-500 inline-block mr-1" />
+                          <Star size={14} className="text-blue-500 inline-block mr-1" />
                           <span className="text-xs text-gray-500">Résultat affiché à droite</span>
                         </div>
                       )}

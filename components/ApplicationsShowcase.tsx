@@ -5,9 +5,9 @@ import { useRef, useState } from 'react'
 import {
   ShoppingCart, Plane, ArrowRight, Zap, BarChart3, Users, MapPin,
   GraduationCap, Hotel, Cake, MessageSquare, BookOpen, Dumbbell, Stethoscope,
-  Utensils, Package, Calendar, Truck, Home, Briefcase, FolderKanban, DollarSign,
+  UtensilsCrossed, Package, Calendar, Truck, Home, Briefcase, FolderKanban, DollarSign,
   Database, Store, FileText, Wrench, Pill, Car, Baby, Heart,
-  Building2, Palette, ShoppingBag, CarTaxiFront, UtensilsCrossed, Coffee, IceCream,
+  Building2, Palette, ShoppingBag, CarTaxiFront, Coffee, IceCream,
   Pizza, Fish, Apple, Gamepad2, Laptop, Cloud, Shield,
   Lock, Settings, Paintbrush, Droplet, Gift,
   Receipt, MessageCircle, Film, Newspaper, Book,
@@ -65,7 +65,7 @@ export default function ApplicationsShowcase() {
     { id: 'sushi', title: 'Gestion Sushis', description: 'Gestion de restaurant de sushis avec menu et réservations.', icon: Fish, color: 'from-teal-600 to-teal-700', bgColor: 'bg-teal-50', iconColor: 'text-teal-600', features: ['Menu', 'Réservations', 'Commandes'], technologies: ['Next.js'], link: '/sushi', stats: [{ label: 'Plats', value: '40+', icon: Fish }], category: 'Restaurant & Food' },
     { id: 'fastfood', title: 'Gestion Fast-Food', description: 'Système de point de vente pour fast-food avec commande rapide.', icon: UtensilsCrossed, color: 'from-orange-600 to-orange-700', bgColor: 'bg-orange-50', iconColor: 'text-orange-600', features: ['Commandes', 'Drive', 'Stock'], technologies: ['Next.js'], link: '/fastfood', stats: [{ label: 'Menus', value: '25+', icon: UtensilsCrossed }], category: 'Restaurant & Food' },
     { id: 'foodtruck', title: 'Gestion Food Truck', description: 'Gestion mobile pour food truck avec localisation et commandes.', icon: Truck, color: 'from-yellow-600 to-yellow-700', bgColor: 'bg-yellow-50', iconColor: 'text-yellow-600', features: ['Localisation', 'Commandes', 'Stock'], technologies: ['Next.js'], link: '/foodtruck', stats: [{ label: 'Locations', value: '∞', icon: MapPin }], category: 'Restaurant & Food' },
-    { id: 'catering', title: 'Gestion Traiteur', description: 'Gestion de service traiteur avec événements et menus.', icon: Utensils, color: 'from-purple-600 to-purple-700', bgColor: 'bg-purple-50', iconColor: 'text-purple-600', features: ['Événements', 'Menus', 'Commandes'], technologies: ['Next.js'], link: '/catering', stats: [{ label: 'Événements', value: '∞', icon: Calendar }], category: 'Restaurant & Food' },
+    { id: 'catering', title: 'Gestion Traiteur', description: 'Gestion de service traiteur avec événements et menus.', icon: UtensilsCrossed, color: 'from-purple-600 to-purple-700', bgColor: 'bg-purple-50', iconColor: 'text-purple-600', features: ['Événements', 'Menus', 'Commandes'], technologies: ['Next.js'], link: '/catering', stats: [{ label: 'Événements', value: '∞', icon: Calendar }], category: 'Restaurant & Food' },
     { id: 'delivery', title: 'Gestion Livraison', description: 'Plateforme de livraison de nourriture multi-restaurants.', icon: CarTaxiFront, color: 'from-green-600 to-green-700', bgColor: 'bg-green-50', iconColor: 'text-green-600', features: ['Livraisons', 'Suivi', 'Paiements'], technologies: ['Next.js'], link: '/delivery', stats: [{ label: 'Restaurants', value: '∞', icon: Store }], category: 'Restaurant & Food' },
 
     // Santé & Bien-être (10)

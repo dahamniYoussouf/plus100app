@@ -56,7 +56,7 @@ interface MedicalRecord {
   patientId: string
   patientName: string
   date: Date
-  visitType: 'consultation' | 'emergency' | 'followup' | 'vaccination'
+  visitType: 'consultation' | 'emergency' | 'followup' | 'vaccination' | 'checkup'
   chiefComplaint: string
   symptoms: string[]
   diagnosis: string[]

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MapPin, Calendar, Users, DollarSign, Settings, LogOut, Plane, Hotel, Utensils, Camera } from 'lucide-react'
+import { MapPin, Calendar, Users, DollarSign, Settings, LogOut, Plane, Hotel } from 'lucide-react'
 import DestinationManagement from '@/components/travel/DestinationManagement'
 import CircuitManagement from '@/components/travel/CircuitManagement'
 import ReservationManagement from '@/components/travel/ReservationManagement'
@@ -122,33 +122,6 @@ export default function TravelPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <Plane className="w-6 h-6 text-blue-600" />
-                Gestion de Voyage
-              </h1>
-              <p className="text-sm text-gray-500">Application interactive pour agence de voyage</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">Agence Voyage</p>
-                <p className="text-xs text-gray-500">Active</p>
-              </div>
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <Settings className="w-5 h-5 text-gray-600" />
-              </button>
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <LogOut className="w-5 h-5 text-gray-600" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
       {/* Navigation Tabs */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="px-6">

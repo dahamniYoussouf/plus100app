@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Stethoscope, Users, Calendar, FileText, BarChart3, Clock, Tooth } from 'lucide-react'
+import { Stethoscope, Users, Calendar, FileText, BarChart3, Clock, Activity } from 'lucide-react'
 
 type TabType = 'dashboard' | 'patients' | 'appointments' | 'treatments'
 
@@ -103,7 +103,7 @@ export default function DentistPage() {
     { id: 'dashboard' as TabType, label: 'Tableau de bord', icon: BarChart3 },
     { id: 'patients' as TabType, label: 'Patients', icon: Users },
     { id: 'appointments' as TabType, label: 'Rendez-vous', icon: Calendar },
-    { id: 'treatments' as TabType, label: 'Traitements', icon: Tooth },
+    { id: 'treatments' as TabType, label: 'Traitements', icon: Activity },
   ]
 
   const todayAppointments = appointments.filter(a => {
@@ -167,7 +167,7 @@ export default function DentistPage() {
                     <p className="text-xs sm:text-sm text-gray-600">Traitements</p>
                     <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{treatments.length}</p>
                   </div>
-                  <Tooth className="w-8 h-8 sm:w-10 sm:h-10 text-purple-500" />
+                  <Activity className="w-8 h-8 sm:w-10 sm:h-10 text-purple-500" />
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg border border-sky-100 p-4 sm:p-6">
@@ -312,7 +312,7 @@ export default function DentistPage() {
             </div>
             {treatments.length === 0 ? (
               <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 text-center">
-                <Tooth className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <Activity className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600">Aucun traitement enregistré</p>
               </div>
             ) : (
