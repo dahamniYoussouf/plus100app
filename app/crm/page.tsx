@@ -210,7 +210,7 @@ export default function CRMPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Pipeline</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{(pipelineValue / 1000).toFixed(0)}k</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{(pipelineValue / 1000).toFixed(0)}k</p>
                   </div>
                   <Target className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" />
                 </div>
@@ -219,7 +219,7 @@ export default function CRMPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{(totalRevenue / 1000).toFixed(0)}k</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{(totalRevenue / 1000).toFixed(0)}k</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -237,7 +237,7 @@ export default function CRMPage() {
                         <span className="text-gray-500 ml-2">- {opp.contactName}</span>
                       </div>
                       <div className="mt-1 sm:mt-0 flex items-center gap-2">
-                        <span className="font-semibold text-blue-700">€{opp.value.toLocaleString()}</span>
+                        <span className="font-semibold text-blue-700">DZD{opp.value.toLocaleString()}</span>
                         <span className="text-gray-500">({opp.probability}%)</span>
                       </div>
                     </div>
@@ -362,7 +362,7 @@ export default function CRMPage() {
                         </p>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className="text-lg font-bold text-gray-900">€{opp.value.toLocaleString()}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{opp.value.toLocaleString()}</span>
                         <div className="flex items-center gap-2">
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                             opp.stage === 'closed_won' ? 'bg-green-100 text-green-800' :
@@ -414,7 +414,7 @@ export default function CRMPage() {
                         </p>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className="text-lg font-bold text-gray-900">€{sale.amount.toLocaleString()}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{sale.amount.toLocaleString()}</span>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           sale.status === 'completed' ? 'bg-green-100 text-green-800' :
                           'bg-yellow-100 text-yellow-800'

@@ -286,7 +286,7 @@ export default function DeliveryPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalRevenue.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalRevenue.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -418,7 +418,7 @@ export default function DeliveryPage() {
                           )}
 
                           <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-                            <span className="text-lg font-bold text-gray-900">€{delivery.total.toFixed(2)}</span>
+                            <span className="text-lg font-bold text-gray-900">DZD{delivery.total.toFixed(2)}</span>
                             <div className="flex items-center gap-3 text-xs text-gray-500">
                               {delivery.pickupTime && (
                                 <span>Récupéré: {new Date(delivery.pickupTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
@@ -500,7 +500,7 @@ export default function DeliveryPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-gray-500">Gains totaux</span>
-                        <span className="font-bold text-green-600">€{driver.totalEarnings.toLocaleString()}</span>
+                        <span className="font-bold text-green-600">DZD{driver.totalEarnings.toLocaleString()}</span>
                       </div>
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>Membre depuis</span>
@@ -539,7 +539,7 @@ export default function DeliveryPage() {
                         </p>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className="text-lg font-bold text-gray-900">€{order.total.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{order.total.toFixed(2)}</span>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                           order.status === 'ready' ? 'bg-yellow-100 text-yellow-800' :

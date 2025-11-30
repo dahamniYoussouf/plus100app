@@ -188,7 +188,7 @@ export default function SushiPage() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <span className="text-lg sm:text-xl font-bold text-gray-900">€{dish.price.toFixed(2)}</span>
+                    <span className="text-lg sm:text-xl font-bold text-gray-900">DZD{dish.price.toFixed(2)}</span>
                   </div>
                 </div>
               ))}

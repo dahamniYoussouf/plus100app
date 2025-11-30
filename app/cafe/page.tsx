@@ -151,7 +151,7 @@ export default function CafePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalRevenue.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalRevenue.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -183,7 +183,7 @@ export default function CafePage() {
                   {pendingOrders.slice(0, 3).map((order) => (
                     <div key={order.id} className="flex items-center justify-between bg-white rounded-lg p-3 text-sm">
                       <span className="text-gray-700">Commande #{order.id.slice(0, 8)}</span>
-                      <span className="font-semibold text-yellow-700">€{order.total.toFixed(2)}</span>
+                      <span className="font-semibold text-yellow-700">DZD{order.total.toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
@@ -251,7 +251,7 @@ export default function CafePage() {
                   </div>
                   <p className="text-sm text-gray-600 mb-3">{item.description}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <span className="text-lg sm:text-xl font-bold text-gray-900">€{item.price.toFixed(2)}</span>
+                    <span className="text-lg sm:text-xl font-bold text-gray-900">DZD{item.price.toFixed(2)}</span>
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
                       item.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     }`}>
@@ -289,7 +289,7 @@ export default function CafePage() {
                         </p>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-lg font-bold text-gray-900">€{order.total.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{order.total.toFixed(2)}</span>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           order.status === 'completed' ? 'bg-green-100 text-green-800' :
                           order.status === 'preparing' ? 'bg-yellow-100 text-yellow-800' :

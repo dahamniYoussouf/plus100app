@@ -244,7 +244,7 @@ export default function MosquePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Dons</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalDonations.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalDonations.toFixed(0)}</p>
                   </div>
                   <DollarSign className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -446,7 +446,7 @@ export default function MosquePage() {
                         <p className="text-xs text-gray-400 mt-1">{new Date(donation.date).toLocaleDateString('fr-FR')}</p>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-lg font-bold text-gray-900">€{donation.amount.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{donation.amount.toFixed(2)}</span>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           donation.type === 'zakat' ? 'bg-green-100 text-green-800' :
                           donation.type === 'sadaqa' ? 'bg-blue-100 text-blue-800' :

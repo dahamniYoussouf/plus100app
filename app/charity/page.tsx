@@ -197,7 +197,7 @@ export default function CharityPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Dons Reçus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalDonations.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalDonations.toFixed(0)}</p>
                   </div>
                   <DollarSign className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -206,7 +206,7 @@ export default function CharityPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Distribué</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalDistributed.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalDistributed.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" />
                 </div>
@@ -290,7 +290,7 @@ export default function CharityPage() {
                         <p className="text-xs text-gray-400 mt-1">{new Date(donation.date).toLocaleDateString('fr-FR')}</p>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-lg font-bold text-gray-900">€{donation.amount.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{donation.amount.toFixed(2)}</span>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           donation.status === 'distributed' ? 'bg-green-100 text-green-800' :
                           donation.status === 'received' ? 'bg-blue-100 text-blue-800' :
@@ -338,7 +338,7 @@ export default function CharityPage() {
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                       <div>
                         <p className="text-xs text-gray-500">Assistance</p>
-                        <p className="font-bold text-green-600">€{beneficiary.assistanceReceived}</p>
+                        <p className="font-bold text-green-600">DZD{beneficiary.assistanceReceived}</p>
                       </div>
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
                         beneficiary.status === 'active' ? 'bg-green-100 text-green-800' :
@@ -376,8 +376,8 @@ export default function CharityPage() {
                     <p className="text-sm text-gray-600 mb-4">{project.description}</p>
                     <div className="mb-4">
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-gray-600">Budget: €{project.budget}</span>
-                        <span className="text-gray-900 font-semibold">Collecté: €{project.collected}</span>
+                        <span className="text-gray-600">Budget: DZD{project.budget}</span>
+                        <span className="text-gray-900 font-semibold">Collecté: DZD{project.collected}</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div className="bg-green-600 h-2 rounded-full" style={{ width: `${(project.collected / project.budget) * 100}%` }}></div>

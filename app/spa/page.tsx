@@ -217,7 +217,7 @@ export default function SpaPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalRevenue}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{totalRevenue.toLocaleString('fr-DZ')} د.ج</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -318,7 +318,7 @@ export default function SpaPage() {
                       <Clock className="w-4 h-4 text-gray-400" />
                       <span className="text-sm text-gray-600">{service.duration} min</span>
                     </div>
-                    <span className="text-lg sm:text-xl font-bold text-gray-900">€{service.price}</span>
+                    <span className="text-lg sm:text-xl font-bold text-gray-900">{service.price.toLocaleString('fr-DZ')} د.ج</span>
                   </div>
                 </div>
               ))}
@@ -363,7 +363,7 @@ export default function SpaPage() {
                           {apt.status === 'completed' ? 'Terminé' :
                            apt.status === 'cancelled' ? 'Annulé' : 'Programmé'}
                         </span>
-                        <span className="text-lg font-bold text-gray-900">€{apt.price}</span>
+                        <span className="text-lg font-bold text-gray-900">{apt.price.toLocaleString('fr-DZ')} د.ج</span>
                       </div>
                     </div>
                   </div>

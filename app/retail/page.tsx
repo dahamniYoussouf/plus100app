@@ -152,7 +152,7 @@ export default function RetailPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalRevenue.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalRevenue.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -170,7 +170,7 @@ export default function RetailPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Profit</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalProfit.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalProfit.toFixed(0)}</p>
                   </div>
                   <DollarSign className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" />
                 </div>
@@ -246,7 +246,7 @@ export default function RetailPage() {
                   <p className="text-xs text-gray-500 mb-3">SKU: {product.sku} • {product.category}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                     <div>
-                      <p className="text-lg sm:text-xl font-bold text-gray-900">€{product.price.toFixed(2)}</p>
+                      <p className="text-lg sm:text-xl font-bold text-gray-900">DZD{product.price.toFixed(2)}</p>
                       <p className="text-xs text-gray-500">Stock: {product.stock}</p>
                     </div>
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
@@ -289,7 +289,7 @@ export default function RetailPage() {
                         )}
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className="text-lg font-bold text-gray-900">€{sale.total.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{sale.total.toFixed(2)}</span>
                         <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs capitalize">
                           {sale.paymentMethod}
                         </span>

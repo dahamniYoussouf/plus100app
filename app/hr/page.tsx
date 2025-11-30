@@ -177,7 +177,7 @@ export default function HRPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Masse Salariale</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{(totalSalary / 1000).toFixed(0)}k</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{(totalSalary / 1000).toFixed(0)}k</p>
                   </div>
                   <DollarSign className="w-8 h-8 sm:w-10 sm:h-10 text-purple-500" />
                 </div>
@@ -262,7 +262,7 @@ export default function HRPage() {
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                       <div>
                         <p className="text-xs text-gray-500">Salaire</p>
-                        <p className="font-bold text-gray-900">€{employee.salary.toLocaleString()}</p>
+                        <p className="font-bold text-gray-900">DZD{employee.salary.toLocaleString()}</p>
                       </div>
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
                         employee.status === 'active' ? 'bg-green-100 text-green-800' :

@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
+import LanguageSwitcher from './LanguageSwitcher'
 
 // Items de navigation - Facilement modifiable
 const navItems = [
@@ -58,98 +59,15 @@ export default function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <motion.a
-            href="#home"
-            className="text-2xl font-bold text-gradient"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Portfolio
-          </motion.a>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
-            {navItems.map((item) => {
-              const isRoute = item.href.startsWith('/')
-              
-              if (isRoute) {
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="text-gray-700 hover:text-blue-600 transition-colors relative font-medium"
-                  >
-                    {item.name}
-                  </Link>
-                )
-              }
-              
-              return (
-                <motion.a
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-700 hover:text-blue-600 transition-colors relative font-medium"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {item.name}
-                  <motion.span
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600"
-                    initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </motion.a>
-              )
-            })}
+          <div className="flex items-center gap-4">
+            <Link href="/" className="text-xl font-bold text-gray-900">
+              Portfolio
+            </Link>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-gray-700 hover:text-blue-600"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+          </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden py-4 space-y-4"
-          >
-            {navItems.map((item) => {
-              const isRoute = item.href.startsWith('/')
-              
-              if (isRoute) {
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="block text-gray-700 hover:text-blue-600 transition-colors font-medium"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                )
-              }
-              
-              return (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="block text-gray-700 hover:text-blue-600 transition-colors font-medium"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
-              )
-            })}
-          </motion.div>
-        )}
       </div>
     </motion.nav>
   )

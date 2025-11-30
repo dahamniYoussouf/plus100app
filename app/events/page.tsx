@@ -164,7 +164,7 @@ export default function EventsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalRevenue.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalRevenue.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -233,7 +233,7 @@ export default function EventsPage() {
                       </div>
                     </div>
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                      <span className="text-lg sm:text-xl font-bold text-gray-900">€{event.price.toFixed(2)}</span>
+                      <span className="text-lg sm:text-xl font-bold text-gray-900">DZD{event.price.toFixed(2)}</span>
                       <span className={`px-2 py-1 rounded text-xs capitalize ${
                         event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
                         event.status === 'ongoing' ? 'bg-green-100 text-green-800' :
@@ -278,7 +278,7 @@ export default function EventsPage() {
                         </p>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className="text-lg font-bold text-gray-900">€{ticket.totalPrice.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{ticket.totalPrice.toFixed(2)}</span>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           ticket.status === 'confirmed' ? 'bg-green-100 text-green-800' :
                           'bg-red-100 text-red-800'

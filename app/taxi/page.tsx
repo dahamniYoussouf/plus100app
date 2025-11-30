@@ -203,7 +203,7 @@ export default function TaxiPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalRevenue.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalRevenue.toFixed(0)}</p>
                   </div>
                   <Clock className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -356,7 +356,7 @@ export default function TaxiPage() {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className="text-lg font-bold text-gray-900">€{ride.fare.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{ride.fare.toFixed(2)}</span>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           ride.status === 'completed' ? 'bg-green-100 text-green-800' :
                           ride.status === 'cancelled' ? 'bg-red-100 text-red-800' :

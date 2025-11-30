@@ -14,6 +14,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Calculator, Target, Users, Zap, CheckCircle, Send, TrendingUp, Clock, Award } from 'lucide-react'
+import { formatCurrency } from '@/utils/currency'
 
 interface ServiceOption {
   id: string
@@ -206,7 +207,7 @@ export default function EstimationService() {
                       </span>
                     </div>
                     <p className="text-sm text-gray-600">{service.description}</p>
-                    <p className="text-xs text-gray-500 mt-2">À partir de {service.basePrice}€</p>
+                    <p className="text-xs text-gray-500 mt-2">À partir de {formatCurrency(service.basePrice)}</p>
                   </motion.button>
                 ))}
               </div>
@@ -238,7 +239,7 @@ export default function EstimationService() {
                         {feature.name}
                       </span>
                     </div>
-                    <span className="text-gray-600 font-medium">+{feature.price}€</span>
+                    <span className="text-gray-600 font-medium">+{formatCurrency(feature.price)}</span>
                   </motion.button>
                 ))}
               </div>
@@ -252,7 +253,7 @@ export default function EstimationService() {
             >
               <div className="flex justify-between items-center mb-2">
                 <span className="text-lg font-semibold">Estimation Totale</span>
-                <span className="text-3xl font-bold">{calculatePrice()}€</span>
+                <span className="text-3xl font-bold">{formatCurrency(calculatePrice())}</span>
               </div>
               <p className="text-sm text-blue-100">
                 * Estimation indicative, prix final selon spécifications détaillées
@@ -354,7 +355,7 @@ export default function EstimationService() {
               <label className="block text-gray-700 font-medium mb-2">Estimation calculée</label>
               <input
                 type="text"
-                value={`${calculatePrice()}€`}
+                value={`${calculatePrice().toLocaleString('fr-DZ')} د.ج`}
                 readOnly
                 className="w-full px-4 py-3 bg-blue-50 border border-blue-300 rounded-lg text-blue-700 font-bold"
               />

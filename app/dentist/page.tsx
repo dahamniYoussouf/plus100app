@@ -174,7 +174,7 @@ export default function DentistPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalRevenue}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalRevenue}</p>
                   </div>
                   <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -329,7 +329,7 @@ export default function DentistPage() {
                           <p className="text-sm text-gray-500 mt-1">{treatment.notes}</p>
                         )}
                       </div>
-                      <span className="text-lg font-bold text-gray-900">€{treatment.cost.toFixed(2)}</span>
+                      <span className="text-lg font-bold text-gray-900">DZD{treatment.cost.toFixed(2)}</span>
                     </div>
                   </div>
                 ))}

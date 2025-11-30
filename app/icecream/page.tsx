@@ -200,7 +200,7 @@ export default function IcecreamPage() {
                   </div>
                   <p className="text-sm text-gray-600 mb-3">{flavor.description}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <span className="text-lg sm:text-xl font-bold text-gray-900">€{flavor.price.toFixed(2)}</span>
+                    <span className="text-lg sm:text-xl font-bold text-gray-900">DZD{flavor.price.toFixed(2)}</span>
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
                       flavor.stock < 20 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                     }`}>

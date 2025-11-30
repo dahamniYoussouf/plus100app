@@ -244,7 +244,7 @@ export default function FinancePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Solde Total</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalBalance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalBalance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</p>
                   </div>
                   <Wallet className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -253,7 +253,7 @@ export default function FinancePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600 mt-2">€{totalIncome.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600 mt-2">DZD{totalIncome.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -262,7 +262,7 @@ export default function FinancePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Dépenses</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-red-600 mt-2">€{totalExpenses.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-red-600 mt-2">DZD{totalExpenses.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</p>
                   </div>
                   <TrendingDown className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" />
                 </div>
@@ -292,7 +292,7 @@ export default function FinancePage() {
                     <div key={budget.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white rounded-lg p-3 text-sm">
                       <span className="text-gray-700 font-medium">{budget.name}</span>
                       <span className="font-semibold text-red-700 mt-1 sm:mt-0">
-                        €{budget.spent.toFixed(2)} / €{budget.amount.toFixed(2)}
+                        DZD{budget.spent.toFixed(2)} / DZD{budget.amount.toFixed(2)}
                       </span>
                     </div>
                   ))}
@@ -381,7 +381,7 @@ export default function FinancePage() {
                         <span className={`text-xl font-bold ${
                           account.balance >= 0 ? 'text-green-600' : 'text-red-600'
                         }`}>
-                          {account.balance >= 0 ? '+' : ''}€{Math.abs(account.balance).toLocaleString('fr-FR', { minimumFractionDigits: 2 })}
+                          {account.balance >= 0 ? '+' : ''}DZD{Math.abs(account.balance).toLocaleString('fr-FR', { minimumFractionDigits: 2 })}
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 mt-1">{account.currency}</p>
@@ -425,7 +425,7 @@ export default function FinancePage() {
                           <span className={`text-lg font-bold ${
                             transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
                           }`}>
-                            {transaction.type === 'income' ? '+' : '-'}€{Math.abs(transaction.amount).toLocaleString('fr-FR', { minimumFractionDigits: 2 })}
+                            {transaction.type === 'income' ? '+' : '-'}DZD{Math.abs(transaction.amount).toLocaleString('fr-FR', { minimumFractionDigits: 2 })}
                           </span>
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                             transaction.status === 'completed' ? 'bg-green-100 text-green-800' :
@@ -507,7 +507,7 @@ export default function FinancePage() {
                               usage > 100 ? 'text-red-600' :
                               usage > 80 ? 'text-yellow-600' : 'text-gray-700'
                             }`}>
-                              €{budget.spent.toFixed(2)} / €{budget.amount.toFixed(2)} ({usage.toFixed(0)}%)
+                              DZD{budget.spent.toFixed(2)} / DZD{budget.amount.toFixed(2)} ({usage.toFixed(0)}%)
                             </span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -526,7 +526,7 @@ export default function FinancePage() {
                           <span className={`font-bold ${
                             remaining < 0 ? 'text-red-600' : 'text-green-600'
                           }`}>
-                            €{remaining.toFixed(2)}
+                            DZD{remaining.toFixed(2)}
                           </span>
                         </div>
 

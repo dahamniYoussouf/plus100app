@@ -308,8 +308,8 @@ export default function ProjectPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Budget Total</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{(totalBudget / 1000).toFixed(0)}k</p>
-                    <p className="text-xs text-gray-500 mt-1">€{(totalSpent / 1000).toFixed(0)}k dépensé</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{(totalBudget / 1000).toFixed(0)}k</p>
+                    <p className="text-xs text-gray-500 mt-1">DZD{(totalSpent / 1000).toFixed(0)}k dépensé</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -470,7 +470,7 @@ export default function ProjectPage() {
                           </div>
                           <div>
                             <p className="text-xs text-gray-500">Budget</p>
-                            <p className="text-sm font-medium text-gray-900">€{project.budget.toLocaleString()}</p>
+                            <p className="text-sm font-medium text-gray-900">DZD{project.budget.toLocaleString()}</p>
                           </div>
                         </div>
 
@@ -481,7 +481,7 @@ export default function ProjectPage() {
                               budgetUsage > 90 ? 'text-red-600' :
                               budgetUsage > 75 ? 'text-yellow-600' : 'text-gray-700'
                             }`}>
-                              €{project.spent.toLocaleString()} / €{project.budget.toLocaleString()} ({budgetUsage.toFixed(0)}%)
+                              DZD{project.spent.toLocaleString()} / DZD{project.budget.toLocaleString()} ({budgetUsage.toFixed(0)}%)
                             </span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">

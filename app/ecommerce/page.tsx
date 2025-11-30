@@ -186,7 +186,7 @@ export default function EcommercePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{totalRevenue.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{totalRevenue.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -218,7 +218,7 @@ export default function EcommercePage() {
                   {pendingOrders.slice(0, 3).map((order) => (
                     <div key={order.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white rounded-lg p-3 text-sm">
                       <span className="text-gray-700">Commande #{order.id.slice(0, 8)}</span>
-                      <span className="font-semibold text-blue-700 mt-1 sm:mt-0">€{order.total.toFixed(2)}</span>
+                      <span className="font-semibold text-blue-700 mt-1 sm:mt-0">DZD{order.total.toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
@@ -280,7 +280,7 @@ export default function EcommercePage() {
                   <p className="text-xs text-gray-500 mb-3">SKU: {product.sku} • Catégorie: {product.category}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                     <div>
-                      <p className="text-lg sm:text-xl font-bold text-gray-900">€{product.price.toFixed(2)}</p>
+                      <p className="text-lg sm:text-xl font-bold text-gray-900">DZD{product.price.toFixed(2)}</p>
                       <p className="text-xs text-gray-500">Stock: {product.stock}</p>
                     </div>
                   </div>
@@ -316,7 +316,7 @@ export default function EcommercePage() {
                         </p>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className="text-lg font-bold text-gray-900">€{order.total.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">DZD{order.total.toFixed(2)}</span>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                           order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
@@ -364,7 +364,7 @@ export default function EcommercePage() {
                       </div>
                       <div>
                         <p className="text-xs text-gray-500">Total Dépensé</p>
-                        <p className="font-bold text-yellow-600">€{customer.totalSpent.toFixed(2)}</p>
+                        <p className="font-bold text-yellow-600">DZD{customer.totalSpent.toFixed(2)}</p>
                       </div>
                     </div>
                   </div>

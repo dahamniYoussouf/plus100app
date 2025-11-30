@@ -456,8 +456,8 @@ export default function GymPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus Mensuels</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">€{monthlyRevenue}</p>
-                    <p className="text-xs text-gray-500 mt-1">€{totalRevenue} total</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">DZD{monthlyRevenue}</p>
+                    <p className="text-xs text-gray-500 mt-1">DZD{totalRevenue} total</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -635,17 +635,17 @@ export default function GymPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-4 text-center">
                 <CreditCard className="w-8 h-8 text-red-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-gray-900">€50</p>
+                <p className="text-2xl font-bold text-gray-900">DZD50</p>
                 <p className="text-sm text-gray-600">Mensuel</p>
               </div>
               <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-4 text-center">
                 <CreditCard className="w-8 h-8 text-red-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-gray-900">€130</p>
+                <p className="text-2xl font-bold text-gray-900">DZD130</p>
                 <p className="text-sm text-gray-600">Trimestriel</p>
               </div>
               <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-4 text-center">
                 <CreditCard className="w-8 h-8 text-red-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-gray-900">€500</p>
+                <p className="text-2xl font-bold text-gray-900">DZD500</p>
                 <p className="text-sm text-gray-600">Annuel</p>
               </div>
             </div>
@@ -718,7 +718,7 @@ export default function GymPage() {
                         </div>
                         <div className="text-right">
                           <p className="text-xs text-gray-500">Prix</p>
-                          <p className="font-bold text-red-600">€{classItem.price}</p>
+                          <p className="font-bold text-red-600">DZD{classItem.price}</p>
                         </div>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">

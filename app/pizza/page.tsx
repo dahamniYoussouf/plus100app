@@ -218,7 +218,7 @@ export default function PizzaPage() {
                     <div className="flex flex-wrap gap-1">
                       {pizza.sizes.map((size, i) => (
                         <span key={i} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
-                          {size.name}: €{size.price.toFixed(2)}
+                          {size.name}: DZD{size.price.toFixed(2)}
                         </span>
                       ))}
                     </div>
@@ -235,7 +235,7 @@ export default function PizzaPage() {
                   </div>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                     <span className="text-lg sm:text-xl font-bold text-gray-900">
-                      À partir de €{pizza.basePrice.toFixed(2)}
+                      À partir de DZD{pizza.basePrice.toFixed(2)}
                     </span>
                   </div>
                 </div>
