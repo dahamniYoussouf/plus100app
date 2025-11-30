@@ -1,0 +1,6 @@
+name = "plus100app"
+compatibility_date = "2024-01-01"
+
+# For Cloudflare Pages with Next.js
+pages_build_output_dir = ".next"
+
