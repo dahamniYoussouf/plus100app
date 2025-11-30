@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Force dynamic rendering since we use searchParams
+export const dynamic = 'force-dynamic'
+
 /**
  * API Route pour la recherche d'offres d'emploi réelles
  * 
