@@ -61,7 +61,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
             <Link href="/" className="text-xl font-bold text-gray-900">
-              Portfolio
+              Plus 100 Application Made In Algeria
             </Link>
           </div>
           <div className="flex items-center gap-4">
