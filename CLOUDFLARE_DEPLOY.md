@@ -1,17 +1,33 @@
 # Cloudflare Pages Deployment Fix
 
 ## Problem
-The deployment is failing because `npx wrangler deploy` is for Cloudflare Workers, not Pages.
+The deployment is failing with authentication errors when using `npx wrangler pages deploy`.
 
 ## Solution
 
-### Option 1: Use Correct Pages Command (If Deploy Command Required)
-If you must use a custom deploy command, use the **Pages** command with project name:
+### Option 1: Fix API Token Permissions (If Deploy Command Required)
+If Cloudflare Pages requires a deploy command, you need to ensure your API token has the correct permissions:
 
-**Deploy command**: `npx wrangler pages deploy .next --project-name=plus100app`
+1. Go to [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens)
+2. Find or create a token with these permissions:
+   - **Account** → **Cloudflare Pages** → **Edit**
+   - **Zone** → **Zone Settings** → **Read** (if needed)
+3. Update the `CLOUDFLARE_API_TOKEN` environment variable in Cloudflare Pages settings:
+   - Go to **Settings** → **Environment variables**
+   - Add/update `CLOUDFLARE_API_TOKEN` with your token
+4. Use this deploy command:
+   ```
+   npx wrangler pages deploy .next --project-name=plus100app
+   ```
 
-**OR** (if project name is set in wrangler.toml):
-**Deploy command**: `npx wrangler pages deploy .next`
+### Option 2: Use No-Op Command (If Allowed)
+If Cloudflare Pages allows it, use a simple command that does nothing:
+```
+echo "Deployment handled by Cloudflare Pages"
+```
+
+### Option 3: Remove Deploy Command (Recommended if Possible)
+If possible, remove the deploy command entirely and let Cloudflare Pages handle deployment automatically.
 
 **OR** (Recommended) Remove the deploy command entirely:
 
