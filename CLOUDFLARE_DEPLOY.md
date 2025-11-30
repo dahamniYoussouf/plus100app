@@ -6,8 +6,11 @@ The deployment is failing because `npx wrangler deploy` is for Cloudflare Worker
 ## Solution
 
 ### Option 1: Use Correct Pages Command (If Deploy Command Required)
-If you must use a custom deploy command, use the **Pages** command:
+If you must use a custom deploy command, use the **Pages** command with project name:
 
+**Deploy command**: `npx wrangler pages deploy .next --project-name=plus100app`
+
+**OR** (if project name is set in wrangler.toml):
 **Deploy command**: `npx wrangler pages deploy .next`
 
 **OR** (Recommended) Remove the deploy command entirely:
