@@ -864,7 +864,7 @@ export default function TransportPage() {
                     setVehicles(vehicles.map(v => v.id === newShipment.vehicleId ? { ...v, status: 'in_use' as const } : v))
                   }
                   if (newShipment.driverId) {
-                    setDrivers(drivers.map(d => d.id === newShipment.driverId ? { ...d, status: 'busy' as const } : d))
+                    setDrivers(drivers.map(d => d.id === newShipment.driverId ? { ...d, status: 'on_delivery' as const } : d))
                   }
                   setShowShipmentModal(false)
                   setNewShipment({ senderName: '', senderAddress: '', recipientName: '', recipientAddress: '', weight: 0, routeId: '', vehicleId: '', driverId: '' })

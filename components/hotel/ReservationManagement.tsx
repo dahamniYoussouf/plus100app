@@ -153,7 +153,6 @@ export default function ReservationManagement({ reservations, setReservations, r
                     const reservation: Reservation = {
                       id: Date.now().toString(),
                       roomId: newReservation.roomId,
-                      roomNumber: room.number,
                       guestName: newReservation.guestName,
                       guestEmail: newReservation.guestEmail,
                       guestPhone: newReservation.guestPhone,
@@ -162,6 +161,7 @@ export default function ReservationManagement({ reservations, setReservations, r
                       numberOfGuests: newReservation.guests,
                       totalPrice: room.price * nights,
                       status: 'confirmed',
+                      paymentStatus: 'unpaid',
                       createdAt: new Date(),
                     }
                     setReservations([...reservations, reservation])
