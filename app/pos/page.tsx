@@ -7,7 +7,6 @@ import OrderManagement from '@/components/pos/OrderManagement'
 import TableManagement from '@/components/pos/TableManagement'
 import Checkout from '@/components/pos/Checkout'
 import Dashboard from '@/components/pos/Dashboard'
-import AutomationAgent from '@/components/pos/AutomationAgent'
 import { MenuItem, Order, Table } from '@/types/pos'
 
 type TabType = 'dashboard' | 'menu' | 'orders' | 'tables' | 'checkout'
@@ -164,15 +163,6 @@ export default function POSPage() {
           />
         )}
       </main>
-
-      {/* Automation Agent */}
-      <AutomationAgent
-        menuItems={menuItems}
-        orders={orders}
-        setOrders={setOrders}
-        tables={tables}
-        setTables={setTables}
-      />
     </div>
   )
 }

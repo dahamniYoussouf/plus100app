@@ -42,7 +42,7 @@ export default function About() {
             <div className="grid md:grid-cols-2 gap-8 relative z-10">
               <div>
             <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              Je suis <span className="text-blue-600 font-semibold text-xl">Dahamni Youssouf</span>, un{' '}
+              Je suis <span className="text-blue-600 font-semibold text-xl">APP</span>, un{' '}
               <span className="text-blue-600 font-semibold">Développeur Full Stack</span> passionné avec une
               expérience approfondie dans le développement d'applications web scalables et de solutions sur mesure.
               Mon expertise s'étend sur plusieurs plateformes et technologies, me permettant de livrer des solutions

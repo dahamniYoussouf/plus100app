@@ -110,7 +110,7 @@ export default function InternalAgent() {
       },
       {
         id: 3,
-        title: 'Full Stack Developer (React/Node.js)',
+        title: '  (React/Node.js)',
         company: 'StartupXYZ',
         location: 'Remote',
         salary: '70k - 100k USD',
@@ -403,7 +403,7 @@ export default function InternalAgent() {
           data: [
             { company: 'Levio', role: 'Agentforce Developer', period: '2022 - Présent' },
             { company: 'Gama Outillage', role: 'WordPress Developer', period: '2020 - 2022' },
-            { company: 'Tawssil', role: 'Full Stack Developer', period: '2019 - 2021' },
+            { company: 'Tawssil', role: ' ', period: '2019 - 2021' },
           ],
           title: 'Expériences Professionnelles',
         },

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Gamepad2, Users, Calendar, Clock, Trophy, BarChart3, Target, Zap } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'lanes' | 'bookings' | 'tournaments' | 'members'
 
@@ -57,6 +58,10 @@ export default function BowlingPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [tournaments, setTournaments] = useState<Tournament[]>([])
   const [members, setMembers] = useState<Member[]>([])
+  const [showTournamentModal, setShowTournamentModal] = useState(false)
+  const [showMemberModal, setShowMemberModal] = useState(false)
+  const [newTournament, setNewTournament] = useState({ name: '', date: '', maxParticipants: 16, prize: 0 })
+  const [newMember, setNewMember] = useState({ name: '', email: '', phone: '', membershipType: 'basic' as 'basic' | 'premium' | 'vip' })
 
   useEffect(() => {
     const savedLanes = localStorage.getItem('bowling-lanes')
@@ -393,7 +398,10 @@ export default function BowlingPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Tournois</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowTournamentModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau tournoi
               </button>
             </div>
@@ -440,7 +448,10 @@ export default function BowlingPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Membres</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowMemberModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau membre
               </button>
             </div>
@@ -476,6 +487,179 @@ export default function BowlingPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showTournamentModal}
+        onClose={() => {
+          setShowTournamentModal(false)
+          setNewTournament({ name: '', date: '', maxParticipants: 16, prize: 0 })
+        }}
+        title="Nouveau tournoi"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du tournoi</label>
+            <input
+              type="text"
+              value={newTournament.name}
+              onChange={(e) => setNewTournament({ ...newTournament, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Championnat du Weekend"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+            <input
+              type="date"
+              value={newTournament.date}
+              onChange={(e) => setNewTournament({ ...newTournament, date: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Participants maximum</label>
+            <input
+              type="number"
+              value={newTournament.maxParticipants}
+              onChange={(e) => setNewTournament({ ...newTournament, maxParticipants: parseInt(e.target.value) || 16 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              min="2"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+            <input
+              type="number"
+              value={newTournament.prize}
+              onChange={(e) => setNewTournament({ ...newTournament, prize: parseFloat(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowTournamentModal(false)
+                setNewTournament({ name: '', date: '', maxParticipants: 16, prize: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newTournament.name && newTournament.date) {
+                  const tournament: Tournament = {
+                    id: Date.now().toString(),
+                    name: newTournament.name,
+                    date: new Date(newTournament.date),
+                    participants: 0,
+                    maxParticipants: newTournament.maxParticipants,
+                    prize: newTournament.prize,
+                    status: 'upcoming',
+                  }
+                  setTournaments([...tournaments, tournament])
+                  setShowTournamentModal(false)
+                  setNewTournament({ name: '', date: '', maxParticipants: 16, prize: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showMemberModal}
+        onClose={() => {
+          setShowMemberModal(false)
+          setNewMember({ name: '', email: '', phone: '', membershipType: 'basic' })
+        }}
+        title="Nouveau membre"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newMember.name}
+              onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              value={newMember.email}
+              onChange={(e) => setNewMember({ ...newMember, email: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: ahmed@email.com"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+            <input
+              type="tel"
+              value={newMember.phone}
+              onChange={(e) => setNewMember({ ...newMember, phone: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: +213 555 1234"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type d'adhésion</label>
+            <select
+              value={newMember.membershipType}
+              onChange={(e) => setNewMember({ ...newMember, membershipType: e.target.value as 'basic' | 'premium' | 'vip' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="basic">Basique</option>
+              <option value="premium">Premium</option>
+              <option value="vip">VIP</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMemberModal(false)
+                setNewMember({ name: '', email: '', phone: '', membershipType: 'basic' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMember.name && newMember.email && newMember.phone) {
+                  const member: Member = {
+                    id: Date.now().toString(),
+                    name: newMember.name,
+                    email: newMember.email,
+                    phone: newMember.phone,
+                    membershipType: newMember.membershipType,
+                    gamesPlayed: 0,
+                    averageScore: 0,
+                    joinDate: new Date(),
+                  }
+                  setMembers([...members, member])
+                  setShowMemberModal(false)
+                  setNewMember({ name: '', email: '', phone: '', membershipType: 'basic' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

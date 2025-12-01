@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Stethoscope, Users, Calendar, FileText, BarChart3, TrendingUp, Clock, Pill, Activity, AlertCircle, Heart } from 'lucide-react'
 
 type TabType = 'dashboard' | 'patients' | 'appointments' | 'records'
@@ -81,6 +82,12 @@ export default function ClinicPage() {
   const [patients, setPatients] = useState<Patient[]>([])
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [records, setRecords] = useState<MedicalRecord[]>([])
+  const [showPatientModal, setShowPatientModal] = useState(false)
+  const [showRdvModal, setShowRdvModal] = useState(false)
+  const [showDossierModal, setShowDossierModal] = useState(false)
+  const [newPatient, setNewPatient] = useState({ name: '', email: '', phone: '', dateOfBirth: '', gender: 'male' as 'male' | 'female', address: '', city: '' })
+  const [newRdv, setNewRdv] = useState({ patientId: '', date: '', time: '', reason: '', type: 'consultation' as 'consultation' | 'followup' | 'emergency' | 'vaccination' | 'checkup', doctor: '' })
+  const [newDossier, setNewDossier] = useState({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '' })
 
   useEffect(() => {
     const savedPatients = localStorage.getItem('clinic-patients')
@@ -528,7 +535,10 @@ export default function ClinicPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Patients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+              <button 
+                onClick={() => setShowPatientModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
                 Nouveau Patient
               </button>
             </div>
@@ -645,7 +655,10 @@ export default function ClinicPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Rendez-vous</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+              <button 
+                onClick={() => setShowRdvModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
                 Nouveau RDV
               </button>
             </div>

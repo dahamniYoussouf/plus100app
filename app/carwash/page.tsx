@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Car, Users, Calendar, DollarSign, BarChart3, TrendingUp, Package, Clock } from 'lucide-react'
 
 type TabType = 'dashboard' | 'services' | 'vehicles' | 'subscriptions' | 'appointments'
@@ -61,6 +62,12 @@ export default function CarwashPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [showServiceModal, setShowServiceModal] = useState(false)
+  const [showVehicleModal, setShowVehicleModal] = useState(false)
+  const [showRdvModal, setShowRdvModal] = useState(false)
+  const [newService, setNewService] = useState({ name: '', description: '', price: 0, duration: 30, category: 'basic' as 'basic' | 'premium' | 'deluxe' | 'interior' | 'exterior' })
+  const [newVehicle, setNewVehicle] = useState({ ownerName: '', ownerPhone: '', licensePlate: '', make: '', model: '', color: '' })
+  const [newRdv, setNewRdv] = useState({ vehicleId: '', serviceId: '', date: '', time: '' })
 
   useEffect(() => {
     const savedServices = localStorage.getItem('carwash-services')
@@ -359,7 +366,10 @@ export default function CarwashPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Services</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+              <button 
+                onClick={() => setShowServiceModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
                 Ajouter Service
               </button>
             </div>
@@ -395,7 +405,10 @@ export default function CarwashPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Véhicules</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+              <button 
+                onClick={() => setShowVehicleModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
                 Nouveau Véhicule
               </button>
             </div>
@@ -515,7 +528,10 @@ export default function CarwashPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Rendez-vous</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+              <button 
+                onClick={() => setShowRdvModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
                 Nouveau RDV
               </button>
             </div>
@@ -560,9 +576,323 @@ export default function CarwashPage() {
                 ))}
               </div>
             )}
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showServiceModal}
+        onClose={() => {
+          setShowServiceModal(false)
+          setNewService({ name: '', description: '', price: 0, duration: 30, category: 'basic' })
+        }}
+        title="Ajouter Service"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du service</label>
+            <input
+              type="text"
+              value={newService.name}
+              onChange={(e) => setNewService({ ...newService, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              placeholder="Ex: Lavage Intérieur"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newService.description}
+              onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du service"
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newService.price}
+                onChange={(e) => setNewService({ ...newService, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (min)</label>
+              <input
+                type="number"
+                value={newService.duration}
+                onChange={(e) => setNewService({ ...newService, duration: parseInt(e.target.value) || 30 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newService.category}
+                onChange={(e) => setNewService({ ...newService, category: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              >
+                <option value="basic">Basique</option>
+                <option value="premium">Premium</option>
+                <option value="deluxe">Deluxe</option>
+                <option value="interior">Intérieur</option>
+                <option value="exterior">Extérieur</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowServiceModal(false)
+                setNewService({ name: '', description: '', price: 0, duration: 30, category: 'basic' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newService.name && newService.description) {
+                  const service: Service = {
+                    id: Date.now().toString(),
+                    name: newService.name,
+                    description: newService.description,
+                    price: newService.price,
+                    duration: newService.duration,
+                    category: newService.category,
+                    available: true,
+                  }
+                  setServices([...services, service])
+                  setShowServiceModal(false)
+                  setNewService({ name: '', description: '', price: 0, duration: 30, category: 'basic' })
+                }
+              }}
+              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showVehicleModal}
+        onClose={() => {
+          setShowVehicleModal(false)
+          setNewVehicle({ ownerName: '', ownerPhone: '', licensePlate: '', make: '', model: '', color: '' })
+        }}
+        title="Nouveau Véhicule"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom du propriétaire</label>
+              <input
+                type="text"
+                value={newVehicle.ownerName}
+                onChange={(e) => setNewVehicle({ ...newVehicle, ownerName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newVehicle.ownerPhone}
+                onChange={(e) => setNewVehicle({ ...newVehicle, ownerPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Plaque d'immatriculation</label>
+            <input
+              type="text"
+              value={newVehicle.licensePlate}
+              onChange={(e) => setNewVehicle({ ...newVehicle, licensePlate: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              placeholder="Ex: 12345-A-16"
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Marque</label>
+              <input
+                type="text"
+                value={newVehicle.make}
+                onChange={(e) => setNewVehicle({ ...newVehicle, make: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: Renault"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Modèle</label>
+              <input
+                type="text"
+                value={newVehicle.model}
+                onChange={(e) => setNewVehicle({ ...newVehicle, model: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: Clio"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Couleur</label>
+              <input
+                type="text"
+                value={newVehicle.color}
+                onChange={(e) => setNewVehicle({ ...newVehicle, color: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: Blanc"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowVehicleModal(false)
+                setNewVehicle({ ownerName: '', ownerPhone: '', licensePlate: '', make: '', model: '', color: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newVehicle.ownerName && newVehicle.ownerPhone && newVehicle.licensePlate && newVehicle.make && newVehicle.model) {
+                  const vehicle: Vehicle = {
+                    id: Date.now().toString(),
+                    ownerName: newVehicle.ownerName,
+                    ownerPhone: newVehicle.ownerPhone,
+                    licensePlate: newVehicle.licensePlate,
+                    make: newVehicle.make,
+                    model: newVehicle.model,
+                    color: newVehicle.color,
+                    washCount: 0,
+                  }
+                  setVehicles([...vehicles, vehicle])
+                  setShowVehicleModal(false)
+                  setNewVehicle({ ownerName: '', ownerPhone: '', licensePlate: '', make: '', model: '', color: '' })
+                }
+              }}
+              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showRdvModal}
+        onClose={() => {
+          setShowRdvModal(false)
+          setNewRdv({ vehicleId: '', serviceId: '', date: '', time: '' })
+        }}
+        title="Nouveau RDV"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {vehicles.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Véhicule</label>
+              <select
+                value={newRdv.vehicleId}
+                onChange={(e) => setNewRdv({ ...newRdv, vehicleId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un véhicule</option>
+                {vehicles.map(vehicle => (
+                  <option key={vehicle.id} value={vehicle.id}>{vehicle.licensePlate} - {vehicle.ownerName}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {services.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Service</label>
+              <select
+                value={newRdv.serviceId}
+                onChange={(e) => setNewRdv({ ...newRdv, serviceId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un service</option>
+                {services.map(service => (
+                  <option key={service.id} value={service.id}>{service.name} - DZD{service.price}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newRdv.date}
+                onChange={(e) => setNewRdv({ ...newRdv, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newRdv.time}
+                onChange={(e) => setNewRdv({ ...newRdv, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowRdvModal(false)
+                setNewRdv({ vehicleId: '', serviceId: '', date: '', time: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newRdv.vehicleId && newRdv.serviceId && newRdv.date && newRdv.time) {
+                  const vehicle = vehicles.find(v => v.id === newRdv.vehicleId)
+                  const service = services.find(s => s.id === newRdv.serviceId)
+                  if (vehicle && service) {
+                    const appointment: Appointment = {
+                      id: Date.now().toString(),
+                      vehicleId: newRdv.vehicleId,
+                      ownerName: vehicle.ownerName,
+                      licensePlate: vehicle.licensePlate,
+                      serviceId: newRdv.serviceId,
+                      serviceName: service.name,
+                      date: new Date(newRdv.date),
+                      time: newRdv.time,
+                      status: 'scheduled',
+                      price: service.price,
+                    }
+                    setAppointments([...appointments, appointment])
+                    setShowRdvModal(false)
+                    setNewRdv({ vehicleId: '', serviceId: '', date: '', time: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

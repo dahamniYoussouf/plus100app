@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Book, BookOpen, Users, ShoppingCart, BarChart3, Search, Star, Tag } from 'lucide-react'
 
 type TabType = 'dashboard' | 'catalog' | 'sales' | 'customers' | 'inventory'
@@ -43,6 +44,8 @@ export default function BooksPage() {
   const [books, setBooks] = useState<BookItem[]>([])
   const [sales, setSales] = useState<Sale[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
+  const [showLivreModal, setShowLivreModal] = useState(false)
+  const [showClientModal, setShowClientModal] = useState(false)
 
   useEffect(() => {
     const savedBooks = localStorage.getItem('books-catalog')
@@ -242,7 +245,10 @@ export default function BooksPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Catalogue</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowLivreModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Ajouter un livre
               </button>
             </div>
@@ -331,7 +337,10 @@ export default function BooksPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowClientModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Nouveau client
               </button>
             </div>
@@ -405,6 +414,45 @@ export default function BooksPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showLivreModal}
+        onClose={() => setShowLivreModal(false)}
+        title="Ajouter un livre"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau livre.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowLivreModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showClientModal}
+        onClose={() => setShowClientModal(false)}
+        title="Nouveau client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau client.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowClientModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

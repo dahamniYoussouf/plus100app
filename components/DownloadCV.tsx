@@ -24,7 +24,7 @@ export default function DownloadCV() {
     setTimeout(() => {
       // Créer un CV simple en format texte/HTML
       const cvContent = `
-CV - DAHAMNI YOUSSOUF
+CV - APP
 Développeur Full Stack
 
 EXPÉRIENCE PROFESSIONNELLE
@@ -47,7 +47,7 @@ WordPress Developer - Gama Outillage (2020 - 2022)
 • Optimisation performance et SEO
 • Livraison dans 58 wilayas (Algérie)
 
-Full Stack Developer - Tawssil Food Delivery (2019 - 2021)
+  - Tawssil Food Delivery (2019 - 2021)
 • Application de livraison de nourriture complète
 • APIs RESTful et GraphQL
 • Suivi en temps réel des commandes

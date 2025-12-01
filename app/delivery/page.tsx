@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Truck, Users, Package, MapPin, BarChart3, TrendingUp, Clock, CheckCircle, AlertCircle } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'deliveries' | 'drivers' | 'orders'
 
@@ -63,6 +64,8 @@ export default function DeliveryPage() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([])
   const [drivers, setDrivers] = useState<Driver[]>([])
   const [orders, setOrders] = useState<Order[]>([])
+  const [showDeliveryModal, setShowDeliveryModal] = useState(false)
+  const [showDriverModal, setShowDriverModal] = useState(false)
 
   useEffect(() => {
     const savedDeliveries = localStorage.getItem('delivery-deliveries')
@@ -346,7 +349,10 @@ export default function DeliveryPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Livraisons</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowDeliveryModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouvelle Livraison
               </button>
             </div>
@@ -442,7 +448,10 @@ export default function DeliveryPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Livreurs</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowDriverModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau Livreur
               </button>
             </div>
@@ -561,6 +570,45 @@ export default function DeliveryPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showDeliveryModal}
+        onClose={() => setShowDeliveryModal(false)}
+        title="Nouvelle Livraison"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra de créer une nouvelle livraison.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowDeliveryModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showDriverModal}
+        onClose={() => setShowDriverModal(false)}
+        title="Nouveau Livreur"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau livreur.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowDriverModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

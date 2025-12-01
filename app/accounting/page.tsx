@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Calculator, DollarSign, TrendingUp, FileText, BarChart3, Receipt, CreditCard, Building2 } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'transactions' | 'invoices' | 'reports' | 'clients'
 
@@ -43,6 +44,7 @@ export default function AccountingPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [clients, setClients] = useState<Client[]>([])
+  const [showClientModal, setShowClientModal] = useState(false)
 
   useEffect(() => {
     const savedTransactions = localStorage.getItem('accounting-transactions')
@@ -364,7 +366,10 @@ export default function AccountingPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowClientModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -397,6 +402,26 @@ export default function AccountingPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showClientModal}
+        onClose={() => setShowClientModal(false)}
+        title="Nouveau Client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau client.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowClientModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -2,6 +2,7 @@
 
 import { Coffee, Package, Users, DollarSign, TrendingUp, Calendar, ShoppingCart, BarChart3, Award, MapPin } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'menu' | 'orders' | 'customers' | 'loyalty'
 
@@ -40,6 +41,9 @@ export default function CafePage() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
+  const [showMenuModal, setShowMenuModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
+  const [showCustomerModal, setShowCustomerModal] = useState(false)
 
   useEffect(() => {
     const savedMenu = localStorage.getItem('cafe-menu')
@@ -234,7 +238,10 @@ export default function CafePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Menu</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors">
+              <button 
+                onClick={() => setShowMenuModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+              >
                 Ajouter Produit
               </button>
             </div>
@@ -268,7 +275,10 @@ export default function CafePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Commandes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors">
+              <button 
+                onClick={() => setShowOrderModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+              >
                 Nouvelle Commande
               </button>
             </div>
@@ -311,7 +321,10 @@ export default function CafePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors">
+              <button 
+                onClick={() => setShowCustomerModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -387,6 +400,64 @@ export default function CafePage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showMenuModal}
+        onClose={() => setShowMenuModal(false)}
+        title="Ajouter un produit"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau produit au menu.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowMenuModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showOrderModal}
+        onClose={() => setShowOrderModal(false)}
+        title="Nouvelle commande"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra de créer une nouvelle commande.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowOrderModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showCustomerModal}
+        onClose={() => setShowCustomerModal(false)}
+        title="Nouveau client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau client.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowCustomerModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -59,7 +59,7 @@ Chaque section/expérience a sa propre couleur pour faciliter la navigation visu
   - Agentforce Developer chez Levio
   - Salesforce Developer
   - WordPress Developer pour Gama Outillage (avec lien externe)
-  - Full Stack Developer pour Tawssil Food Delivery
+  -   pour Tawssil Food Delivery
 - ✅ Icônes colorées pour chaque expérience
 - ✅ Liste de réalisations avec puces colorées
 - ✅ Badges de technologies avec gradients

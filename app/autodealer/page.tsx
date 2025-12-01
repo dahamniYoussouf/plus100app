@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Car, Users, Calendar, DollarSign, BarChart3, TrendingUp, FileText, CheckCircle } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'vehicles' | 'clients' | 'sales' | 'appointments' | 'inventory'
 
@@ -62,6 +63,9 @@ interface Appointment {
 
 export default function AutodealerPage() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
+  const [showVehiculeModal, setShowVehiculeModal] = useState(false)
+  const [showClientModal, setShowClientModal] = useState(false)
+  const [showRdvModal, setShowRdvModal] = useState(false)
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [clients, setClients] = useState<Client[]>([])
   const [sales, setSales] = useState<Sale[]>([])
@@ -333,7 +337,10 @@ export default function AutodealerPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Véhicules</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowVehiculeModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Nouveau Véhicule
               </button>
             </div>
@@ -393,7 +400,10 @@ export default function AutodealerPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowClientModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -486,7 +496,10 @@ export default function AutodealerPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Rendez-vous</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowRdvModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Nouveau RDV
               </button>
             </div>
@@ -561,6 +574,64 @@ export default function AutodealerPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showVehiculeModal}
+        onClose={() => setShowVehiculeModal(false)}
+        title="Nouveau Véhicule"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau véhicule.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowVehiculeModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showClientModal}
+        onClose={() => setShowClientModal(false)}
+        title="Nouveau Client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau client.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowClientModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showRdvModal}
+        onClose={() => setShowRdvModal(false)}
+        title="Nouveau RDV"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra de créer un nouveau rendez-vous.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowRdvModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { UtensilsCrossed, Calendar, Users, Package, BarChart3, TrendingUp, MapPin, Clock } from 'lucide-react'
 
 type TabType = 'dashboard' | 'events' | 'menus' | 'orders' | 'clients'
@@ -60,6 +61,10 @@ export default function CateringPage() {
   const [menus, setMenus] = useState<Menu[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [clients, setClients] = useState<Client[]>([])
+  const [showMenuModal, setShowMenuModal] = useState(false)
+  const [showClientModal, setShowClientModal] = useState(false)
+  const [newMenu, setNewMenu] = useState({ name: '', description: '', pricePerPerson: 0, category: 'full' as 'starter' | 'main' | 'dessert' | 'full', items: '' })
+  const [newClient, setNewClient] = useState({ name: '', email: '', phone: '', address: '' })
 
   useEffect(() => {
     const savedEvents = localStorage.getItem('catering-events')
@@ -413,7 +418,10 @@ export default function CateringPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Menus</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+              <button 
+                onClick={() => setShowMenuModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
                 Nouveau Menu
               </button>
             </div>
@@ -491,7 +499,10 @@ export default function CateringPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+              <button 
+                onClick={() => setShowClientModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -524,6 +535,194 @@ export default function CateringPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showMenuModal}
+        onClose={() => {
+          setShowMenuModal(false)
+          setNewMenu({ name: '', description: '', pricePerPerson: 0, category: 'full', items: '' })
+        }}
+        title="Nouveau Menu"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du menu</label>
+            <input
+              type="text"
+              value={newMenu.name}
+              onChange={(e) => setNewMenu({ ...newMenu, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Ex: Menu Mariage Premium"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newMenu.description}
+              onChange={(e) => setNewMenu({ ...newMenu, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du menu"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix par personne (DZD)</label>
+              <input
+                type="number"
+                value={newMenu.pricePerPerson}
+                onChange={(e) => setNewMenu({ ...newMenu, pricePerPerson: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newMenu.category}
+                onChange={(e) => setNewMenu({ ...newMenu, category: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                <option value="starter">Entrée</option>
+                <option value="main">Plat principal</option>
+                <option value="dessert">Dessert</option>
+                <option value="full">Menu complet</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Plats (séparés par des virgules)</label>
+            <input
+              type="text"
+              value={newMenu.items}
+              onChange={(e) => setNewMenu({ ...newMenu, items: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Ex: Salade, Couscous, Gâteau"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMenuModal(false)
+                setNewMenu({ name: '', description: '', pricePerPerson: 0, category: 'full', items: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMenu.name && newMenu.description) {
+                  const menu: Menu = {
+                    id: Date.now().toString(),
+                    name: newMenu.name,
+                    description: newMenu.description,
+                    pricePerPerson: newMenu.pricePerPerson,
+                    category: newMenu.category,
+                    items: newMenu.items.split(',').map(item => item.trim()).filter(item => item),
+                    available: true,
+                  }
+                  setMenus([...menus, menu])
+                  setShowMenuModal(false)
+                  setNewMenu({ name: '', description: '', pricePerPerson: 0, category: 'full', items: '' })
+                }
+              }}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showClientModal}
+        onClose={() => {
+          setShowClientModal(false)
+          setNewClient({ name: '', email: '', phone: '', address: '' })
+        }}
+        title="Nouveau Client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newClient.name}
+              onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newClient.email}
+                onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newClient.phone}
+                onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse (optionnel)</label>
+            <input
+              type="text"
+              value={newClient.address}
+              onChange={(e) => setNewClient({ ...newClient, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Ex: 123 Rue Didouche Mourad, Alger"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowClientModal(false)
+                setNewClient({ name: '', email: '', phone: '', address: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newClient.name && newClient.email && newClient.phone) {
+                  const client: Client = {
+                    id: Date.now().toString(),
+                    name: newClient.name,
+                    email: newClient.email,
+                    phone: newClient.phone,
+                    address: newClient.address || undefined,
+                    eventCount: 0,
+                    totalSpent: 0,
+                  }
+                  setClients([...clients, client])
+                  setShowClientModal(false)
+                  setNewClient({ name: '', email: '', phone: '', address: '' })
+                }
+              }}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

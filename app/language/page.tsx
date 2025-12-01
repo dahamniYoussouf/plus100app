@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Globe, Users, BookOpen, Calendar, BarChart3, Award, Clock, GraduationCap } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'courses' | 'students' | 'instructors' | 'schedule' | 'levels'
 
@@ -50,6 +51,9 @@ export default function LanguagePage() {
   const [courses, setCourses] = useState<Course[]>([])
   const [students, setStudents] = useState<Student[]>([])
   const [instructors, setInstructors] = useState<Instructor[]>([])
+  const [showCoursModal, setShowCoursModal] = useState(false)
+  const [showEtudiantModal, setShowEtudiantModal] = useState(false)
+  const [showInstructeurModal, setShowInstructeurModal] = useState(false)
 
   useEffect(() => {
     const savedCourses = localStorage.getItem('language-courses')
@@ -232,7 +236,10 @@ export default function LanguagePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Cours</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+              <button 
+                onClick={() => setShowCoursModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
                 Nouveau Cours
               </button>
             </div>
@@ -276,7 +283,10 @@ export default function LanguagePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Étudiants</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+              <button 
+                onClick={() => setShowEtudiantModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
                 Nouvel Étudiant
               </button>
             </div>
@@ -329,7 +339,10 @@ export default function LanguagePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Instructeurs</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+              <button 
+                onClick={() => setShowInstructeurModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
                 Nouvel Instructeur
               </button>
             </div>
@@ -445,6 +458,64 @@ export default function LanguagePage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showCoursModal}
+        onClose={() => setShowCoursModal(false)}
+        title="Nouveau Cours"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau cours.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowCoursModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showEtudiantModal}
+        onClose={() => setShowEtudiantModal(false)}
+        title="Nouvel Étudiant"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouvel étudiant.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowEtudiantModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showInstructeurModal}
+        onClose={() => setShowInstructeurModal(false)}
+        title="Nouvel Instructeur"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouvel instructeur.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowInstructeurModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

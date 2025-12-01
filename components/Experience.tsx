@@ -66,7 +66,7 @@ const experiences = [
     about: 'Gama Outillage est un fournisseur d\'outillage professionnel en Algérie, offrant une large gamme d\'outils et d\'équipements pour les professionnels du bâtiment et de l\'industrie. Livraison disponible dans 58 wilayas.',
   },
   {
-    title: 'Full Stack Developer',
+    title: ' ',
     company: 'Tawssil Food Delivery',
     location: 'Algérie / Remote',
     period: '2019 - 2021',
@@ -191,7 +191,7 @@ export default function Experience() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                       <div className="absolute bottom-4 left-4 text-white z-10">
                         <p className="text-lg font-semibold mb-1">{exp.company}</p>
-                        <p className="text-xs text-gray-300">Projet développé par Dahamni Youssouf</p>
+                        <p className="text-xs text-gray-300">Projet développé par APP</p>
                       </div>
                       {exp.link && (
                         <div className="absolute top-4 right-4 z-10">

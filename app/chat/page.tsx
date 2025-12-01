@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { MessageCircle, Users, Send, Search, BarChart3, Phone, Video, MoreVertical, Check, CheckCheck, Clock } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'conversations' | 'contacts' | 'groups'
 
@@ -54,6 +55,10 @@ export default function ChatPage() {
   const [groups, setGroups] = useState<Group[]>([])
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null)
   const [newMessage, setNewMessage] = useState('')
+  const [showContactModal, setShowContactModal] = useState(false)
+  const [showGroupModal, setShowGroupModal] = useState(false)
+  const [newContact, setNewContact] = useState({ name: '', email: '' })
+  const [newGroup, setNewGroup] = useState({ name: '', description: '', memberIds: [] as string[] })
 
   useEffect(() => {
     const savedConversations = localStorage.getItem('chat-conversations')
@@ -435,7 +440,10 @@ export default function ChatPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Contacts</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowContactModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau contact
               </button>
             </div>
@@ -477,7 +485,10 @@ export default function ChatPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Groupes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowGroupModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau groupe
               </button>
             </div>
@@ -501,9 +512,159 @@ export default function ChatPage() {
                 </div>
               ))}
             </div>
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showContactModal}
+        onClose={() => {
+          setShowContactModal(false)
+          setNewContact({ name: '', email: '' })
+        }}
+        title="Nouveau contact"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newContact.name}
+              onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              value={newContact.email}
+              onChange={(e) => setNewContact({ ...newContact, email: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: ahmed@email.com"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowContactModal(false)
+                setNewContact({ name: '', email: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newContact.name && newContact.email) {
+                  const contact: Contact = {
+                    id: Date.now().toString(),
+                    name: newContact.name,
+                    email: newContact.email,
+                    status: 'offline',
+                  }
+                  setContacts([...contacts, contact])
+                  setShowContactModal(false)
+                  setNewContact({ name: '', email: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showGroupModal}
+        onClose={() => {
+          setShowGroupModal(false)
+          setNewGroup({ name: '', description: '', memberIds: [] })
+        }}
+        title="Nouveau groupe"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du groupe</label>
+            <input
+              type="text"
+              value={newGroup.name}
+              onChange={(e) => setNewGroup({ ...newGroup, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Équipe Marketing"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description (optionnel)</label>
+            <textarea
+              value={newGroup.description}
+              onChange={(e) => setNewGroup({ ...newGroup, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du groupe"
+            />
+          </div>
+          {contacts.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Membres</label>
+              <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-2">
+                {contacts.map(contact => (
+                  <label key={contact.id} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={newGroup.memberIds.includes(contact.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setNewGroup({ ...newGroup, memberIds: [...newGroup.memberIds, contact.id] })
+                        } else {
+                          setNewGroup({ ...newGroup, memberIds: newGroup.memberIds.filter(id => id !== contact.id) })
+                        }
+                      }}
+                      className="rounded"
+                    />
+                    <span className="text-sm">{contact.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowGroupModal(false)
+                setNewGroup({ name: '', description: '', memberIds: [] })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newGroup.name && newGroup.memberIds.length > 0) {
+                  const group: Group = {
+                    id: Date.now().toString(),
+                    name: newGroup.name,
+                    description: newGroup.description || undefined,
+                    members: newGroup.memberIds,
+                    createdAt: new Date(),
+                  }
+                  setGroups([...groups, group])
+                  setShowGroupModal(false)
+                  setNewGroup({ name: '', description: '', memberIds: [] })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Droplet, Users, Calendar, CheckCircle, BarChart3, Clock, MapPin, Package } from 'lucide-react'
 
 type TabType = 'dashboard' | 'teams' | 'missions' | 'clients' | 'equipment' | 'schedules'
@@ -63,6 +64,8 @@ export default function CleaningPage() {
   const [missions, setMissions] = useState<Mission[]>([])
   const [clients, setClients] = useState<Client[]>([])
   const [equipment, setEquipment] = useState<Equipment[]>([])
+  const [showClientModal, setShowClientModal] = useState(false)
+  const [newClient, setNewClient] = useState({ name: '', contactPerson: '', phone: '', email: '', address: '', serviceFrequency: 'one_time' as 'one_time' | 'weekly' | 'bi_weekly' | 'monthly' })
 
   useEffect(() => {
     const savedTeams = localStorage.getItem('cleaning-teams')
@@ -469,7 +472,10 @@ export default function CleaningPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowClientModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -568,6 +574,118 @@ export default function CleaningPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showClientModal}
+        onClose={() => {
+          setShowClientModal(false)
+          setNewClient({ name: '', contactPerson: '', phone: '', email: '', address: '', serviceFrequency: 'one_time' })
+        }}
+        title="Nouveau Client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom / Entreprise</label>
+            <input
+              type="text"
+              value={newClient.name}
+              onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Entreprise ABC"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Personne de contact</label>
+            <input
+              type="text"
+              value={newClient.contactPerson}
+              onChange={(e) => setNewClient({ ...newClient, contactPerson: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newClient.phone}
+                onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email (optionnel)</label>
+              <input
+                type="email"
+                value={newClient.email}
+                onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: contact@entreprise.com"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+            <input
+              type="text"
+              value={newClient.address}
+              onChange={(e) => setNewClient({ ...newClient, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: 123 Rue Didouche Mourad, Alger"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Fréquence de service</label>
+            <select
+              value={newClient.serviceFrequency}
+              onChange={(e) => setNewClient({ ...newClient, serviceFrequency: e.target.value as any })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="one_time">Une seule fois</option>
+              <option value="weekly">Hebdomadaire</option>
+              <option value="bi_weekly">Bi-hebdomadaire</option>
+              <option value="monthly">Mensuel</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowClientModal(false)
+                setNewClient({ name: '', contactPerson: '', phone: '', email: '', address: '', serviceFrequency: 'one_time' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newClient.name && newClient.contactPerson && newClient.phone && newClient.address) {
+                  const client: Client = {
+                    id: Date.now().toString(),
+                    name: newClient.name,
+                    contactPerson: newClient.contactPerson,
+                    phone: newClient.phone,
+                    email: newClient.email || undefined,
+                    address: newClient.address,
+                    serviceFrequency: newClient.serviceFrequency,
+                    totalMissions: 0,
+                  }
+                  setClients([...clients, client])
+                  setShowClientModal(false)
+                  setNewClient({ name: '', contactPerson: '', phone: '', email: '', address: '', serviceFrequency: 'one_time' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

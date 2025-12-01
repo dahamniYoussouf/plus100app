@@ -87,7 +87,7 @@ export default function Contact() {
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
                     <Linkedin size={20} className="text-white" />
                   </div>
-                  <span className="font-medium">LinkedIn - Dahamni Youssouf</span>
+                  <span className="font-medium">LinkedIn - APP</span>
                 </motion.a>
 
                 <motion.a
@@ -100,7 +100,7 @@ export default function Contact() {
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-gray-600 to-gray-700 flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
                     <Github size={20} className="text-white" />
                   </div>
-                  <span className="font-medium">GitHub - Dahamni Youssouf</span>
+                  <span className="font-medium">GitHub - APP</span>
                 </motion.a>
               </div>
             </div>

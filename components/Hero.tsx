@@ -61,7 +61,7 @@ export default function Hero() {
           <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-blue-500/50 shadow-2xl">
             <img
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"
-              alt="Dahamni Youssouf"
+              alt="APP"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent" />
@@ -86,7 +86,7 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             {/* text-gradient: classe custom qui applique un gradient coloré au texte */}
-            <span className="text-gradient">Dahamni Youssouf</span>
+            <span className="text-gradient">APP</span>
           </motion.h1>
           
           <motion.h2

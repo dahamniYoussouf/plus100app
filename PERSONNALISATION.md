@@ -1,8 +1,8 @@
-# 📝 Guide de Personnalisation - Dahamni Youssouf
+# 📝 Guide de Personnalisation - APP
 
 ## ✅ Informations Déjà Mises à Jour
 
-J'ai mis à jour le portfolio avec votre nom **Dahamni Youssouf** dans les sections suivantes :
+J'ai mis à jour le portfolio avec votre nom **APP** dans les sections suivantes :
 
 1. ✅ **Hero Section** - Nom affiché en grand
 2. ✅ **About Section** - Présentation personnalisée
@@ -188,7 +188,7 @@ Dans `components/Contact.tsx`, vous pouvez ajouter :
 ## 🎯 Résultat Final
 
 Une fois personnalisé, vous aurez un portfolio professionnel qui :
-- ✅ Présente clairement votre identité (Dahamni Youssouf)
+- ✅ Présente clairement votre identité (APP)
 - ✅ Met en valeur vos expériences réelles
 - ✅ Facilite le contact avec les recruteurs
 - ✅ Démontre vos compétences techniques

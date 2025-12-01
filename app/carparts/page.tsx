@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Car, Package, Users, DollarSign, BarChart3, AlertCircle, Search } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'parts' | 'sales' | 'suppliers' | 'customers' | 'stock'
 
@@ -59,6 +60,12 @@ export default function CarpartsPage() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [showPartModal, setShowPartModal] = useState(false)
+  const [showSupplierModal, setShowSupplierModal] = useState(false)
+  const [showCustomerModal, setShowCustomerModal] = useState(false)
+  const [newPart, setNewPart] = useState({ name: '', partNumber: '', category: '', brand: '', price: 0, cost: 0, quantity: 0, minStock: 5, location: '', supplierId: '', supplierName: '' })
+  const [newSupplier, setNewSupplier] = useState({ name: '', contact: '', phone: '', email: '', address: '' })
+  const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', vehicleInfo: '' })
 
   useEffect(() => {
     const savedParts = localStorage.getItem('carparts-parts')
@@ -361,7 +368,10 @@ export default function CarpartsPage() {
                     className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full sm:w-64"
                   />
                 </div>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <button 
+                  onClick={() => setShowPartModal(true)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
                   Ajouter Pièce
                 </button>
               </div>
@@ -475,7 +485,10 @@ export default function CarpartsPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Fournisseurs</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowSupplierModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Fournisseur
               </button>
             </div>
@@ -517,7 +530,10 @@ export default function CarpartsPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowCustomerModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -603,9 +619,359 @@ export default function CarpartsPage() {
                 </table>
               </div>
             </div>
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showPartModal}
+        onClose={() => {
+          setShowPartModal(false)
+          setNewPart({ name: '', partNumber: '', category: '', brand: '', price: 0, cost: 0, quantity: 0, minStock: 5, location: '', supplierId: '', supplierName: '' })
+        }}
+        title="Ajouter Pièce"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom de la pièce</label>
+            <input
+              type="text"
+              value={newPart.name}
+              onChange={(e) => setNewPart({ ...newPart, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Filtre à Huile"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de pièce</label>
+              <input
+                type="text"
+                value={newPart.partNumber}
+                onChange={(e) => setNewPart({ ...newPart, partNumber: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: FIL-001"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newPart.category}
+                onChange={(e) => setNewPart({ ...newPart, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Filtres"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Marque</label>
+              <input
+                type="text"
+                value={newPart.brand}
+                onChange={(e) => setNewPart({ ...newPart, brand: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Mann Filter"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Emplacement</label>
+              <input
+                type="text"
+                value={newPart.location}
+                onChange={(e) => setNewPart({ ...newPart, location: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: A1-B2"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newPart.price}
+                onChange={(e) => setNewPart({ ...newPart, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Coût (DZD)</label>
+              <input
+                type="number"
+                value={newPart.cost}
+                onChange={(e) => setNewPart({ ...newPart, cost: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+              <input
+                type="number"
+                value={newPart.quantity}
+                onChange={(e) => setNewPart({ ...newPart, quantity: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Stock minimum</label>
+            <input
+              type="number"
+              value={newPart.minStock}
+              onChange={(e) => setNewPart({ ...newPart, minStock: parseInt(e.target.value) || 5 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+          {suppliers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Fournisseur</label>
+              <select
+                value={newPart.supplierId}
+                onChange={(e) => {
+                  const supplier = suppliers.find(s => s.id === e.target.value)
+                  setNewPart({ ...newPart, supplierId: e.target.value, supplierName: supplier?.name || '' })
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un fournisseur</option>
+                {suppliers.map(supplier => (
+                  <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowPartModal(false)
+                setNewPart({ name: '', partNumber: '', category: '', brand: '', price: 0, cost: 0, quantity: 0, minStock: 5, location: '', supplierId: '', supplierName: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newPart.name && newPart.partNumber && newPart.category && newPart.brand) {
+                  const part: Part = {
+                    id: Date.now().toString(),
+                    name: newPart.name,
+                    partNumber: newPart.partNumber,
+                    category: newPart.category,
+                    brand: newPart.brand,
+                    compatibleVehicles: [],
+                    price: newPart.price,
+                    cost: newPart.cost,
+                    quantity: newPart.quantity,
+                    minStock: newPart.minStock,
+                    location: newPart.location,
+                    supplierId: newPart.supplierId,
+                    supplierName: newPart.supplierName,
+                  }
+                  setParts([...parts, part])
+                  setShowPartModal(false)
+                  setNewPart({ name: '', partNumber: '', category: '', brand: '', price: 0, cost: 0, quantity: 0, minStock: 5, location: '', supplierId: '', supplierName: '' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSupplierModal}
+        onClose={() => {
+          setShowSupplierModal(false)
+          setNewSupplier({ name: '', contact: '', phone: '', email: '', address: '' })
+        }}
+        title="Nouveau Fournisseur"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newSupplier.name}
+              onChange={(e) => setNewSupplier({ ...newSupplier, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: AutoParts Plus"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Contact</label>
+            <input
+              type="text"
+              value={newSupplier.contact}
+              onChange={(e) => setNewSupplier({ ...newSupplier, contact: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Mohamed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newSupplier.phone}
+                onChange={(e) => setNewSupplier({ ...newSupplier, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newSupplier.email}
+                onChange={(e) => setNewSupplier({ ...newSupplier, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: contact@autoparts.com"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+            <input
+              type="text"
+              value={newSupplier.address}
+              onChange={(e) => setNewSupplier({ ...newSupplier, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: 123 Rue Didouche Mourad, Alger"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowSupplierModal(false)
+                setNewSupplier({ name: '', contact: '', phone: '', email: '', address: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newSupplier.name && newSupplier.phone) {
+                  const supplier: Supplier = {
+                    id: Date.now().toString(),
+                    name: newSupplier.name,
+                    contact: newSupplier.contact,
+                    phone: newSupplier.phone,
+                    email: newSupplier.email,
+                    address: newSupplier.address,
+                    totalOrders: 0,
+                    rating: 5,
+                  }
+                  setSuppliers([...suppliers, supplier])
+                  setShowSupplierModal(false)
+                  setNewSupplier({ name: '', contact: '', phone: '', email: '', address: '' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showCustomerModal}
+        onClose={() => {
+          setShowCustomerModal(false)
+          setNewCustomer({ name: '', phone: '', email: '', vehicleInfo: '' })
+        }}
+        title="Nouveau Client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newCustomer.name}
+              onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newCustomer.phone}
+                onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email (optionnel)</label>
+              <input
+                type="email"
+                value={newCustomer.email}
+                onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Véhicule (optionnel)</label>
+            <input
+              type="text"
+              value={newCustomer.vehicleInfo}
+              onChange={(e) => setNewCustomer({ ...newCustomer, vehicleInfo: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Renault Clio 2018"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowCustomerModal(false)
+                setNewCustomer({ name: '', phone: '', email: '', vehicleInfo: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCustomer.name && newCustomer.phone) {
+                  const customer: Customer = {
+                    id: Date.now().toString(),
+                    name: newCustomer.name,
+                    phone: newCustomer.phone,
+                    email: newCustomer.email || undefined,
+                    vehicleInfo: newCustomer.vehicleInfo || undefined,
+                    totalPurchases: 0,
+                  }
+                  setCustomers([...customers, customer])
+                  setShowCustomerModal(false)
+                  setNewCustomer({ name: '', phone: '', email: '', vehicleInfo: '' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

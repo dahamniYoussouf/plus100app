@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Film, Calendar, Ticket, Users, BarChart3, TrendingUp, Clock, Play } from 'lucide-react'
 
 type TabType = 'dashboard' | 'movies' | 'sessions' | 'bookings'
@@ -45,6 +46,8 @@ export default function CinemaPage() {
   const [movies, setMovies] = useState<Movie[]>([])
   const [sessions, setSessions] = useState<Session[]>([])
   const [bookings, setBookings] = useState<Booking[]>([])
+  const [showFilmModal, setShowFilmModal] = useState(false)
+  const [newFilm, setNewFilm] = useState({ title: '', genre: '', duration: 120, rating: '', releaseDate: '', director: '', status: 'now_showing' as 'now_showing' | 'coming_soon' | 'ended' })
 
   useEffect(() => {
     const savedMovies = localStorage.getItem('cinema-movies')
@@ -225,7 +228,10 @@ export default function CinemaPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Films</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => setShowFilmModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
                 Ajouter Film
               </button>
             </div>
@@ -354,6 +360,128 @@ export default function CinemaPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showFilmModal}
+        onClose={() => {
+          setShowFilmModal(false)
+          setNewFilm({ title: '', genre: '', duration: 120, rating: '', releaseDate: '', director: '', status: 'now_showing' })
+        }}
+        title="Ajouter Film"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+            <input
+              type="text"
+              value={newFilm.title}
+              onChange={(e) => setNewFilm({ ...newFilm, title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              placeholder="Ex: Le Roi Lion"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+              <input
+                type="text"
+                value={newFilm.genre}
+                onChange={(e) => setNewFilm({ ...newFilm, genre: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="Ex: Action, Drame"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Réalisateur</label>
+              <input
+                type="text"
+                value={newFilm.director}
+                onChange={(e) => setNewFilm({ ...newFilm, director: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="Ex: John Doe"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (min)</label>
+              <input
+                type="number"
+                value={newFilm.duration}
+                onChange={(e) => setNewFilm({ ...newFilm, duration: parseInt(e.target.value) || 120 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Note</label>
+              <input
+                type="text"
+                value={newFilm.rating}
+                onChange={(e) => setNewFilm({ ...newFilm, rating: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="Ex: PG-13"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+              <select
+                value={newFilm.status}
+                onChange={(e) => setNewFilm({ ...newFilm, status: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              >
+                <option value="now_showing">À l'affiche</option>
+                <option value="coming_soon">Bientôt</option>
+                <option value="ended">Terminé</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date de sortie</label>
+            <input
+              type="date"
+              value={newFilm.releaseDate}
+              onChange={(e) => setNewFilm({ ...newFilm, releaseDate: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowFilmModal(false)
+                setNewFilm({ title: '', genre: '', duration: 120, rating: '', releaseDate: '', director: '', status: 'now_showing' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newFilm.title && newFilm.genre && newFilm.director && newFilm.releaseDate) {
+                  const movie: Movie = {
+                    id: Date.now().toString(),
+                    title: newFilm.title,
+                    genre: newFilm.genre,
+                    duration: newFilm.duration,
+                    rating: newFilm.rating,
+                    releaseDate: new Date(newFilm.releaseDate),
+                    director: newFilm.director,
+                    status: newFilm.status,
+                  }
+                  setMovies([...movies, movie])
+                  setShowFilmModal(false)
+                  setNewFilm({ title: '', genre: '', duration: 120, rating: '', releaseDate: '', director: '', status: 'now_showing' })
+                }
+              }}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

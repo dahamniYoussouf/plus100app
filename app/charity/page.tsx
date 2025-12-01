@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Heart, DollarSign, Users, Package, BarChart3, TrendingUp, Calendar, FileText } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'donations' | 'beneficiaries' | 'projects' | 'volunteers'
 
@@ -55,6 +56,9 @@ export default function CharityPage() {
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([])
   const [projects, setProjects] = useState<Project[]>([])
   const [volunteers, setVolunteers] = useState<Volunteer[]>([])
+  const [showDonModal, setShowDonModal] = useState(false)
+  const [showBeneficiaireModal, setShowBeneficiaireModal] = useState(false)
+  const [showProjetModal, setShowProjetModal] = useState(false)
 
   useEffect(() => {
     const savedDonations = localStorage.getItem('charity-donations')
@@ -267,7 +271,10 @@ export default function CharityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Dons</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowDonModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau Don
               </button>
             </div>
@@ -312,7 +319,10 @@ export default function CharityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Bénéficiaires</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowBeneficiaireModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau Bénéficiaire
               </button>
             </div>
@@ -359,7 +369,10 @@ export default function CharityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Projets</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowProjetModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau Projet
               </button>
             </div>
@@ -445,6 +458,64 @@ export default function CharityPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showDonModal}
+        onClose={() => setShowDonModal(false)}
+        title="Nouveau Don"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau don.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowDonModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showBeneficiaireModal}
+        onClose={() => setShowBeneficiaireModal(false)}
+        title="Nouveau Bénéficiaire"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau bénéficiaire.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowBeneficiaireModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showProjetModal}
+        onClose={() => setShowProjetModal(false)}
+        title="Nouveau Projet"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra de créer un nouveau projet.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowProjetModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

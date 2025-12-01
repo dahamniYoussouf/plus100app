@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Baby, Calendar, Droplet, Moon, Heart, BarChart3, Clock, Activity } from 'lucide-react'
 
 type TabType = 'dashboard' | 'feeding' | 'sleep' | 'diapers' | 'health' | 'milestones'
@@ -54,6 +55,9 @@ export default function BabyPage() {
   const [feedings, setFeedings] = useState<Feeding[]>([])
   const [sleeps, setSleeps] = useState<Sleep[]>([])
   const [diapers, setDiapers] = useState<Diaper[]>([])
+  const [showRepasModal, setShowRepasModal] = useState(false)
+  const [showSommeilModal, setShowSommeilModal] = useState(false)
+  const [showEtapeModal, setShowEtapeModal] = useState(false)
   const [health, setHealth] = useState<Health[]>([])
   const [milestones, setMilestones] = useState<Milestone[]>([])
 
@@ -325,7 +329,10 @@ export default function BabyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Repas</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowRepasModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Repas
               </button>
             </div>
@@ -375,7 +382,10 @@ export default function BabyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Sommeil</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowSommeilModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Sommeil
               </button>
             </div>
@@ -507,7 +517,10 @@ export default function BabyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Étapes de Développement</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowEtapeModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Étape
               </button>
             </div>
@@ -544,9 +557,67 @@ export default function BabyPage() {
                 ))}
               </div>
             )}
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showRepasModal}
+        onClose={() => setShowRepasModal(false)}
+        title="Nouveau Repas"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau repas.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowRepasModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSommeilModal}
+        onClose={() => setShowSommeilModal(false)}
+        title="Nouveau Sommeil"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau sommeil.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowSommeilModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showEtapeModal}
+        onClose={() => setShowEtapeModal(false)}
+        title="Nouvelle Étape"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter une nouvelle étape.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowEtapeModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
