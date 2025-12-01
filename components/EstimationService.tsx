@@ -373,7 +373,7 @@ export default function EstimationService() {
             </div>
             <motion.button
               type="submit"
-              className="md:col-span-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3"
+              className="md:col-span-2 px-8 py-4 bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >

@@ -209,7 +209,7 @@ export default function CreateAgentPage() {
                     onClick={() => setStep(stepItem.id)}
                     className={`flex flex-col items-center gap-2 px-4 py-3 rounded-lg transition-all ${
                       isActive
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                        ? 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white shadow-lg'
                         : isCompleted
                         ? 'bg-green-100 text-green-700'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -1126,7 +1126,7 @@ export default function CreateAgentPage() {
                   }
                 }}
                 disabled={step === 1 && (!agent.name || !agent.description)}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white rounded-lg hover:from-green-700 hover:via-red-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
               >
                 {step < 10 ? 'Suivant' : 'Sauvegarder'}
                 {step === 10 && <Save size={20} />}

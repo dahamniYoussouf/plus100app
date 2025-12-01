@@ -292,7 +292,7 @@ export default function ProjectGallery() {
                     href={selectedProjectData.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg text-white hover:shadow-lg transition-all"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 via-red-600 to-blue-600 rounded-lg text-white hover:shadow-lg transition-all"
                   >
                     <ExternalLink size={18} />
                     Visiter le site

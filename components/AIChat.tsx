@@ -106,7 +106,7 @@ export default function AIChat() {
     return (
       <motion.button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg hover:shadow-xl transition-all z-50 flex items-center justify-center"
+        className="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-gradient-to-r from-green-600 via-red-600 to-blue-600 shadow-lg hover:shadow-xl transition-all z-50 flex items-center justify-center"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         initial={{ scale: 0 }}
@@ -129,7 +129,7 @@ export default function AIChat() {
       style={{ height: isMinimized ? 'auto' : '600px', maxHeight: '90vh' }}
     >
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-green-600 via-red-600 to-blue-600 p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Bot className="text-white" size={24} />
           <div>
@@ -167,14 +167,14 @@ export default function AIChat() {
                   className={`flex gap-3 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {message.sender === 'ai' && (
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-600 via-red-600 to-blue-600 flex items-center justify-center flex-shrink-0">
                       <Bot className="text-white" size={16} />
                     </div>
                   )}
                   <div
                     className={`max-w-[80%] rounded-2xl px-4 py-2 ${
                       message.sender === 'user'
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+                        ? 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white'
                         : 'bg-gray-100 text-gray-800'
                     }`}
                   >
@@ -195,7 +195,7 @@ export default function AIChat() {
                 animate={{ opacity: 1 }}
                 className="flex gap-3"
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-600 via-red-600 to-blue-600 flex items-center justify-center">
                   <Bot className="text-white" size={16} />
                 </div>
                 <div className="bg-gray-100 rounded-2xl px-4 py-2">
@@ -238,7 +238,7 @@ export default function AIChat() {
               <motion.button
                 onClick={handleSend}
                 disabled={!inputText.trim()}
-                className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-10 h-10 bg-gradient-to-r from-green-600 via-red-600 to-blue-600 rounded-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >

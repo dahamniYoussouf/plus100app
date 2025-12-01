@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import LanguageSwitcher from './LanguageSwitcher'
 
 // Items de navigation - Facilement modifiable
@@ -60,8 +61,15 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-xl font-bold text-gray-900">
-              Plus 100 Application Made In Algeria
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/images/logo .png"
+                alt="Logo"
+                width={120}
+                height={40}
+                className="h-10 w-auto object-contain"
+                priority
+              />
             </Link>
           </div>
           <div className="flex items-center gap-4">

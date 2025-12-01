@@ -211,7 +211,7 @@ export default function ApplicationsShowcase() {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
                   selectedCategory === category
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
+                    ? 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white shadow-lg scale-105'
                     : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
                 }`}
               >

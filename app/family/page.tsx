@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Modal from '@/components/Modal'
-import { Users, Calendar, CheckCircle, Gift, BarChart3, Clock, MessageSquare, ShoppingCart } from 'lucide-react'
+import { Users, Calendar, CheckCircle, Gift, BarChart3, Clock, MessageSquare, ShoppingCart, Edit2, Trash2, Plus } from 'lucide-react'
 
 type TabType = 'dashboard' | 'members' | 'calendar' | 'tasks' | 'shopping' | 'events'
 
@@ -60,6 +60,11 @@ export default function FamilyPage() {
   const [showTaskModal, setShowTaskModal] = useState(false)
   const [showEventModal, setShowEventModal] = useState(false)
   const [showShoppingModal, setShowShoppingModal] = useState(false)
+  const [editingMember, setEditingMember] = useState<FamilyMember | null>(null)
+  const [editingTask, setEditingTask] = useState<Task | null>(null)
+  const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
+  const [editingShopping, setEditingShopping] = useState<ShoppingItem | null>(null)
+  const [deleteConfirm, setDeleteConfirm] = useState<{ type: string, id: string } | null>(null)
   const [newMember, setNewMember] = useState({ name: '', role: 'parent' as 'parent' | 'child' | 'grandparent' | 'other', email: '', phone: '', dateOfBirth: '' })
   const [newTask, setNewTask] = useState({ title: '', description: '', assignedTo: [] as string[], dueDate: '', priority: 'medium' as 'low' | 'medium' | 'high', category: 'chores' as 'chores' | 'shopping' | 'appointments' | 'other' })
   const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', time: '', participants: [] as string[], type: 'event' as 'appointment' | 'event' | 'reminder' | 'birthday', recurring: '' as '' | 'daily' | 'weekly' | 'monthly' | 'yearly' })
@@ -238,6 +243,89 @@ export default function FamilyPage() {
   const upcomingEvents = events.filter(e => new Date(e.date) >= new Date()).length
   const pendingShopping = shopping.filter(s => s.status === 'pending').length
 
+  // CRUD Handlers
+  const handleDeleteMember = (id: string) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce membre?')) {
+      setMembers(members.filter(m => m.id !== id))
+    }
+  }
+
+  const handleDeleteTask = (id: string) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette tâche?')) {
+      setTasks(tasks.filter(t => t.id !== id))
+    }
+  }
+
+  const handleDeleteEvent = (id: string) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet événement?')) {
+      setEvents(events.filter(e => e.id !== id))
+    }
+  }
+
+  const handleDeleteShopping = (id: string) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet article?')) {
+      setShopping(shopping.filter(s => s.id !== id))
+    }
+  }
+
+  const handleUpdateTaskStatus = (id: string, status: Task['status']) => {
+    setTasks(tasks.map(t => t.id === id ? { ...t, status } : t))
+  }
+
+  const handleUpdateShoppingStatus = (id: string, status: ShoppingItem['status']) => {
+    setShopping(shopping.map(s => s.id === id ? { ...s, status } : s))
+  }
+
+  const handleEditMember = (member: FamilyMember) => {
+    setEditingMember(member)
+    setNewMember({
+      name: member.name,
+      role: member.role,
+      email: member.email || '',
+      phone: member.phone || '',
+      dateOfBirth: member.dateOfBirth ? new Date(member.dateOfBirth).toISOString().split('T')[0] : ''
+    })
+    setShowMemberModal(true)
+  }
+
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task)
+    setNewTask({
+      title: task.title,
+      description: task.description || '',
+      assignedTo: task.assignedTo,
+      dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '',
+      priority: task.priority,
+      category: task.category
+    })
+    setShowTaskModal(true)
+  }
+
+  const handleEditEvent = (event: CalendarEvent) => {
+    setEditingEvent(event)
+    setNewEvent({
+      title: event.title,
+      description: event.description || '',
+      date: new Date(event.date).toISOString().split('T')[0],
+      time: event.time || '',
+      participants: event.participants,
+      type: event.type,
+      recurring: event.recurring || ''
+    })
+    setShowEventModal(true)
+  }
+
+  const handleEditShopping = (item: ShoppingItem) => {
+    setEditingShopping(item)
+    setNewShoppingItem({
+      name: item.name,
+      quantity: item.quantity || 1,
+      category: item.category,
+      priority: item.priority
+    })
+    setShowShoppingModal(true)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
@@ -344,9 +432,14 @@ export default function FamilyPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Membres de la Famille</h2>
               <button 
-                onClick={() => setShowMemberModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+                onClick={() => {
+                  setEditingMember(null)
+                  setNewMember({ name: '', role: 'parent', email: '', phone: '', dateOfBirth: '' })
+                  setShowMemberModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2 justify-center"
               >
+                <Plus className="w-4 h-4" />
                 Ajouter Membre
               </button>
             </div>
@@ -357,13 +450,29 @@ export default function FamilyPage() {
                   : null
                 return (
                   <div key={member.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center">
-                        <Users className="w-6 h-6 text-pink-600" />
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center">
+                          <Users className="w-6 h-6 text-pink-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{member.name}</h3>
+                          <p className="text-xs text-gray-500 capitalize">{member.role}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{member.name}</h3>
-                        <p className="text-xs text-gray-500 capitalize">{member.role}</p>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleEditMember(member)}
+                          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        >
+                          <Edit2 className="w-4 h-4 text-blue-600" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteMember(member.id)}
+                          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4 text-red-600" />
+                        </button>
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -383,9 +492,14 @@ export default function FamilyPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Tâches</h2>
               <button 
-                onClick={() => setShowTaskModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+                onClick={() => {
+                  setEditingTask(null)
+                  setNewTask({ title: '', description: '', assignedTo: [], dueDate: '', priority: 'medium', category: 'chores' })
+                  setShowTaskModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2 justify-center"
               >
+                <Plus className="w-4 h-4" />
                 Nouvelle Tâche
               </button>
             </div>
@@ -407,16 +521,23 @@ export default function FamilyPage() {
                             <p className="text-sm text-gray-600 mt-1">{task.description}</p>
                           )}
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          task.status === 'completed' ? 'bg-green-100 text-green-800' :
-                          task.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                          'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {task.status === 'completed' ? 'Terminé' :
-                           task.status === 'in_progress' ? 'En cours' : 'En attente'}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={task.status}
+                            onChange={(e) => handleUpdateTaskStatus(task.id, e.target.value as Task['status'])}
+                            className={`px-3 py-1 rounded-full text-xs font-medium border-0 ${
+                              task.status === 'completed' ? 'bg-green-100 text-green-800' :
+                              task.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+                              'bg-yellow-100 text-yellow-800'
+                            }`}
+                          >
+                            <option value="pending">En attente</option>
+                            <option value="in_progress">En cours</option>
+                            <option value="completed">Terminé</option>
+                          </select>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-4 text-sm">
+                      <div className="flex items-center gap-4 text-sm mb-3">
                         <span className={`px-2 py-0.5 rounded text-xs ${
                           task.priority === 'high' ? 'bg-red-100 text-red-800' :
                           task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
@@ -432,6 +553,22 @@ export default function FamilyPage() {
                           </span>
                         )}
                       </div>
+                      <div className="flex gap-2 pt-3 border-t border-gray-200">
+                        <button
+                          onClick={() => handleEditTask(task)}
+                          className="flex-1 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 text-sm"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                          Modifier
+                        </button>
+                        <button
+                          onClick={() => handleDeleteTask(task.id)}
+                          className="flex-1 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center gap-2 text-sm"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Supprimer
+                        </button>
+                      </div>
                     </div>
                   )
                 })}
@@ -445,9 +582,14 @@ export default function FamilyPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Calendrier</h2>
               <button 
-                onClick={() => setShowEventModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+                onClick={() => {
+                  setEditingEvent(null)
+                  setNewEvent({ title: '', description: '', date: '', time: '', participants: [], type: 'event', recurring: '' })
+                  setShowEventModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2 justify-center"
               >
+                <Plus className="w-4 h-4" />
                 Nouvel Événement
               </button>
             </div>
@@ -463,7 +605,7 @@ export default function FamilyPage() {
                   return (
                     <div key={event.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                       <div className="flex items-start justify-between mb-3">
-                        <div>
+                        <div className="flex-1">
                           <h3 className="font-semibold text-gray-900 text-lg">{event.title}</h3>
                           {event.description && (
                             <p className="text-sm text-gray-600 mt-1">{event.description}</p>
@@ -473,7 +615,7 @@ export default function FamilyPage() {
                           {event.type}
                         </span>
                       </div>
-                      <div className="space-y-2 text-sm">
+                      <div className="space-y-2 text-sm mb-3">
                         <p className="text-gray-600">
                           📅 {new Date(event.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                           {event.time && ` à ${event.time}`}
@@ -482,6 +624,22 @@ export default function FamilyPage() {
                         {event.recurring && (
                           <p className="text-xs text-gray-500">🔄 Récurrent: {event.recurring}</p>
                         )}
+                      </div>
+                      <div className="flex gap-2 pt-3 border-t border-gray-200">
+                        <button
+                          onClick={() => handleEditEvent(event)}
+                          className="flex-1 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 text-sm"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                          Modifier
+                        </button>
+                        <button
+                          onClick={() => handleDeleteEvent(event.id)}
+                          className="flex-1 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center gap-2 text-sm"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Supprimer
+                        </button>
                       </div>
                     </div>
                   )
@@ -496,9 +654,14 @@ export default function FamilyPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Liste de Courses</h2>
               <button 
-                onClick={() => setShowShoppingModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+                onClick={() => {
+                  setEditingShopping(null)
+                  setNewShoppingItem({ name: '', quantity: 1, category: '', priority: 'medium' })
+                  setShowShoppingModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2 justify-center"
               >
+                <Plus className="w-4 h-4" />
                 Ajouter Article
               </button>
             </div>
@@ -512,18 +675,18 @@ export default function FamilyPage() {
                 {shopping.map((item) => {
                   const addedByMember = members.find(m => m.id === item.addedBy)
                   return (
-                    <div key={item.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
+                    <div key={item.id} className={`bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 ${item.status === 'purchased' ? 'opacity-60' : ''}`}>
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3">
                             <input
                               type="checkbox"
                               checked={item.status === 'purchased'}
-                              onChange={() => {}}
-                              className="w-5 h-5 text-pink-600 rounded"
+                              onChange={(e) => handleUpdateShoppingStatus(item.id, e.target.checked ? 'purchased' : 'pending')}
+                              className="w-5 h-5 text-pink-600 rounded cursor-pointer"
                             />
                             <div>
-                              <h3 className="font-semibold text-gray-900">{item.name}</h3>
+                              <h3 className={`font-semibold ${item.status === 'purchased' ? 'line-through text-gray-500' : 'text-gray-900'}`}>{item.name}</h3>
                               {item.quantity && (
                                 <p className="text-sm text-gray-500">Quantité: {item.quantity}</p>
                               )}
@@ -536,14 +699,30 @@ export default function FamilyPage() {
                             )}
                           </div>
                         </div>
-                        <span className={`px-2 py-1 rounded text-xs ${
-                          item.priority === 'high' ? 'bg-red-100 text-red-800' :
-                          item.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
-                          {item.priority === 'high' ? 'Haute' :
-                           item.priority === 'medium' ? 'Moyenne' : 'Basse'}
-                        </span>
+                        <div className="flex flex-col items-end gap-2">
+                          <span className={`px-2 py-1 rounded text-xs ${
+                            item.priority === 'high' ? 'bg-red-100 text-red-800' :
+                            item.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {item.priority === 'high' ? 'Haute' :
+                             item.priority === 'medium' ? 'Moyenne' : 'Basse'}
+                          </span>
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => handleEditShopping(item)}
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                              <Edit2 className="w-4 h-4 text-blue-600" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteShopping(item.id)}
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )
@@ -566,9 +745,10 @@ export default function FamilyPage() {
         isOpen={showMemberModal}
         onClose={() => {
           setShowMemberModal(false)
+          setEditingMember(null)
           setNewMember({ name: '', role: 'parent', email: '', phone: '', dateOfBirth: '' })
         }}
-        title="Ajouter Membre"
+        title={editingMember ? "Modifier Membre" : "Ajouter Membre"}
         size="lg"
       >
         <div className="space-y-4">
@@ -641,22 +821,34 @@ export default function FamilyPage() {
             <button
               onClick={() => {
                 if (newMember.name) {
-                  const member: FamilyMember = {
-                    id: Date.now().toString(),
-                    name: newMember.name,
-                    role: newMember.role,
-                    email: newMember.email || undefined,
-                    phone: newMember.phone || undefined,
-                    dateOfBirth: newMember.dateOfBirth ? new Date(newMember.dateOfBirth) : undefined,
+                  if (editingMember) {
+                    setMembers(members.map(m => m.id === editingMember.id ? {
+                      ...m,
+                      name: newMember.name,
+                      role: newMember.role,
+                      email: newMember.email || undefined,
+                      phone: newMember.phone || undefined,
+                      dateOfBirth: newMember.dateOfBirth ? new Date(newMember.dateOfBirth) : undefined,
+                    } : m))
+                  } else {
+                    const member: FamilyMember = {
+                      id: Date.now().toString(),
+                      name: newMember.name,
+                      role: newMember.role,
+                      email: newMember.email || undefined,
+                      phone: newMember.phone || undefined,
+                      dateOfBirth: newMember.dateOfBirth ? new Date(newMember.dateOfBirth) : undefined,
+                    }
+                    setMembers([...members, member])
                   }
-                  setMembers([...members, member])
                   setShowMemberModal(false)
+                  setEditingMember(null)
                   setNewMember({ name: '', role: 'parent', email: '', phone: '', dateOfBirth: '' })
                 }
               }}
               className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
             >
-              Ajouter
+              {editingMember ? 'Enregistrer' : 'Ajouter'}
             </button>
           </div>
         </div>
@@ -666,9 +858,10 @@ export default function FamilyPage() {
         isOpen={showTaskModal}
         onClose={() => {
           setShowTaskModal(false)
+          setEditingTask(null)
           setNewTask({ title: '', description: '', assignedTo: [], dueDate: '', priority: 'medium', category: 'chores' })
         }}
-        title="Nouvelle Tâche"
+        title={editingTask ? "Modifier Tâche" : "Nouvelle Tâche"}
         size="lg"
       >
         <div className="space-y-4">
@@ -765,26 +958,39 @@ export default function FamilyPage() {
             <button
               onClick={() => {
                 if (newTask.title && newTask.assignedTo.length > 0) {
-                  const task: Task = {
-                    id: Date.now().toString(),
-                    title: newTask.title,
-                    description: newTask.description || undefined,
-                    assignedTo: newTask.assignedTo,
-                    dueDate: newTask.dueDate ? new Date(newTask.dueDate) : undefined,
-                    priority: newTask.priority,
-                    status: 'pending',
-                    category: newTask.category,
-                    createdBy: members[0]?.id || '',
-                    createdAt: new Date(),
+                  if (editingTask) {
+                    setTasks(tasks.map(t => t.id === editingTask.id ? {
+                      ...t,
+                      title: newTask.title,
+                      description: newTask.description || undefined,
+                      assignedTo: newTask.assignedTo,
+                      dueDate: newTask.dueDate ? new Date(newTask.dueDate) : undefined,
+                      priority: newTask.priority,
+                      category: newTask.category,
+                    } : t))
+                  } else {
+                    const task: Task = {
+                      id: Date.now().toString(),
+                      title: newTask.title,
+                      description: newTask.description || undefined,
+                      assignedTo: newTask.assignedTo,
+                      dueDate: newTask.dueDate ? new Date(newTask.dueDate) : undefined,
+                      priority: newTask.priority,
+                      status: 'pending',
+                      category: newTask.category,
+                      createdBy: members[0]?.id || '',
+                      createdAt: new Date(),
+                    }
+                    setTasks([...tasks, task])
                   }
-                  setTasks([...tasks, task])
                   setShowTaskModal(false)
+                  setEditingTask(null)
                   setNewTask({ title: '', description: '', assignedTo: [], dueDate: '', priority: 'medium', category: 'chores' })
                 }
               }}
               className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
             >
-              Ajouter
+              {editingTask ? 'Enregistrer' : 'Ajouter'}
             </button>
           </div>
         </div>
@@ -794,9 +1000,10 @@ export default function FamilyPage() {
         isOpen={showEventModal}
         onClose={() => {
           setShowEventModal(false)
+          setEditingEvent(null)
           setNewEvent({ title: '', description: '', date: '', time: '', participants: [], type: 'event', recurring: '' })
         }}
-        title="Nouvel Événement"
+        title={editingEvent ? "Modifier Événement" : "Nouvel Événement"}
         size="lg"
       >
         <div className="space-y-4">
@@ -906,24 +1113,38 @@ export default function FamilyPage() {
             <button
               onClick={() => {
                 if (newEvent.title && newEvent.date && newEvent.participants.length > 0) {
-                  const event: CalendarEvent = {
-                    id: Date.now().toString(),
-                    title: newEvent.title,
-                    description: newEvent.description || undefined,
-                    date: new Date(newEvent.date),
-                    time: newEvent.time || undefined,
-                    participants: newEvent.participants,
-                    type: newEvent.type,
-                    recurring: newEvent.recurring || undefined,
+                  if (editingEvent) {
+                    setEvents(events.map(e => e.id === editingEvent.id ? {
+                      ...e,
+                      title: newEvent.title,
+                      description: newEvent.description || undefined,
+                      date: new Date(newEvent.date),
+                      time: newEvent.time || undefined,
+                      participants: newEvent.participants,
+                      type: newEvent.type,
+                      recurring: newEvent.recurring || undefined,
+                    } : e))
+                  } else {
+                    const event: CalendarEvent = {
+                      id: Date.now().toString(),
+                      title: newEvent.title,
+                      description: newEvent.description || undefined,
+                      date: new Date(newEvent.date),
+                      time: newEvent.time || undefined,
+                      participants: newEvent.participants,
+                      type: newEvent.type,
+                      recurring: newEvent.recurring || undefined,
+                    }
+                    setEvents([...events, event])
                   }
-                  setEvents([...events, event])
                   setShowEventModal(false)
+                  setEditingEvent(null)
                   setNewEvent({ title: '', description: '', date: '', time: '', participants: [], type: 'event', recurring: '' })
                 }
               }}
               className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
             >
-              Ajouter
+              {editingEvent ? 'Enregistrer' : 'Ajouter'}
             </button>
           </div>
         </div>
@@ -933,9 +1154,10 @@ export default function FamilyPage() {
         isOpen={showShoppingModal}
         onClose={() => {
           setShowShoppingModal(false)
+          setEditingShopping(null)
           setNewShoppingItem({ name: '', quantity: 1, category: '', priority: 'medium' })
         }}
-        title="Ajouter Article"
+        title={editingShopping ? "Modifier Article" : "Ajouter Article"}
         size="lg"
       >
         <div className="space-y-4">
@@ -996,23 +1218,34 @@ export default function FamilyPage() {
             <button
               onClick={() => {
                 if (newShoppingItem.name) {
-                  const item: ShoppingItem = {
-                    id: Date.now().toString(),
-                    name: newShoppingItem.name,
-                    quantity: newShoppingItem.quantity,
-                    category: newShoppingItem.category,
-                    addedBy: members[0]?.id || '',
-                    status: 'pending',
-                    priority: newShoppingItem.priority,
+                  if (editingShopping) {
+                    setShopping(shopping.map(s => s.id === editingShopping.id ? {
+                      ...s,
+                      name: newShoppingItem.name,
+                      quantity: newShoppingItem.quantity,
+                      category: newShoppingItem.category,
+                      priority: newShoppingItem.priority,
+                    } : s))
+                  } else {
+                    const item: ShoppingItem = {
+                      id: Date.now().toString(),
+                      name: newShoppingItem.name,
+                      quantity: newShoppingItem.quantity,
+                      category: newShoppingItem.category,
+                      addedBy: members[0]?.id || '',
+                      status: 'pending',
+                      priority: newShoppingItem.priority,
+                    }
+                    setShopping([...shopping, item])
                   }
-                  setShopping([...shopping, item])
                   setShowShoppingModal(false)
+                  setEditingShopping(null)
                   setNewShoppingItem({ name: '', quantity: 1, category: '', priority: 'medium' })
                 }
               }}
               className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
             >
-              Ajouter
+              {editingShopping ? 'Enregistrer' : 'Ajouter'}
             </button>
           </div>
         </div>

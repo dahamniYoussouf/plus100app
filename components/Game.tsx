@@ -214,7 +214,7 @@ export default function Game() {
                   onClick={() => setDifficulty(level)}
                   className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
                     difficulty === level
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white shadow-lg'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                   whileHover={{ scale: 1.05 }}
@@ -226,7 +226,7 @@ export default function Game() {
             </div>
             <motion.button
               onClick={initializeGame}
-              className="w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all"
+              className="w-full px-8 py-4 bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -260,7 +260,7 @@ export default function Game() {
                   transition={{ duration: 0.3 }}
                 >
                   {card.flipped || card.matched ? (
-                    <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex flex-col items-center justify-center text-white p-4 border-2 border-blue-300">
+                    <div className="w-full h-full bg-gradient-to-br from-green-600 via-red-600 to-blue-600 flex flex-col items-center justify-center text-white p-4 border-2 border-blue-300">
                       <div className="text-4xl mb-2">{card.icon}</div>
                       <div className="text-sm font-bold text-center">{card.tech}</div>
                     </div>
@@ -324,7 +324,7 @@ export default function Game() {
                       <span className="text-gray-600">Temps :</span>
                       <span className="font-bold text-gray-800">{formatTime(time)}</span>
                     </div>
-                    <div className="flex justify-between items-center bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-3 text-white">
+                    <div className="flex justify-between items-center bg-gradient-to-r from-green-600 via-red-600 to-blue-600 rounded-lg p-3 text-white">
                       <span>Score Final :</span>
                       <span className="font-bold text-xl">{score}</span>
                     </div>
@@ -333,7 +333,7 @@ export default function Game() {
                   <div className="flex gap-4">
                     <motion.button
                       onClick={initializeGame}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold"
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white rounded-lg font-semibold"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >

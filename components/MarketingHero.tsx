@@ -306,7 +306,7 @@ export default function MarketingHero() {
                 className={`flex-1 px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-3 transition-all ${
                   isListening
                     ? 'bg-red-500 hover:bg-red-600 text-white'
-                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg'
+                    : 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white hover:shadow-lg'
                 }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

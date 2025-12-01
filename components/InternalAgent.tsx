@@ -537,7 +537,7 @@ export default function InternalAgent() {
     return (
       <motion.button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg hover:shadow-xl transition-all z-50 flex items-center justify-center"
+        className="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-gradient-to-r from-green-600 via-red-600 to-blue-600 shadow-lg hover:shadow-xl transition-all z-50 flex items-center justify-center"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         initial={{ scale: 0 }}
@@ -560,7 +560,7 @@ export default function InternalAgent() {
       style={{ height: isMinimized ? 'auto' : '700px', maxHeight: '90vh' }}
     >
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-green-600 via-red-600 to-blue-600 p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <motion.div
             animate={{ rotate: robotState === 'thinking' ? [0, 10, -10, 0] : 0 }}
@@ -777,7 +777,7 @@ export default function InternalAgent() {
                 <motion.button
                   onClick={handleSend}
                   disabled={!inputText.trim() || isSearching || isApplying}
-                  className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg disabled:opacity-50 flex items-center gap-2"
+                  className="px-4 py-2 bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white rounded-lg disabled:opacity-50 flex items-center gap-2"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

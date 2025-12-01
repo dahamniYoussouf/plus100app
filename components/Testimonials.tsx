@@ -198,7 +198,7 @@ export default function Testimonials() {
           >
             <motion.button
               onClick={() => setShowForm(true)}
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+              className="px-8 py-3 bg-gradient-to-r from-green-600 via-red-600 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -272,7 +272,7 @@ export default function Testimonials() {
               <div className="flex gap-4">
                 <motion.button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 via-red-600 to-blue-600 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
