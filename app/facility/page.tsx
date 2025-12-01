@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Building2, Calendar, Users, Wrench, BarChart3, AlertCircle, CheckCircle, Clock } from 'lucide-react'
 
 type TabType = 'dashboard' | 'maintenance' | 'bookings' | 'equipment' | 'staff'
@@ -58,6 +59,12 @@ export default function FacilityPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [equipment, setEquipment] = useState<Equipment[]>([])
   const [staff, setStaff] = useState<Staff[]>([])
+  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false)
+  const [showBookingModal, setShowBookingModal] = useState(false)
+  const [showStaffModal, setShowStaffModal] = useState(false)
+  const [newMaintenance, setNewMaintenance] = useState({ title: '', description: '', facility: '', priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent', assignedTo: '', scheduledDate: '', cost: 0 })
+  const [newBooking, setNewBooking] = useState({ facilityName: '', bookedBy: '', contactPhone: '', date: '', startTime: '', endTime: '', purpose: '', attendees: 1 })
+  const [newStaff, setNewStaff] = useState({ name: '', role: '', department: '', email: '', phone: '' })
 
   useEffect(() => {
     const savedMaintenances = localStorage.getItem('facility-maintenances')
@@ -356,7 +363,10 @@ export default function FacilityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Maintenances</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowMaintenanceModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Nouvelle Maintenance
               </button>
             </div>
@@ -420,7 +430,10 @@ export default function FacilityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Réservations</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowBookingModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Nouvelle Réservation
               </button>
             </div>
@@ -512,7 +525,10 @@ export default function FacilityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Personnel</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowStaffModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Nouveau Membre
               </button>
             </div>
@@ -538,6 +554,358 @@ export default function FacilityPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showMaintenanceModal}
+        onClose={() => {
+          setShowMaintenanceModal(false)
+          setNewMaintenance({ title: '', description: '', facility: '', priority: 'medium', assignedTo: '', scheduledDate: '', cost: 0 })
+        }}
+        title="Nouvelle Maintenance"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+            <input
+              type="text"
+              value={newMaintenance.title}
+              onChange={(e) => setNewMaintenance({ ...newMaintenance, title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Titre de la maintenance"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newMaintenance.description}
+              onChange={(e) => setNewMaintenance({ ...newMaintenance, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description de la maintenance..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Installation</label>
+              <input
+                type="text"
+                value={newMaintenance.facility}
+                onChange={(e) => setNewMaintenance({ ...newMaintenance, facility: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: Hall Principal"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
+              <select
+                value={newMaintenance.priority}
+                onChange={(e) => setNewMaintenance({ ...newMaintenance, priority: e.target.value as 'low' | 'medium' | 'high' | 'urgent' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              >
+                <option value="low">Basse</option>
+                <option value="medium">Moyenne</option>
+                <option value="high">Élevée</option>
+                <option value="urgent">Urgente</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Assigné à</label>
+              <input
+                type="text"
+                value={newMaintenance.assignedTo}
+                onChange={(e) => setNewMaintenance({ ...newMaintenance, assignedTo: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Nom de la personne"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date prévue</label>
+              <input
+                type="date"
+                value={newMaintenance.scheduledDate}
+                onChange={(e) => setNewMaintenance({ ...newMaintenance, scheduledDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Coût (DZD, optionnel)</label>
+            <input
+              type="number"
+              value={newMaintenance.cost}
+              onChange={(e) => setNewMaintenance({ ...newMaintenance, cost: parseFloat(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMaintenanceModal(false)
+                setNewMaintenance({ title: '', description: '', facility: '', priority: 'medium', assignedTo: '', scheduledDate: '', cost: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMaintenance.title && newMaintenance.description && newMaintenance.facility && newMaintenance.assignedTo && newMaintenance.scheduledDate) {
+                  const maintenance: Maintenance = {
+                    id: Date.now().toString(),
+                    title: newMaintenance.title,
+                    description: newMaintenance.description,
+                    facility: newMaintenance.facility,
+                    priority: newMaintenance.priority,
+                    status: 'pending',
+                    assignedTo: newMaintenance.assignedTo,
+                    scheduledDate: new Date(newMaintenance.scheduledDate),
+                    cost: newMaintenance.cost > 0 ? newMaintenance.cost : undefined,
+                  }
+                  setMaintenances([...maintenances, maintenance])
+                  setShowMaintenanceModal(false)
+                  setNewMaintenance({ title: '', description: '', facility: '', priority: 'medium', assignedTo: '', scheduledDate: '', cost: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showBookingModal}
+        onClose={() => {
+          setShowBookingModal(false)
+          setNewBooking({ facilityName: '', bookedBy: '', contactPhone: '', date: '', startTime: '', endTime: '', purpose: '', attendees: 1 })
+        }}
+        title="Nouvelle Réservation"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Installation</label>
+            <input
+              type="text"
+              value={newBooking.facilityName}
+              onChange={(e) => setNewBooking({ ...newBooking, facilityName: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Ex: Salle de conférence A"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Réservé par</label>
+              <input
+                type="text"
+                value={newBooking.bookedBy}
+                onChange={(e) => setNewBooking({ ...newBooking, bookedBy: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Nom"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="text"
+                value={newBooking.contactPhone}
+                onChange={(e) => setNewBooking({ ...newBooking, contactPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="+213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+            <input
+              type="date"
+              value={newBooking.date}
+              onChange={(e) => setNewBooking({ ...newBooking, date: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure de début</label>
+              <input
+                type="time"
+                value={newBooking.startTime}
+                onChange={(e) => setNewBooking({ ...newBooking, startTime: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure de fin</label>
+              <input
+                type="time"
+                value={newBooking.endTime}
+                onChange={(e) => setNewBooking({ ...newBooking, endTime: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Objectif</label>
+            <input
+              type="text"
+              value={newBooking.purpose}
+              onChange={(e) => setNewBooking({ ...newBooking, purpose: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Ex: Réunion d'équipe"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de participants</label>
+            <input
+              type="number"
+              value={newBooking.attendees}
+              onChange={(e) => setNewBooking({ ...newBooking, attendees: parseInt(e.target.value) || 1 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              min="1"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowBookingModal(false)
+                setNewBooking({ facilityName: '', bookedBy: '', contactPhone: '', date: '', startTime: '', endTime: '', purpose: '', attendees: 1 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newBooking.facilityName && newBooking.bookedBy && newBooking.contactPhone && newBooking.date && newBooking.startTime && newBooking.endTime && newBooking.purpose) {
+                  const booking: Booking = {
+                    id: Date.now().toString(),
+                    facilityName: newBooking.facilityName,
+                    bookedBy: newBooking.bookedBy,
+                    contactPhone: newBooking.contactPhone,
+                    date: new Date(newBooking.date),
+                    startTime: newBooking.startTime,
+                    endTime: newBooking.endTime,
+                    purpose: newBooking.purpose,
+                    status: 'pending',
+                    attendees: newBooking.attendees,
+                  }
+                  setBookings([...bookings, booking])
+                  setShowBookingModal(false)
+                  setNewBooking({ facilityName: '', bookedBy: '', contactPhone: '', date: '', startTime: '', endTime: '', purpose: '', attendees: 1 })
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showStaffModal}
+        onClose={() => {
+          setShowStaffModal(false)
+          setNewStaff({ name: '', role: '', department: '', email: '', phone: '' })
+        }}
+        title="Nouveau Membre"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+            <input
+              type="text"
+              value={newStaff.name}
+              onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Nom complet"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Rôle</label>
+              <input
+                type="text"
+                value={newStaff.role}
+                onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: Technicien"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Département</label>
+              <input
+                type="text"
+                value={newStaff.department}
+                onChange={(e) => setNewStaff({ ...newStaff, department: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: Maintenance"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newStaff.email}
+                onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="email@example.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="text"
+                value={newStaff.phone}
+                onChange={(e) => setNewStaff({ ...newStaff, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="+213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowStaffModal(false)
+                setNewStaff({ name: '', role: '', department: '', email: '', phone: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newStaff.name && newStaff.role && newStaff.department && newStaff.email && newStaff.phone) {
+                  const staffMember: Staff = {
+                    id: Date.now().toString(),
+                    name: newStaff.name,
+                    role: newStaff.role,
+                    department: newStaff.department,
+                    email: newStaff.email,
+                    phone: newStaff.phone,
+                    activeTasks: 0,
+                  }
+                  setStaff([...staff, staffMember])
+                  setShowStaffModal(false)
+                  setNewStaff({ name: '', role: '', department: '', email: '', phone: '' })
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

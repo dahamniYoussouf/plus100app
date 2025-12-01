@@ -50,8 +50,10 @@ export default function FinancePage() {
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [showAccountModal, setShowAccountModal] = useState(false)
   const [showBudgetModal, setShowBudgetModal] = useState(false)
+  const [showTransactionModal, setShowTransactionModal] = useState(false)
   const [newAccount, setNewAccount] = useState({ name: '', type: 'checking' as 'checking' | 'savings' | 'investment' | 'credit', balance: 0, currency: 'DZD', bank: '', accountNumber: '' })
   const [newBudget, setNewBudget] = useState({ name: '', category: '', amount: 0, period: 'monthly' as 'monthly' | 'quarterly' | 'yearly', startDate: '' })
+  const [newTransaction, setNewTransaction] = useState({ accountId: '', type: 'income' as 'income' | 'expense', amount: 0, description: '', category: '', date: '', paymentMethod: 'cash' as 'cash' | 'card' | 'transfer' | 'check', tags: '' })
 
   useEffect(() => {
     const savedAccounts = localStorage.getItem('finance-accounts')
@@ -405,7 +407,10 @@ export default function FinancePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Transactions</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowTransactionModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouvelle Transaction
               </button>
             </div>
@@ -784,6 +789,156 @@ export default function FinancePage() {
                   setBudgets([...budgets, budget])
                   setShowBudgetModal(false)
                   setNewBudget({ name: '', category: '', amount: 0, period: 'monthly', startDate: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showTransactionModal}
+        onClose={() => {
+          setShowTransactionModal(false)
+          setNewTransaction({ accountId: '', type: 'income', amount: 0, description: '', category: '', date: '', paymentMethod: 'cash', tags: '' })
+        }}
+        title="Nouvelle Transaction"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {accounts.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Compte</label>
+              <select
+                value={newTransaction.accountId}
+                onChange={(e) => setNewTransaction({ ...newTransaction, accountId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un compte</option>
+                {accounts.map(account => (
+                  <option key={account.id} value={account.id}>{account.name} - {account.balance.toLocaleString()} {account.currency}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select
+              value={newTransaction.type}
+              onChange={(e) => setNewTransaction({ ...newTransaction, type: e.target.value as 'income' | 'expense' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            >
+              <option value="income">Revenu</option>
+              <option value="expense">Dépense</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <input
+              type="text"
+              value={newTransaction.description}
+              onChange={(e) => setNewTransaction({ ...newTransaction, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Salaire, Achat matériel..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Montant (DZD)</label>
+              <input
+                type="number"
+                value={newTransaction.amount}
+                onChange={(e) => setNewTransaction({ ...newTransaction, amount: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newTransaction.date}
+                onChange={(e) => setNewTransaction({ ...newTransaction, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newTransaction.category}
+                onChange={(e) => setNewTransaction({ ...newTransaction, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: Salaire, Nourriture..."
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Méthode de paiement</label>
+              <select
+                value={newTransaction.paymentMethod}
+                onChange={(e) => setNewTransaction({ ...newTransaction, paymentMethod: e.target.value as 'cash' | 'card' | 'transfer' | 'check' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="cash">Espèces</option>
+                <option value="card">Carte</option>
+                <option value="transfer">Virement</option>
+                <option value="check">Chèque</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tags (séparés par des virgules)</label>
+            <input
+              type="text"
+              value={newTransaction.tags}
+              onChange={(e) => setNewTransaction({ ...newTransaction, tags: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: urgent, important"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowTransactionModal(false)
+                setNewTransaction({ accountId: '', type: 'income', amount: 0, description: '', category: '', date: '', paymentMethod: 'cash', tags: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newTransaction.accountId && newTransaction.description && newTransaction.amount > 0 && newTransaction.date && newTransaction.category) {
+                  const account = accounts.find(a => a.id === newTransaction.accountId)
+                  if (account) {
+                    const transaction: Transaction = {
+                      id: Date.now().toString(),
+                      accountId: newTransaction.accountId,
+                      accountName: account.name,
+                      type: newTransaction.type,
+                      category: newTransaction.category,
+                      description: newTransaction.description,
+                      amount: newTransaction.amount,
+                      date: new Date(newTransaction.date),
+                      paymentMethod: newTransaction.paymentMethod,
+                      status: 'completed',
+                      tags: newTransaction.tags ? newTransaction.tags.split(',').map(t => t.trim()).filter(t => t) : undefined,
+                    }
+                    setTransactions([...transactions, transaction])
+                    // Update account balance
+                    const updatedBalance = newTransaction.type === 'income' 
+                      ? account.balance + newTransaction.amount 
+                      : account.balance - newTransaction.amount
+                    setAccounts(accounts.map(a => a.id === account.id ? { ...a, balance: updatedBalance } : a))
+                    setShowTransactionModal(false)
+                    setNewTransaction({ accountId: '', type: 'income', amount: 0, description: '', category: '', date: '', paymentMethod: 'cash', tags: '' })
+                  }
                 }
               }}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"

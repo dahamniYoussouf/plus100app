@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Briefcase, Users, UserPlus, Calendar, FileText, BarChart3, TrendingUp, DollarSign, Award } from 'lucide-react'
 
 type TabType = 'dashboard' | 'employees' | 'candidates' | 'leaves' | 'recruitment'
@@ -45,6 +46,10 @@ export default function HRPage() {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [candidates, setCandidates] = useState<Candidate[]>([])
   const [leaves, setLeaves] = useState<Leave[]>([])
+  const [showCandidateModal, setShowCandidateModal] = useState(false)
+  const [showLeaveModal, setShowLeaveModal] = useState(false)
+  const [newCandidate, setNewCandidate] = useState({ name: '', email: '', phone: '', position: '', status: 'pending' as 'pending' | 'interview' | 'accepted' | 'rejected' })
+  const [newLeave, setNewLeave] = useState({ employeeId: '', type: 'vacation' as 'vacation' | 'sick' | 'personal' | 'maternity' | 'paternity', startDate: '', endDate: '', reason: '' })
 
   useEffect(() => {
     const savedEmployees = localStorage.getItem('hr-employees')
@@ -284,7 +289,10 @@ export default function HRPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Candidats</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowCandidateModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Candidat
               </button>
             </div>
@@ -328,7 +336,10 @@ export default function HRPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Congés</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowLeaveModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Demande
               </button>
             </div>
@@ -403,6 +414,221 @@ export default function HRPage() {
       </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showCandidateModal}
+        onClose={() => {
+          setShowCandidateModal(false)
+          setNewCandidate({ name: '', email: '', phone: '', position: '', status: 'pending' })
+        }}
+        title="Nouveau Candidat"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+            <input
+              type="text"
+              value={newCandidate.name}
+              onChange={(e) => setNewCandidate({ ...newCandidate, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Nom complet"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newCandidate.email}
+                onChange={(e) => setNewCandidate({ ...newCandidate, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="email@example.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="text"
+                value={newCandidate.phone}
+                onChange={(e) => setNewCandidate({ ...newCandidate, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="+213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Poste</label>
+              <input
+                type="text"
+                value={newCandidate.position}
+                onChange={(e) => setNewCandidate({ ...newCandidate, position: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Développeur Full Stack"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+              <select
+                value={newCandidate.status}
+                onChange={(e) => setNewCandidate({ ...newCandidate, status: e.target.value as 'pending' | 'interview' | 'accepted' | 'rejected' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="pending">En attente</option>
+                <option value="interview">Entretien</option>
+                <option value="accepted">Accepté</option>
+                <option value="rejected">Rejeté</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowCandidateModal(false)
+                setNewCandidate({ name: '', email: '', phone: '', position: '', status: 'pending' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCandidate.name && newCandidate.email && newCandidate.phone && newCandidate.position) {
+                  const candidate: Candidate = {
+                    id: Date.now().toString(),
+                    name: newCandidate.name,
+                    email: newCandidate.email,
+                    phone: newCandidate.phone,
+                    position: newCandidate.position,
+                    status: newCandidate.status,
+                    appliedDate: new Date(),
+                  }
+                  setCandidates([...candidates, candidate])
+                  setShowCandidateModal(false)
+                  setNewCandidate({ name: '', email: '', phone: '', position: '', status: 'pending' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showLeaveModal}
+        onClose={() => {
+          setShowLeaveModal(false)
+          setNewLeave({ employeeId: '', type: 'vacation', startDate: '', endDate: '', reason: '' })
+        }}
+        title="Nouvelle Demande de Congé"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {employees.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Employé</label>
+              <select
+                value={newLeave.employeeId}
+                onChange={(e) => setNewLeave({ ...newLeave, employeeId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un employé</option>
+                {employees.map(employee => (
+                  <option key={employee.id} value={employee.id}>{employee.name} - {employee.position}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type de congé</label>
+            <select
+              value={newLeave.type}
+              onChange={(e) => setNewLeave({ ...newLeave, type: e.target.value as 'vacation' | 'sick' | 'personal' | 'maternity' | 'paternity' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="vacation">Vacances</option>
+              <option value="sick">Maladie</option>
+              <option value="personal">Personnel</option>
+              <option value="maternity">Maternité</option>
+              <option value="paternity">Paternité</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+              <input
+                type="date"
+                value={newLeave.startDate}
+                onChange={(e) => setNewLeave({ ...newLeave, startDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
+              <input
+                type="date"
+                value={newLeave.endDate}
+                onChange={(e) => setNewLeave({ ...newLeave, endDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Raison</label>
+            <textarea
+              value={newLeave.reason}
+              onChange={(e) => setNewLeave({ ...newLeave, reason: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              rows={3}
+              placeholder="Raison de la demande de congé..."
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowLeaveModal(false)
+                setNewLeave({ employeeId: '', type: 'vacation', startDate: '', endDate: '', reason: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newLeave.employeeId && newLeave.startDate && newLeave.endDate && newLeave.reason) {
+                  const employee = employees.find(e => e.id === newLeave.employeeId)
+                  if (employee) {
+                    const startDate = new Date(newLeave.startDate)
+                    const endDate = new Date(newLeave.endDate)
+                    const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+                    const leave: Leave = {
+                      id: Date.now().toString(),
+                      employeeId: newLeave.employeeId,
+                      employeeName: employee.name,
+                      type: newLeave.type,
+                      startDate,
+                      endDate,
+                      days,
+                      status: 'pending',
+                      reason: newLeave.reason,
+                    }
+                    setLeaves([...leaves, leave])
+                    setShowLeaveModal(false)
+                    setNewLeave({ employeeId: '', type: 'vacation', startDate: '', endDate: '', reason: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

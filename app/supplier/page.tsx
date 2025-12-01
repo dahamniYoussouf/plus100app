@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { ShoppingBag, Package, Users, DollarSign, BarChart3, TrendingUp, CheckCircle } from 'lucide-react'
 
 type TabType = 'dashboard' | 'suppliers' | 'orders' | 'products' | 'contracts' | 'payments'
@@ -60,6 +61,14 @@ export default function SupplierPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [contracts, setContracts] = useState<Contract[]>([])
+  const [showSupplierModal, setShowSupplierModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
+  const [showProductModal, setShowProductModal] = useState(false)
+  const [showContractModal, setShowContractModal] = useState(false)
+  const [newSupplier, setNewSupplier] = useState({ name: '', contact: '', phone: '', email: '', address: '', category: '', status: 'active' as 'active' | 'inactive' | 'suspended' })
+  const [newOrder, setNewOrder] = useState({ supplierId: '', items: [{ name: '', quantity: 1, unitPrice: 0 }], expectedDelivery: '' })
+  const [newProduct, setNewProduct] = useState({ supplierId: '', name: '', category: '', unitPrice: 0, minOrderQuantity: 1, leadTime: 1, status: 'available' as 'available' | 'out_of_stock' | 'discontinued' })
+  const [newContract, setNewContract] = useState({ supplierId: '', type: 'purchase' as 'purchase' | 'service' | 'maintenance', startDate: '', endDate: '', value: 0 })
 
   useEffect(() => {
     const savedSuppliers = localStorage.getItem('supplier-suppliers')
@@ -280,7 +289,10 @@ export default function SupplierPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Fournisseurs</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowSupplierModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau Fournisseur
               </button>
             </div>
@@ -339,7 +351,10 @@ export default function SupplierPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Commandes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowOrderModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouvelle Commande
               </button>
             </div>
@@ -400,7 +415,10 @@ export default function SupplierPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Produits</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowProductModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Ajouter Produit
               </button>
             </div>
@@ -444,7 +462,10 @@ export default function SupplierPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Contrats</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowContractModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau Contrat
               </button>
             </div>
@@ -496,6 +517,506 @@ export default function SupplierPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showSupplierModal}
+        onClose={() => {
+          setShowSupplierModal(false)
+          setNewSupplier({ name: '', contact: '', phone: '', email: '', address: '', category: '', status: 'active' })
+        }}
+        title="Nouveau Fournisseur"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newSupplier.name}
+              onChange={(e) => setNewSupplier({ ...newSupplier, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Nom du fournisseur"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Contact</label>
+              <input
+                type="text"
+                value={newSupplier.contact}
+                onChange={(e) => setNewSupplier({ ...newSupplier, contact: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Nom du contact"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="text"
+                value={newSupplier.phone}
+                onChange={(e) => setNewSupplier({ ...newSupplier, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="+213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              value={newSupplier.email}
+              onChange={(e) => setNewSupplier({ ...newSupplier, email: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="email@example.com"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+            <input
+              type="text"
+              value={newSupplier.address}
+              onChange={(e) => setNewSupplier({ ...newSupplier, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Adresse complète"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newSupplier.category}
+                onChange={(e) => setNewSupplier({ ...newSupplier, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: Électronique"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+              <select
+                value={newSupplier.status}
+                onChange={(e) => setNewSupplier({ ...newSupplier, status: e.target.value as 'active' | 'inactive' | 'suspended' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="active">Actif</option>
+                <option value="inactive">Inactif</option>
+                <option value="suspended">Suspendu</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowSupplierModal(false)
+                setNewSupplier({ name: '', contact: '', phone: '', email: '', address: '', category: '', status: 'active' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newSupplier.name && newSupplier.contact && newSupplier.phone && newSupplier.email && newSupplier.address && newSupplier.category) {
+                  const supplier: Supplier = {
+                    id: Date.now().toString(),
+                    name: newSupplier.name,
+                    contact: newSupplier.contact,
+                    phone: newSupplier.phone,
+                    email: newSupplier.email,
+                    address: newSupplier.address,
+                    category: newSupplier.category,
+                    rating: 0,
+                    totalOrders: 0,
+                    totalSpent: 0,
+                    status: newSupplier.status,
+                  }
+                  setSuppliers([...suppliers, supplier])
+                  setShowSupplierModal(false)
+                  setNewSupplier({ name: '', contact: '', phone: '', email: '', address: '', category: '', status: 'active' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showOrderModal}
+        onClose={() => {
+          setShowOrderModal(false)
+          setNewOrder({ supplierId: '', items: [{ name: '', quantity: 1, unitPrice: 0 }], expectedDelivery: '' })
+        }}
+        title="Nouvelle Commande"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {suppliers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Fournisseur</label>
+              <select
+                value={newOrder.supplierId}
+                onChange={(e) => setNewOrder({ ...newOrder, supplierId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un fournisseur</option>
+                {suppliers.map(supplier => (
+                  <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Articles</label>
+            {newOrder.items.map((item, idx) => (
+              <div key={idx} className="grid grid-cols-3 gap-2 mb-2">
+                <input
+                  type="text"
+                  value={item.name}
+                  onChange={(e) => {
+                    const updatedItems = [...newOrder.items]
+                    updatedItems[idx].name = e.target.value
+                    setNewOrder({ ...newOrder, items: updatedItems })
+                  }}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Nom"
+                />
+                <input
+                  type="number"
+                  value={item.quantity}
+                  onChange={(e) => {
+                    const updatedItems = [...newOrder.items]
+                    updatedItems[idx].quantity = parseInt(e.target.value) || 1
+                    setNewOrder({ ...newOrder, items: updatedItems })
+                  }}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  min="1"
+                  placeholder="Qté"
+                />
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={item.unitPrice}
+                    onChange={(e) => {
+                      const updatedItems = [...newOrder.items]
+                      updatedItems[idx].unitPrice = parseFloat(e.target.value) || 0
+                      setNewOrder({ ...newOrder, items: updatedItems })
+                    }}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    min="0"
+                    placeholder="Prix"
+                  />
+                  {newOrder.items.length > 1 && (
+                    <button
+                      onClick={() => {
+                        setNewOrder({ ...newOrder, items: newOrder.items.filter((_, i) => i !== idx) })
+                      }}
+                      className="px-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={() => {
+                setNewOrder({ ...newOrder, items: [...newOrder.items, { name: '', quantity: 1, unitPrice: 0 }] })
+              }}
+              className="text-sm text-green-600 hover:text-green-700"
+            >
+              + Ajouter un article
+            </button>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date de livraison prévue</label>
+            <input
+              type="date"
+              value={newOrder.expectedDelivery}
+              onChange={(e) => setNewOrder({ ...newOrder, expectedDelivery: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowOrderModal(false)
+                setNewOrder({ supplierId: '', items: [{ name: '', quantity: 1, unitPrice: 0 }], expectedDelivery: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newOrder.supplierId && newOrder.items.every(item => item.name && item.quantity > 0 && item.unitPrice > 0)) {
+                  const supplier = suppliers.find(s => s.id === newOrder.supplierId)
+                  if (supplier) {
+                    const total = newOrder.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0)
+                    const order: Order = {
+                      id: Date.now().toString(),
+                      supplierId: newOrder.supplierId,
+                      supplierName: supplier.name,
+                      orderNumber: `ORD-${Date.now()}`,
+                      items: newOrder.items,
+                      total,
+                      orderDate: new Date(),
+                      expectedDelivery: newOrder.expectedDelivery ? new Date(newOrder.expectedDelivery) : undefined,
+                      status: 'pending',
+                    }
+                    setOrders([...orders, order])
+                    setShowOrderModal(false)
+                    setNewOrder({ supplierId: '', items: [{ name: '', quantity: 1, unitPrice: 0 }], expectedDelivery: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showProductModal}
+        onClose={() => {
+          setShowProductModal(false)
+          setNewProduct({ supplierId: '', name: '', category: '', unitPrice: 0, minOrderQuantity: 1, leadTime: 1, status: 'available' })
+        }}
+        title="Ajouter Produit"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {suppliers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Fournisseur</label>
+              <select
+                value={newProduct.supplierId}
+                onChange={(e) => setNewProduct({ ...newProduct, supplierId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un fournisseur</option>
+                {suppliers.map(supplier => (
+                  <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du produit</label>
+            <input
+              type="text"
+              value={newProduct.name}
+              onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Nom du produit"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Catégorie"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix unitaire (DZD)</label>
+              <input
+                type="number"
+                value={newProduct.unitPrice}
+                onChange={(e) => setNewProduct({ ...newProduct, unitPrice: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Commande min</label>
+              <input
+                type="number"
+                value={newProduct.minOrderQuantity}
+                onChange={(e) => setNewProduct({ ...newProduct, minOrderQuantity: parseInt(e.target.value) || 1 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Délai (jours)</label>
+              <input
+                type="number"
+                value={newProduct.leadTime}
+                onChange={(e) => setNewProduct({ ...newProduct, leadTime: parseInt(e.target.value) || 1 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+              <select
+                value={newProduct.status}
+                onChange={(e) => setNewProduct({ ...newProduct, status: e.target.value as 'available' | 'out_of_stock' | 'discontinued' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="available">Disponible</option>
+                <option value="out_of_stock">Rupture de stock</option>
+                <option value="discontinued">Discontinué</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowProductModal(false)
+                setNewProduct({ supplierId: '', name: '', category: '', unitPrice: 0, minOrderQuantity: 1, leadTime: 1, status: 'available' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newProduct.supplierId && newProduct.name && newProduct.category && newProduct.unitPrice > 0) {
+                  const supplier = suppliers.find(s => s.id === newProduct.supplierId)
+                  if (supplier) {
+                    const product: Product = {
+                      id: Date.now().toString(),
+                      supplierId: newProduct.supplierId,
+                      supplierName: supplier.name,
+                      name: newProduct.name,
+                      category: newProduct.category,
+                      unitPrice: newProduct.unitPrice,
+                      minOrderQuantity: newProduct.minOrderQuantity,
+                      leadTime: newProduct.leadTime,
+                      status: newProduct.status,
+                    }
+                    setProducts([...products, product])
+                    setShowProductModal(false)
+                    setNewProduct({ supplierId: '', name: '', category: '', unitPrice: 0, minOrderQuantity: 1, leadTime: 1, status: 'available' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showContractModal}
+        onClose={() => {
+          setShowContractModal(false)
+          setNewContract({ supplierId: '', type: 'purchase', startDate: '', endDate: '', value: 0 })
+        }}
+        title="Nouveau Contrat"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {suppliers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Fournisseur</label>
+              <select
+                value={newContract.supplierId}
+                onChange={(e) => setNewContract({ ...newContract, supplierId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un fournisseur</option>
+                {suppliers.map(supplier => (
+                  <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select
+              value={newContract.type}
+              onChange={(e) => setNewContract({ ...newContract, type: e.target.value as 'purchase' | 'service' | 'maintenance' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            >
+              <option value="purchase">Achat</option>
+              <option value="service">Service</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+              <input
+                type="date"
+                value={newContract.startDate}
+                onChange={(e) => setNewContract({ ...newContract, startDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
+              <input
+                type="date"
+                value={newContract.endDate}
+                onChange={(e) => setNewContract({ ...newContract, endDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Valeur (DZD)</label>
+            <input
+              type="number"
+              value={newContract.value}
+              onChange={(e) => setNewContract({ ...newContract, value: parseFloat(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowContractModal(false)
+                setNewContract({ supplierId: '', type: 'purchase', startDate: '', endDate: '', value: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newContract.supplierId && newContract.startDate && newContract.endDate && newContract.value > 0) {
+                  const supplier = suppliers.find(s => s.id === newContract.supplierId)
+                  if (supplier) {
+                    const contract: Contract = {
+                      id: Date.now().toString(),
+                      supplierId: newContract.supplierId,
+                      supplierName: supplier.name,
+                      type: newContract.type,
+                      startDate: new Date(newContract.startDate),
+                      endDate: new Date(newContract.endDate),
+                      value: newContract.value,
+                      status: 'active',
+                    }
+                    setContracts([...contracts, contract])
+                    setShowContractModal(false)
+                    setNewContract({ supplierId: '', type: 'purchase', startDate: '', endDate: '', value: 0 })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

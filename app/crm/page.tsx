@@ -47,7 +47,11 @@ export default function CRMPage() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([])
   const [sales, setSales] = useState<Sale[]>([])
   const [showContactModal, setShowContactModal] = useState(false)
+  const [showOpportunityModal, setShowOpportunityModal] = useState(false)
+  const [showSaleModal, setShowSaleModal] = useState(false)
   const [newContact, setNewContact] = useState({ name: '', email: '', phone: '', company: '', position: '', status: 'lead' as 'lead' | 'customer' | 'partner' })
+  const [newOpportunity, setNewOpportunity] = useState({ contactId: '', title: '', value: 0, stage: 'prospecting' as 'prospecting' | 'qualification' | 'proposal' | 'negotiation' | 'closed_won' | 'closed_lost', probability: 50, expectedCloseDate: '', notes: '' })
+  const [newSale, setNewSale] = useState({ contactId: '', product: '', amount: 0, date: '' })
 
   useEffect(() => {
     const savedContacts = localStorage.getItem('crm-contacts')
@@ -346,7 +350,10 @@ export default function CRMPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Opportunités</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+              <button 
+                onClick={() => setShowOpportunityModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
                 Nouvelle Opportunité
               </button>
             </div>
@@ -398,7 +405,10 @@ export default function CRMPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Ventes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+              <button 
+                onClick={() => setShowSaleModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
                 Nouvelle Vente
               </button>
             </div>
@@ -540,6 +550,234 @@ export default function CRMPage() {
                   setContacts([...contacts, contact])
                   setShowContactModal(false)
                   setNewContact({ name: '', email: '', phone: '', company: '', position: '', status: 'lead' })
+                }
+              }}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showOpportunityModal}
+        onClose={() => {
+          setShowOpportunityModal(false)
+          setNewOpportunity({ contactId: '', title: '', value: 0, stage: 'prospecting', probability: 50, expectedCloseDate: '', notes: '' })
+        }}
+        title="Nouvelle Opportunité"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {contacts.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Contact</label>
+              <select
+                value={newOpportunity.contactId}
+                onChange={(e) => setNewOpportunity({ ...newOpportunity, contactId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un contact</option>
+                {contacts.map(contact => (
+                  <option key={contact.id} value={contact.id}>{contact.name} - {contact.company || 'Sans entreprise'}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+            <input
+              type="text"
+              value={newOpportunity.title}
+              onChange={(e) => setNewOpportunity({ ...newOpportunity, title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="Ex: Vente logiciel CRM"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Valeur (DZD)</label>
+              <input
+                type="number"
+                value={newOpportunity.value}
+                onChange={(e) => setNewOpportunity({ ...newOpportunity, value: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Probabilité (%)</label>
+              <input
+                type="number"
+                value={newOpportunity.probability}
+                onChange={(e) => setNewOpportunity({ ...newOpportunity, probability: parseInt(e.target.value) || 50 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                min="0"
+                max="100"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Étape</label>
+              <select
+                value={newOpportunity.stage}
+                onChange={(e) => setNewOpportunity({ ...newOpportunity, stage: e.target.value as 'prospecting' | 'qualification' | 'proposal' | 'negotiation' | 'closed_won' | 'closed_lost' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              >
+                <option value="prospecting">Prospection</option>
+                <option value="qualification">Qualification</option>
+                <option value="proposal">Proposition</option>
+                <option value="negotiation">Négociation</option>
+                <option value="closed_won">Gagné</option>
+                <option value="closed_lost">Perdu</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de clôture prévue</label>
+              <input
+                type="date"
+                value={newOpportunity.expectedCloseDate}
+                onChange={(e) => setNewOpportunity({ ...newOpportunity, expectedCloseDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optionnel)</label>
+            <textarea
+              value={newOpportunity.notes}
+              onChange={(e) => setNewOpportunity({ ...newOpportunity, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              rows={3}
+              placeholder="Notes supplémentaires..."
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowOpportunityModal(false)
+                setNewOpportunity({ contactId: '', title: '', value: 0, stage: 'prospecting', probability: 50, expectedCloseDate: '', notes: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newOpportunity.contactId && newOpportunity.title && newOpportunity.value > 0 && newOpportunity.expectedCloseDate) {
+                  const contact = contacts.find(c => c.id === newOpportunity.contactId)
+                  if (contact) {
+                    const opportunity: Opportunity = {
+                      id: Date.now().toString(),
+                      contactId: newOpportunity.contactId,
+                      contactName: contact.name,
+                      title: newOpportunity.title,
+                      value: newOpportunity.value,
+                      stage: newOpportunity.stage,
+                      probability: newOpportunity.probability,
+                      expectedCloseDate: new Date(newOpportunity.expectedCloseDate),
+                      notes: newOpportunity.notes || undefined,
+                    }
+                    setOpportunities([...opportunities, opportunity])
+                    setShowOpportunityModal(false)
+                    setNewOpportunity({ contactId: '', title: '', value: 0, stage: 'prospecting', probability: 50, expectedCloseDate: '', notes: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSaleModal}
+        onClose={() => {
+          setShowSaleModal(false)
+          setNewSale({ contactId: '', product: '', amount: 0, date: '' })
+        }}
+        title="Nouvelle Vente"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {contacts.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Contact</label>
+              <select
+                value={newSale.contactId}
+                onChange={(e) => setNewSale({ ...newSale, contactId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un contact</option>
+                {contacts.map(contact => (
+                  <option key={contact.id} value={contact.id}>{contact.name} - {contact.company || 'Sans entreprise'}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Produit/Service</label>
+            <input
+              type="text"
+              value={newSale.product}
+              onChange={(e) => setNewSale({ ...newSale, product: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="Ex: Logiciel CRM Premium"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Montant (DZD)</label>
+              <input
+                type="number"
+                value={newSale.amount}
+                onChange={(e) => setNewSale({ ...newSale, amount: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newSale.date}
+                onChange={(e) => setNewSale({ ...newSale, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowSaleModal(false)
+                setNewSale({ contactId: '', product: '', amount: 0, date: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newSale.contactId && newSale.product && newSale.amount > 0 && newSale.date) {
+                  const contact = contacts.find(c => c.id === newSale.contactId)
+                  if (contact) {
+                    const sale: Sale = {
+                      id: Date.now().toString(),
+                      contactId: newSale.contactId,
+                      contactName: contact.name,
+                      product: newSale.product,
+                      amount: newSale.amount,
+                      date: new Date(newSale.date),
+                      status: 'completed',
+                    }
+                    setSales([...sales, sale])
+                    setShowSaleModal(false)
+                    setNewSale({ contactId: '', product: '', amount: 0, date: '' })
+                  }
                 }
               }}
               className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
