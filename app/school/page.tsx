@@ -24,7 +24,11 @@ export default function SchoolPage() {
     const savedGrades = localStorage.getItem('school-grades')
 
     if (savedStudents) {
-      setStudents(JSON.parse(savedStudents))
+      const parsed = JSON.parse(savedStudents)
+      setStudents(parsed.map((s: any) => ({
+        ...s,
+        dateOfBirth: new Date(s.dateOfBirth),
+      })))
     } else {
       const sample: Student[] = [
         {
@@ -111,7 +115,11 @@ export default function SchoolPage() {
     }
 
     if (savedGrades) {
-      setGrades(JSON.parse(savedGrades))
+      const parsed = JSON.parse(savedGrades)
+      setGrades(parsed.map((g: any) => ({
+        ...g,
+        date: new Date(g.date),
+      })))
     }
   }, [])
 
@@ -149,7 +157,7 @@ export default function SchoolPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors relative  DZD{
+                  className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors relative ${
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -199,4 +207,3 @@ export default function SchoolPage() {
     </div>
   )
 }
-

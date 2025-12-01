@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Heart, Users, Calendar, FileText, BarChart3, Droplet, Activity } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
+import { Heart, Users, Calendar, FileText, BarChart3, Droplet, Activity, Edit2, Trash2, Search, Plus } from 'lucide-react'
 import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'animals' | 'appointments' | 'vaccinations'
@@ -44,9 +44,14 @@ export default function VetPage() {
   const [showAnimalModal, setShowAnimalModal] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
   const [showVaccinationModal, setShowVaccinationModal] = useState(false)
+  const [editingAnimal, setEditingAnimal] = useState<Animal | null>(null)
+  const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null)
+  const [editingVaccination, setEditingVaccination] = useState<Vaccination | null>(null)
   const [newAnimal, setNewAnimal] = useState({ name: '', species: 'dog' as 'dog' | 'cat' | 'bird' | 'rabbit' | 'other', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
   const [newAppointment, setNewAppointment] = useState({ animalId: '', date: '', time: '', reason: '' })
   const [newVaccination, setNewVaccination] = useState({ animalId: '', vaccine: '', date: '', nextDue: '' })
+  const [searchQuery, setSearchQuery] = useState('')
+  const [deleteConfirm, setDeleteConfirm] = useState<{ type: string, id: string } | null>(null)
 
   useEffect(() => {
     const savedAnimals = localStorage.getItem('vet-animals')
@@ -113,10 +118,146 @@ export default function VetPage() {
     { id: 'vaccinations' as TabType, label: 'Vaccinations', icon: Droplet },
   ]
 
-  const todayAppointments = appointments.filter(a => {
+  const todayAppointments = useMemo(() => appointments.filter(a => {
     const today = new Date()
     return a.status === 'scheduled' && a.date.toDateString() === today.toDateString()
-  })
+  }), [appointments])
+
+  const filteredAnimals = useMemo(() => {
+    let filtered = animals
+    if (searchQuery) {
+      filtered = filtered.filter(a => 
+        a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        a.ownerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        a.breed.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+    return filtered
+  }, [animals, searchQuery])
+
+  const filteredAppointments = useMemo(() => {
+    let filtered = appointments
+    if (searchQuery) {
+      filtered = filtered.filter(a => 
+        a.animalName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        a.reason.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+    return filtered
+  }, [appointments, searchQuery])
+
+  const filteredVaccinations = useMemo(() => {
+    let filtered = vaccinations
+    if (searchQuery) {
+      filtered = filtered.filter(v => 
+        v.animalName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        v.vaccine.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+    return filtered
+  }, [vaccinations, searchQuery])
+
+  const handleAddAnimal = () => {
+    if (newAnimal.name && newAnimal.breed && newAnimal.ownerName && newAnimal.ownerPhone && newAnimal.dateOfBirth) {
+      const animal: Animal = {
+        id: editingAnimal?.id || Date.now().toString(),
+        name: newAnimal.name,
+        species: newAnimal.species,
+        breed: newAnimal.breed,
+        ownerName: newAnimal.ownerName,
+        ownerPhone: newAnimal.ownerPhone,
+        dateOfBirth: new Date(newAnimal.dateOfBirth),
+        lastVisit: editingAnimal?.lastVisit,
+      }
+      if (editingAnimal) {
+        setAnimals(animals.map(a => a.id === editingAnimal.id ? animal : a))
+      } else {
+        setAnimals([...animals, animal])
+      }
+      setShowAnimalModal(false)
+      setEditingAnimal(null)
+      setNewAnimal({ name: '', species: 'dog', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
+    }
+  }
+
+  const handleAddAppointment = () => {
+    if (newAppointment.animalId && newAppointment.date && newAppointment.time && newAppointment.reason) {
+      const animal = animals.find(a => a.id === newAppointment.animalId)
+      if (!animal) return
+      
+      const appointment: Appointment = {
+        id: editingAppointment?.id || Date.now().toString(),
+        animalId: newAppointment.animalId,
+        animalName: animal.name,
+        date: new Date(newAppointment.date),
+        time: newAppointment.time,
+        reason: newAppointment.reason,
+        status: 'scheduled',
+      }
+      if (editingAppointment) {
+        setAppointments(appointments.map(a => a.id === editingAppointment.id ? appointment : a))
+      } else {
+        setAppointments([...appointments, appointment])
+        setAnimals(animals.map(a => a.id === newAppointment.animalId ? { ...a, lastVisit: new Date(newAppointment.date) } : a))
+      }
+      setShowAppointmentModal(false)
+      setEditingAppointment(null)
+      setNewAppointment({ animalId: '', date: '', time: '', reason: '' })
+    }
+  }
+
+  const handleAddVaccination = () => {
+    if (newVaccination.animalId && newVaccination.vaccine && newVaccination.date) {
+      const animal = animals.find(a => a.id === newVaccination.animalId)
+      if (!animal) return
+      
+      const vaccination: Vaccination = {
+        id: editingVaccination?.id || Date.now().toString(),
+        animalId: newVaccination.animalId,
+        animalName: animal.name,
+        vaccine: newVaccination.vaccine,
+        date: new Date(newVaccination.date),
+        nextDue: newVaccination.nextDue ? new Date(newVaccination.nextDue) : undefined,
+      }
+      if (editingVaccination) {
+        setVaccinations(vaccinations.map(v => v.id === editingVaccination.id ? vaccination : v))
+      } else {
+        setVaccinations([...vaccinations, vaccination])
+      }
+      setShowVaccinationModal(false)
+      setEditingVaccination(null)
+      setNewVaccination({ animalId: '', vaccine: '', date: '', nextDue: '' })
+    }
+  }
+
+  const handleDelete = (type: string, id: string) => {
+    if (type === 'animal') {
+      setAnimals(animals.filter(a => a.id !== id))
+    } else if (type === 'appointment') {
+      setAppointments(appointments.filter(a => a.id !== id))
+    } else if (type === 'vaccination') {
+      setVaccinations(vaccinations.filter(v => v.id !== id))
+    }
+    setDeleteConfirm(null)
+  }
+
+  const openEditAnimal = (animal: Animal) => {
+    setEditingAnimal(animal)
+    setNewAnimal({ ...animal, dateOfBirth: animal.dateOfBirth.toISOString().split('T')[0] })
+    setShowAnimalModal(true)
+  }
+
+  const openEditAppointment = (appointment: Appointment) => {
+    setEditingAppointment(appointment)
+    setNewAppointment({ ...appointment, date: appointment.date.toISOString().split('T')[0] })
+    setShowAppointmentModal(true)
+  }
+
+  const openEditVaccination = (vaccination: Vaccination) => {
+    setEditingVaccination(vaccination)
+    setNewVaccination({ ...vaccination, date: vaccination.date.toISOString().split('T')[0], nextDue: vaccination.nextDue ? vaccination.nextDue.toISOString().split('T')[0] : '' })
+    setShowVaccinationModal(true)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
@@ -129,7 +270,7 @@ export default function VetPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
                     activeTab === tab.id
                       ? 'text-pink-600 border-b-2 border-pink-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -186,36 +327,6 @@ export default function VetPage() {
                 </div>
               </div>
             </div>
-
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Fonctionnalités</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Gestion Animaux</h3>
-                  <p className="text-sm text-gray-600">Dossiers animaux avec historique médical</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Consultations</h3>
-                  <p className="text-sm text-gray-600">Rendez-vous et examens vétérinaires</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Vaccinations</h3>
-                  <p className="text-sm text-gray-600">Suivi des vaccinations et rappels</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Chirurgies</h3>
-                  <p className="text-sm text-gray-600">Gestion des interventions chirurgicales</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Prescriptions</h3>
-                  <p className="text-sm text-gray-600">Ordonnances et médicaments</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Rappels</h3>
-                  <p className="text-sm text-gray-600">Notifications de vaccinations et contrôles</p>
-                </div>
-              </div>
-            </div>
           </div>
         )}
 
@@ -224,22 +335,60 @@ export default function VetPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Animaux</h2>
               <button 
-                onClick={() => setShowAnimalModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+                onClick={() => {
+                  setEditingAnimal(null)
+                  setNewAnimal({ name: '', species: 'dog', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
+                  setShowAnimalModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2"
               >
+                <Plus className="w-4 h-4" />
                 Nouvel Animal
               </button>
             </div>
-            {animals.length === 0 ? (
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Rechercher un animal..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+
+            {filteredAnimals.length === 0 ? (
               <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 text-center">
                 <Heart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Aucun animal enregistré</p>
+                <p className="text-gray-600">Aucun animal trouvé</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                {animals.map((animal) => (
+                {filteredAnimals.map((animal) => (
                   <div key={animal.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
-                    <h3 className="font-semibold text-gray-900 mb-2">{animal.name}</h3>
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 mb-2">{animal.name}</h3>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => openEditAnimal(animal)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Modifier"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirm({ type: 'animal', id: animal.id })}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Supprimer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
                     <p className="text-sm text-gray-600 mb-1 capitalize">{animal.species} - {animal.breed}</p>
                     <p className="text-sm text-gray-600 mb-1">Propriétaire: {animal.ownerName}</p>
                     <p className="text-sm text-gray-600 mb-3">{animal.ownerPhone}</p>
@@ -257,28 +406,67 @@ export default function VetPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Consultations</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => {
+                  setEditingAppointment(null)
+                  setNewAppointment({ animalId: '', date: '', time: '', reason: '' })
+                  setShowAppointmentModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
                 Nouvelle Consultation
               </button>
             </div>
-            {appointments.length === 0 ? (
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Rechercher une consultation..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+
+            {filteredAppointments.length === 0 ? (
               <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 text-center">
                 <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Aucune consultation programmée</p>
+                <p className="text-gray-600">Aucune consultation trouvée</p>
               </div>
             ) : (
               <div className="space-y-4">
-                {appointments.map((apt) => (
+                {filteredAppointments.map((apt) => (
                   <div key={apt.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{apt.animalName}</h3>
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-semibold text-gray-900">{apt.animalName}</h3>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => openEditAppointment(apt)}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Modifier"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => setDeleteConfirm({ type: 'appointment', id: apt.id })}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Supprimer"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
                         <p className="text-sm text-gray-600 mt-1">
                           {new Date(apt.date).toLocaleDateString('fr-FR')} à {apt.time}
                         </p>
                         <p className="text-sm text-gray-500 mt-1">Raison: {apt.reason}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                         apt.status === 'completed' ? 'bg-green-100 text-green-800' :
                         apt.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-blue-100 text-blue-800'
@@ -299,24 +487,60 @@ export default function VetPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Vaccinations</h2>
               <button 
-                onClick={() => setShowVaccinationModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+                onClick={() => {
+                  setEditingVaccination(null)
+                  setNewVaccination({ animalId: '', vaccine: '', date: '', nextDue: '' })
+                  setShowVaccinationModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2"
               >
+                <Plus className="w-4 h-4" />
                 Nouvelle Vaccination
               </button>
             </div>
-            {vaccinations.length === 0 ? (
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Rechercher une vaccination..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+
+            {filteredVaccinations.length === 0 ? (
               <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 text-center">
                 <Droplet className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Aucune vaccination enregistrée</p>
+                <p className="text-gray-600">Aucune vaccination trouvée</p>
               </div>
             ) : (
               <div className="space-y-4">
-                {vaccinations.map((vacc) => (
+                {filteredVaccinations.map((vacc) => (
                   <div key={vacc.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{vacc.animalName}</h3>
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-semibold text-gray-900">{vacc.animalName}</h3>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => openEditVaccination(vacc)}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Modifier"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => setDeleteConfirm({ type: 'vaccination', id: vacc.id })}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Supprimer"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
                         <p className="text-sm text-gray-600 mt-1">{vacc.vaccine}</p>
                         <p className="text-sm text-gray-500 mt-1">
                           Date: {new Date(vacc.date).toLocaleDateString('fr-FR')}
@@ -336,19 +560,20 @@ export default function VetPage() {
         )}
       </main>
 
-      {/* Modals */}
+      {/* Animal Modal */}
       <Modal
         isOpen={showAnimalModal}
         onClose={() => {
           setShowAnimalModal(false)
+          setEditingAnimal(null)
           setNewAnimal({ name: '', species: 'dog', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
         }}
-        title="Nouvel Animal"
+        title={editingAnimal ? 'Modifier l\'animal' : 'Nouvel animal'}
         size="lg"
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l'animal</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l'animal *</label>
             <input
               type="text"
               value={newAnimal.name}
@@ -359,7 +584,7 @@ export default function VetPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Espèce</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Espèce *</label>
               <select
                 value={newAnimal.species}
                 onChange={(e) => setNewAnimal({ ...newAnimal, species: e.target.value as 'dog' | 'cat' | 'bird' | 'rabbit' | 'other' })}
@@ -373,7 +598,7 @@ export default function VetPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Race</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Race *</label>
               <input
                 type="text"
                 value={newAnimal.breed}
@@ -385,7 +610,7 @@ export default function VetPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nom du propriétaire</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom du propriétaire *</label>
               <input
                 type="text"
                 value={newAnimal.ownerName}
@@ -395,7 +620,7 @@ export default function VetPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone *</label>
               <input
                 type="tel"
                 value={newAnimal.ownerPhone}
@@ -406,7 +631,7 @@ export default function VetPage() {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date de naissance *</label>
             <input
               type="date"
               value={newAnimal.dateOfBirth}
@@ -418,6 +643,7 @@ export default function VetPage() {
             <button
               onClick={() => {
                 setShowAnimalModal(false)
+                setEditingAnimal(null)
                 setNewAnimal({ name: '', species: 'dog', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
               }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
@@ -425,43 +651,30 @@ export default function VetPage() {
               Annuler
             </button>
             <button
-              onClick={() => {
-                if (newAnimal.name && newAnimal.breed && newAnimal.ownerName && newAnimal.ownerPhone && newAnimal.dateOfBirth) {
-                  const animal: Animal = {
-                    id: Date.now().toString(),
-                    name: newAnimal.name,
-                    species: newAnimal.species,
-                    breed: newAnimal.breed,
-                    ownerName: newAnimal.ownerName,
-                    ownerPhone: newAnimal.ownerPhone,
-                    dateOfBirth: new Date(newAnimal.dateOfBirth),
-                  }
-                  setAnimals([...animals, animal])
-                  setShowAnimalModal(false)
-                  setNewAnimal({ name: '', species: 'dog', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
-                }
-              }}
+              onClick={handleAddAnimal}
               className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
             >
-              Ajouter
+              {editingAnimal ? 'Modifier' : 'Ajouter'}
             </button>
           </div>
         </div>
       </Modal>
 
+      {/* Appointment Modal */}
       <Modal
         isOpen={showAppointmentModal}
         onClose={() => {
           setShowAppointmentModal(false)
+          setEditingAppointment(null)
           setNewAppointment({ animalId: '', date: '', time: '', reason: '' })
         }}
-        title="Nouvelle Consultation"
+        title={editingAppointment ? 'Modifier la consultation' : 'Nouvelle consultation'}
         size="lg"
       >
         <div className="space-y-4">
           {animals.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Animal</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Animal *</label>
               <select
                 value={newAppointment.animalId}
                 onChange={(e) => setNewAppointment({ ...newAppointment, animalId: e.target.value })}
@@ -476,7 +689,7 @@ export default function VetPage() {
           )}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date *</label>
               <input
                 type="date"
                 value={newAppointment.date}
@@ -485,7 +698,7 @@ export default function VetPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure *</label>
               <input
                 type="time"
                 value={newAppointment.time}
@@ -495,7 +708,7 @@ export default function VetPage() {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Raison</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Raison *</label>
             <textarea
               value={newAppointment.reason}
               onChange={(e) => setNewAppointment({ ...newAppointment, reason: e.target.value })}
@@ -508,6 +721,7 @@ export default function VetPage() {
             <button
               onClick={() => {
                 setShowAppointmentModal(false)
+                setEditingAppointment(null)
                 setNewAppointment({ animalId: '', date: '', time: '', reason: '' })
               }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
@@ -515,47 +729,30 @@ export default function VetPage() {
               Annuler
             </button>
             <button
-              onClick={() => {
-                if (newAppointment.animalId && newAppointment.date && newAppointment.time && newAppointment.reason) {
-                  const animal = animals.find(a => a.id === newAppointment.animalId)
-                  if (animal) {
-                    const appointment: Appointment = {
-                      id: Date.now().toString(),
-                      animalId: newAppointment.animalId,
-                      animalName: animal.name,
-                      date: new Date(newAppointment.date),
-                      time: newAppointment.time,
-                      reason: newAppointment.reason,
-                      status: 'scheduled',
-                    }
-                    setAppointments([...appointments, appointment])
-                    setAnimals(animals.map(a => a.id === newAppointment.animalId ? { ...a, lastVisit: new Date(newAppointment.date) } : a))
-                    setShowAppointmentModal(false)
-                    setNewAppointment({ animalId: '', date: '', time: '', reason: '' })
-                  }
-                }
-              }}
+              onClick={handleAddAppointment}
               className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
             >
-              Ajouter
+              {editingAppointment ? 'Modifier' : 'Ajouter'}
             </button>
           </div>
         </div>
       </Modal>
 
+      {/* Vaccination Modal */}
       <Modal
         isOpen={showVaccinationModal}
         onClose={() => {
           setShowVaccinationModal(false)
+          setEditingVaccination(null)
           setNewVaccination({ animalId: '', vaccine: '', date: '', nextDue: '' })
         }}
-        title="Nouvelle Vaccination"
+        title={editingVaccination ? 'Modifier la vaccination' : 'Nouvelle vaccination'}
         size="lg"
       >
         <div className="space-y-4">
           {animals.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Animal</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Animal *</label>
               <select
                 value={newVaccination.animalId}
                 onChange={(e) => setNewVaccination({ ...newVaccination, animalId: e.target.value })}
@@ -569,7 +766,7 @@ export default function VetPage() {
             </div>
           )}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Vaccin</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Vaccin *</label>
             <input
               type="text"
               value={newVaccination.vaccine}
@@ -580,7 +777,7 @@ export default function VetPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Date de vaccination</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de vaccination *</label>
               <input
                 type="date"
                 value={newVaccination.date}
@@ -602,6 +799,7 @@ export default function VetPage() {
             <button
               onClick={() => {
                 setShowVaccinationModal(false)
+                setEditingVaccination(null)
                 setNewVaccination({ animalId: '', vaccine: '', date: '', nextDue: '' })
               }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
@@ -609,31 +807,44 @@ export default function VetPage() {
               Annuler
             </button>
             <button
-              onClick={() => {
-                if (newVaccination.animalId && newVaccination.vaccine && newVaccination.date) {
-                  const animal = animals.find(a => a.id === newVaccination.animalId)
-                  if (animal) {
-                    const vaccination: Vaccination = {
-                      id: Date.now().toString(),
-                      animalId: newVaccination.animalId,
-                      animalName: animal.name,
-                      vaccine: newVaccination.vaccine,
-                      date: new Date(newVaccination.date),
-                      nextDue: newVaccination.nextDue ? new Date(newVaccination.nextDue) : undefined,
-                    }
-                    setVaccinations([...vaccinations, vaccination])
-                    setShowVaccinationModal(false)
-                    setNewVaccination({ animalId: '', vaccine: '', date: '', nextDue: '' })
-                  }
-                }
-              }}
+              onClick={handleAddVaccination}
               className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
             >
-              Ajouter
+              {editingVaccination ? 'Modifier' : 'Ajouter'}
             </button>
           </div>
         </div>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <Modal
+          isOpen={!!deleteConfirm}
+          onClose={() => setDeleteConfirm(null)}
+          title="Confirmer la suppression"
+          size="sm"
+        >
+          <div className="space-y-4">
+            <p className="text-gray-700">
+              Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => handleDelete(deleteConfirm.type, deleteConfirm.id)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }
