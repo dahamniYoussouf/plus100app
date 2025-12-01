@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import Image from 'next/image'
-import { Home, Users, Calendar, DollarSign, BarChart3, MapPin, Bed, Bath, Square, TrendingUp, Key, FileText } from 'lucide-react'
+import { Home, Users, Calendar, DollarSign, BarChart3, MapPin, Bed, Bath, Square, TrendingUp, Key, FileText, Edit2, Trash2, Search, Filter, X, Plus, Check, AlertCircle } from 'lucide-react'
 import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'properties' | 'tenants' | 'leases' | 'maintenance'
@@ -77,10 +77,18 @@ export default function RealEstatePage() {
   const [showTenantModal, setShowTenantModal] = useState(false)
   const [showLeaseModal, setShowLeaseModal] = useState(false)
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false)
-  const [newProperty, setNewProperty] = useState({ address: '', type: 'apartment' as 'apartment' | 'house' | 'commercial' | 'land', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '' })
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null)
+  const [editingTenant, setEditingTenant] = useState<Tenant | null>(null)
+  const [editingLease, setEditingLease] = useState<Lease | null>(null)
+  const [editingMaintenance, setEditingMaintenance] = useState<MaintenanceRequest | null>(null)
+  const [newProperty, setNewProperty] = useState({ address: '', type: 'apartment' as 'apartment' | 'house' | 'commercial' | 'land', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '', description: '', features: [] as string[] })
+  const [newFeature, setNewFeature] = useState('')
   const [newTenant, setNewTenant] = useState({ name: '', email: '', phone: '' })
   const [newLease, setNewLease] = useState({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
-  const [newMaintenance, setNewMaintenance] = useState({ propertyId: '', tenantId: '', description: '', priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent' })
+  const [newMaintenance, setNewMaintenance] = useState({ propertyId: '', tenantId: '', description: '', priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent', cost: 0 })
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [deleteConfirm, setDeleteConfirm] = useState<{ type: string, id: string } | null>(null)
 
   useEffect(() => {
     const savedProperties = localStorage.getItem('realestate-properties')
@@ -170,6 +178,101 @@ export default function RealEstatePage() {
   const totalTenants = useMemo(() => tenants.filter(t => t.status === 'active').length, [tenants])
   const totalRevenue = useMemo(() => leases.filter(l => l.status === 'active').reduce((sum, l) => sum + l.monthlyRent, 0), [leases])
   const pendingMaintenance = useMemo(() => maintenanceRequests.filter(m => m.status === 'pending' || m.status === 'in_progress').length, [maintenanceRequests])
+
+  const filteredProperties = useMemo(() => {
+    let filtered = properties
+    if (searchQuery) {
+      filtered = filtered.filter(p => 
+        p.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.ownerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.type.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+    if (filterStatus !== 'all') {
+      filtered = filtered.filter(p => p.status === filterStatus)
+    }
+    return filtered
+  }, [properties, searchQuery, filterStatus])
+
+  const filteredTenants = useMemo(() => {
+    let filtered = tenants
+    if (searchQuery) {
+      filtered = filtered.filter(t => 
+        t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        t.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        t.phone.includes(searchQuery)
+      )
+    }
+    return filtered
+  }, [tenants, searchQuery])
+
+  const filteredLeases = useMemo(() => {
+    let filtered = leases
+    if (searchQuery) {
+      filtered = filtered.filter(l => 
+        l.propertyAddress.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        l.tenantName.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+    return filtered
+  }, [leases, searchQuery])
+
+  const handleDeleteProperty = useCallback((id: string) => {
+    setProperties(properties.filter(p => p.id !== id))
+    setLeases(leases.filter(l => l.propertyId !== id))
+    setMaintenanceRequests(maintenanceRequests.filter(m => m.propertyId !== id))
+    setDeleteConfirm(null)
+  }, [properties, leases, maintenanceRequests])
+
+  const handleDeleteTenant = useCallback((id: string) => {
+    setTenants(tenants.filter(t => t.id !== id))
+    setLeases(leases.filter(l => l.tenantId !== id))
+    setMaintenanceRequests(maintenanceRequests.filter(m => m.tenantId !== id))
+    setDeleteConfirm(null)
+  }, [tenants, leases, maintenanceRequests])
+
+  const handleDeleteLease = useCallback((id: string) => {
+    const lease = leases.find(l => l.id === id)
+    if (lease) {
+      setProperties(properties.map(p => 
+        p.id === lease.propertyId ? { ...p, status: 'available' as const, tenantId: undefined, tenantName: undefined } : p
+      ))
+      setTenants(tenants.map(t => 
+        t.id === lease.tenantId ? { ...t, propertyId: undefined, propertyAddress: undefined, leaseId: undefined, monthlyRent: undefined } : t
+      ))
+    }
+    setLeases(leases.filter(l => l.id !== id))
+    setDeleteConfirm(null)
+  }, [leases, properties, tenants])
+
+  const handleDeleteMaintenance = useCallback((id: string) => {
+    setMaintenanceRequests(maintenanceRequests.filter(m => m.id !== id))
+    setDeleteConfirm(null)
+  }, [maintenanceRequests])
+
+  const handleUpdatePropertyStatus = useCallback((id: string, status: Property['status']) => {
+    setProperties(properties.map(p => p.id === id ? { ...p, status } : p))
+  }, [properties])
+
+  const handleUpdateLeaseStatus = useCallback((id: string, status: Lease['status']) => {
+    const lease = leases.find(l => l.id === id)
+    if (lease && status === 'expired') {
+      setProperties(properties.map(p => 
+        p.id === lease.propertyId ? { ...p, status: 'available' as const, tenantId: undefined, tenantName: undefined } : p
+      ))
+    }
+    setLeases(leases.map(l => l.id === id ? { ...l, status } : l))
+  }, [leases, properties])
+
+  const handleUpdatePaymentStatus = useCallback((id: string, paymentStatus: Lease['paymentStatus']) => {
+    setLeases(leases.map(l => l.id === id ? { ...l, paymentStatus } : l))
+  }, [leases])
+
+  const handleUpdateMaintenanceStatus = useCallback((id: string, status: MaintenanceRequest['status']) => {
+    setMaintenanceRequests(maintenanceRequests.map(m => 
+      m.id === id ? { ...m, status, completedAt: status === 'completed' ? new Date() : m.completedAt } : m
+    ))
+  }, [maintenanceRequests])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
@@ -303,14 +406,51 @@ export default function RealEstatePage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Biens immobiliers</h2>
               <button 
-                onClick={() => setShowPropertyModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                onClick={() => {
+                  setEditingProperty(null)
+                  setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '', description: '', features: [] })
+                  setShowPropertyModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center gap-2"
               >
+                <Plus className="w-4 h-4" />
                 Nouveau bien
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {properties.map((property, idx) => {
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Rechercher par adresse, propriétaire..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                />
+              </div>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              >
+                <option value="all">Tous les statuts</option>
+                <option value="available">Disponible</option>
+                <option value="rented">Loué</option>
+                <option value="sold">Vendu</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+            </div>
+
+            {filteredProperties.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+                <Home className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 text-lg mb-2">Aucun bien trouvé</p>
+                <p className="text-gray-500 text-sm">Essayez de modifier vos critères de recherche</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {filteredProperties.map((property, idx) => {
                 const propertyImages: Record<string, string> = {
                   '1': 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop&q=80',
                   '2': 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop&q=80',
@@ -364,11 +504,54 @@ export default function RealEstatePage() {
                         {property.status === 'available' ? 'Disponible' : property.status === 'rented' ? 'Loué' : property.status === 'sold' ? 'Vendu' : 'Maintenance'}
                       </span>
                     </div>
+                    <div className="flex gap-2 mt-3 pt-3 border-t border-gray-200">
+                      <button
+                        onClick={() => {
+                          setEditingProperty(property)
+                          setNewProperty({ 
+                            address: property.address, 
+                            type: property.type, 
+                            bedrooms: property.bedrooms || 0, 
+                            bathrooms: property.bathrooms || 0, 
+                            area: property.area, 
+                            price: property.price, 
+                            ownerName: property.ownerName,
+                            description: property.description || '',
+                            features: property.features || []
+                          })
+                          setShowPropertyModal(true)
+                        }}
+                        className="flex-1 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 text-sm"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Modifier
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirm({ type: 'property', id: property.id })}
+                        className="flex-1 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center gap-2 text-sm"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Supprimer
+                      </button>
+                    </div>
+                    <div className="mt-2 pt-2 border-t border-gray-100">
+                      <select
+                        value={property.status}
+                        onChange={(e) => handleUpdatePropertyStatus(property.id, e.target.value as Property['status'])}
+                        className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-slate-500"
+                      >
+                        <option value="available">Disponible</option>
+                        <option value="rented">Loué</option>
+                        <option value="sold">Vendu</option>
+                        <option value="maintenance">Maintenance</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
                 )
               })}
-            </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -377,14 +560,38 @@ export default function RealEstatePage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Locataires</h2>
               <button 
-                onClick={() => setShowTenantModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                onClick={() => {
+                  setEditingTenant(null)
+                  setNewTenant({ name: '', email: '', phone: '' })
+                  setShowTenantModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center gap-2"
               >
+                <Plus className="w-4 h-4" />
                 Nouveau locataire
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {tenants.map((tenant) => (
+            
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Rechercher par nom, email, téléphone..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              />
+            </div>
+
+            {filteredTenants.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+                <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 text-lg mb-2">Aucun locataire trouvé</p>
+                <p className="text-gray-500 text-sm">Essayez de modifier vos critères de recherche</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {filteredTenants.map((tenant) => (
                 <div key={tenant.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
@@ -422,10 +629,31 @@ export default function RealEstatePage() {
                         {tenant.status === 'active' ? 'Actif' : tenant.status === 'pending' ? 'En attente' : 'Inactif'}
                       </span>
                     </div>
+                    <div className="flex gap-2 mt-3 pt-3 border-t border-gray-200">
+                      <button
+                        onClick={() => {
+                          setEditingTenant(tenant)
+                          setNewTenant({ name: tenant.name, email: tenant.email, phone: tenant.phone })
+                          setShowTenantModal(true)
+                        }}
+                        className="flex-1 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 text-sm"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Modifier
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirm({ type: 'tenant', id: tenant.id })}
+                        className="flex-1 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center gap-2 text-sm"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Supprimer
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
-            </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -434,14 +662,38 @@ export default function RealEstatePage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Baux</h2>
               <button 
-                onClick={() => setShowLeaseModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                onClick={() => {
+                  setEditingLease(null)
+                  setNewLease({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
+                  setShowLeaseModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center gap-2"
               >
+                <Plus className="w-4 h-4" />
                 Nouveau bail
               </button>
             </div>
-            <div className="space-y-4">
-              {leases.map((lease) => (
+            
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Rechercher par adresse, locataire..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              />
+            </div>
+
+            {filteredLeases.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+                <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 text-lg mb-2">Aucun bail trouvé</p>
+                <p className="text-gray-500 text-sm">Essayez de modifier vos critères de recherche</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredLeases.map((lease) => (
                 <div key={lease.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -481,9 +733,55 @@ export default function RealEstatePage() {
                       </span>
                     </div>
                   </div>
+                  <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => {
+                        setEditingLease(lease)
+                        setNewLease({
+                          propertyId: lease.propertyId,
+                          tenantId: lease.tenantId,
+                          startDate: new Date(lease.startDate).toISOString().split('T')[0],
+                          endDate: new Date(lease.endDate).toISOString().split('T')[0],
+                          monthlyRent: lease.monthlyRent,
+                          deposit: lease.deposit
+                        })
+                        setShowLeaseModal(true)
+                      }}
+                      className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors flex items-center gap-2 text-sm"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                      Modifier
+                    </button>
+                    <select
+                      value={lease.status}
+                      onChange={(e) => handleUpdateLeaseStatus(lease.id, e.target.value as Lease['status'])}
+                      className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500"
+                    >
+                      <option value="active">Actif</option>
+                      <option value="expired">Expiré</option>
+                      <option value="terminated">Résilié</option>
+                    </select>
+                    <select
+                      value={lease.paymentStatus}
+                      onChange={(e) => handleUpdatePaymentStatus(lease.id, e.target.value as Lease['paymentStatus'])}
+                      className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500"
+                    >
+                      <option value="pending">En attente</option>
+                      <option value="paid">Payé</option>
+                      <option value="overdue">En retard</option>
+                    </select>
+                    <button
+                      onClick={() => setDeleteConfirm({ type: 'lease', id: lease.id })}
+                      className="px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors flex items-center gap-2 text-sm"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Supprimer
+                    </button>
+                  </div>
                 </div>
               ))}
-            </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -492,14 +790,27 @@ export default function RealEstatePage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Maintenance</h2>
               <button 
-                onClick={() => setShowMaintenanceModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                onClick={() => {
+                  setEditingMaintenance(null)
+                  setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium', cost: 0 })
+                  setShowMaintenanceModal(true)
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center gap-2"
               >
+                <Plus className="w-4 h-4" />
                 Nouvelle demande
               </button>
             </div>
-            <div className="space-y-4">
-              {maintenanceRequests.map((request) => (
+            
+            {maintenanceRequests.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+                <Key className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 text-lg mb-2">Aucune demande de maintenance</p>
+                <p className="text-gray-500 text-sm">Créez votre première demande de maintenance</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {maintenanceRequests.map((request) => (
                 <div key={request.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -530,9 +841,46 @@ export default function RealEstatePage() {
                       </span>
                     </div>
                   </div>
+                  <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => {
+                        setEditingMaintenance(request)
+                        setNewMaintenance({
+                          propertyId: request.propertyId,
+                          tenantId: request.tenantId,
+                          description: request.description,
+                          priority: request.priority,
+                          cost: request.cost || 0
+                        })
+                        setShowMaintenanceModal(true)
+                      }}
+                      className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors flex items-center gap-2 text-sm"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                      Modifier
+                    </button>
+                    <select
+                      value={request.status}
+                      onChange={(e) => handleUpdateMaintenanceStatus(request.id, e.target.value as MaintenanceRequest['status'])}
+                      className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500"
+                    >
+                      <option value="pending">En attente</option>
+                      <option value="in_progress">En cours</option>
+                      <option value="completed">Terminé</option>
+                      <option value="cancelled">Annulé</option>
+                    </select>
+                    <button
+                      onClick={() => setDeleteConfirm({ type: 'maintenance', id: request.id })}
+                      className="px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors flex items-center gap-2 text-sm"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Supprimer
+                    </button>
+                  </div>
                 </div>
               ))}
-            </div>
+              </div>
+            )}
           </div>
         )}
       </main>
@@ -542,9 +890,11 @@ export default function RealEstatePage() {
         isOpen={showPropertyModal}
         onClose={() => {
           setShowPropertyModal(false)
-          setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '' })
+          setEditingProperty(null)
+          setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '', description: '', features: [] })
+          setNewFeature('')
         }}
-        title="Nouveau bien"
+        title={editingProperty ? "Modifier le bien" : "Nouveau bien"}
         size="lg"
       >
         <div className="space-y-4">
@@ -629,11 +979,66 @@ export default function RealEstatePage() {
               />
             </div>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newProperty.description}
+              onChange={(e) => setNewProperty({ ...newProperty, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du bien..."
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Caractéristiques</label>
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={newFeature}
+                onChange={(e) => setNewFeature(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && newFeature.trim()) {
+                    e.preventDefault()
+                    setNewProperty({ ...newProperty, features: [...newProperty.features, newFeature.trim()] })
+                    setNewFeature('')
+                  }
+                }}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ajouter une caractéristique (ex: Balcon, Parking...)"
+              />
+              <button
+                onClick={() => {
+                  if (newFeature.trim()) {
+                    setNewProperty({ ...newProperty, features: [...newProperty.features, newFeature.trim()] })
+                    setNewFeature('')
+                  }
+                }}
+                className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {newProperty.features.map((feature, idx) => (
+                <span key={idx} className="px-3 py-1 bg-slate-100 text-slate-700 rounded-lg flex items-center gap-2">
+                  {feature}
+                  <button
+                    onClick={() => setNewProperty({ ...newProperty, features: newProperty.features.filter((_, i) => i !== idx) })}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
           <div className="flex justify-end gap-2">
             <button
               onClick={() => {
                 setShowPropertyModal(false)
-                setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '' })
+                setEditingProperty(null)
+                setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '', description: '', features: [] })
+                setNewFeature('')
               }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
@@ -642,29 +1047,49 @@ export default function RealEstatePage() {
             <button
               onClick={() => {
                 if (newProperty.address && newProperty.ownerName && newProperty.area > 0) {
-                  const property: Property = {
-                    id: Date.now().toString(),
-                    address: newProperty.address,
-                    type: newProperty.type,
-                    bedrooms: newProperty.bedrooms || undefined,
-                    bathrooms: newProperty.bathrooms || undefined,
-                    area: newProperty.area,
-                    price: newProperty.price,
-                    status: 'available',
-                    ownerId: Date.now().toString(),
-                    ownerName: newProperty.ownerName,
-                    images: [],
-                    features: [],
-                    createdAt: new Date(),
+                  if (editingProperty) {
+                    setProperties(properties.map(p => 
+                      p.id === editingProperty.id ? {
+                        ...p,
+                        address: newProperty.address,
+                        type: newProperty.type,
+                        bedrooms: newProperty.bedrooms || undefined,
+                        bathrooms: newProperty.bathrooms || undefined,
+                        area: newProperty.area,
+                        price: newProperty.price,
+                        ownerName: newProperty.ownerName,
+                        description: newProperty.description,
+                        features: newProperty.features,
+                      } : p
+                    ))
+                  } else {
+                    const property: Property = {
+                      id: Date.now().toString(),
+                      address: newProperty.address,
+                      type: newProperty.type,
+                      bedrooms: newProperty.bedrooms || undefined,
+                      bathrooms: newProperty.bathrooms || undefined,
+                      area: newProperty.area,
+                      price: newProperty.price,
+                      status: 'available',
+                      ownerId: Date.now().toString(),
+                      ownerName: newProperty.ownerName,
+                      images: [],
+                      features: newProperty.features,
+                      description: newProperty.description,
+                      createdAt: new Date(),
+                    }
+                    setProperties([...properties, property])
                   }
-                  setProperties([...properties, property])
                   setShowPropertyModal(false)
-                  setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '' })
+                  setEditingProperty(null)
+                  setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '', description: '', features: [] })
+                  setNewFeature('')
                 }
               }}
               className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
             >
-              Ajouter
+              {editingProperty ? 'Enregistrer' : 'Ajouter'}
             </button>
           </div>
         </div>
@@ -674,9 +1099,10 @@ export default function RealEstatePage() {
         isOpen={showTenantModal}
         onClose={() => {
           setShowTenantModal(false)
+          setEditingTenant(null)
           setNewTenant({ name: '', email: '', phone: '' })
         }}
-        title="Nouveau locataire"
+        title={editingTenant ? "Modifier le locataire" : "Nouveau locataire"}
         size="lg"
       >
         <div className="space-y-4">
@@ -725,22 +1151,34 @@ export default function RealEstatePage() {
             <button
               onClick={() => {
                 if (newTenant.name && newTenant.email && newTenant.phone) {
-                  const tenant: Tenant = {
-                    id: Date.now().toString(),
-                    name: newTenant.name,
-                    email: newTenant.email,
-                    phone: newTenant.phone,
-                    status: 'pending',
-                    joinDate: new Date(),
+                  if (editingTenant) {
+                    setTenants(tenants.map(t => 
+                      t.id === editingTenant.id ? {
+                        ...t,
+                        name: newTenant.name,
+                        email: newTenant.email,
+                        phone: newTenant.phone,
+                      } : t
+                    ))
+                  } else {
+                    const tenant: Tenant = {
+                      id: Date.now().toString(),
+                      name: newTenant.name,
+                      email: newTenant.email,
+                      phone: newTenant.phone,
+                      status: 'pending',
+                      joinDate: new Date(),
+                    }
+                    setTenants([...tenants, tenant])
                   }
-                  setTenants([...tenants, tenant])
                   setShowTenantModal(false)
+                  setEditingTenant(null)
                   setNewTenant({ name: '', email: '', phone: '' })
                 }
               }}
               className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
             >
-              Ajouter
+              {editingTenant ? 'Enregistrer' : 'Ajouter'}
             </button>
           </div>
         </div>
@@ -750,9 +1188,10 @@ export default function RealEstatePage() {
         isOpen={showLeaseModal}
         onClose={() => {
           setShowLeaseModal(false)
+          setEditingLease(null)
           setNewLease({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
         }}
-        title="Nouveau bail"
+        title={editingLease ? "Modifier le bail" : "Nouveau bail"}
         size="lg"
       >
         <div className="space-y-4">
@@ -763,9 +1202,10 @@ export default function RealEstatePage() {
                 value={newLease.propertyId}
                 onChange={(e) => setNewLease({ ...newLease, propertyId: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                disabled={!!editingLease}
               >
                 <option value="">Sélectionner un bien</option>
-                {properties.filter(p => p.status === 'available').map(property => (
+                {properties.filter(p => editingLease ? p.id === editingLease.propertyId || p.status === 'available' : p.status === 'available').map(property => (
                   <option key={property.id} value={property.id}>{property.address}</option>
                 ))}
               </select>
@@ -778,6 +1218,7 @@ export default function RealEstatePage() {
                 value={newLease.tenantId}
                 onChange={(e) => setNewLease({ ...newLease, tenantId: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                disabled={!!editingLease}
               >
                 <option value="">Sélectionner un locataire</option>
                 {tenants.map(tenant => (
@@ -844,28 +1285,65 @@ export default function RealEstatePage() {
                   const property = properties.find(p => p.id === newLease.propertyId)
                   const tenant = tenants.find(t => t.id === newLease.tenantId)
                   if (property && tenant) {
-                    const lease: Lease = {
-                      id: Date.now().toString(),
-                      propertyId: newLease.propertyId,
-                      propertyAddress: property.address,
-                      tenantId: newLease.tenantId,
-                      tenantName: tenant.name,
-                      startDate: new Date(newLease.startDate),
-                      endDate: new Date(newLease.endDate),
-                      monthlyRent: newLease.monthlyRent,
-                      deposit: newLease.deposit,
-                      status: 'active',
-                      paymentStatus: 'pending',
+                    if (editingLease) {
+                      setLeases(leases.map(l => 
+                        l.id === editingLease.id ? {
+                          ...l,
+                          propertyId: newLease.propertyId,
+                          propertyAddress: property.address,
+                          tenantId: newLease.tenantId,
+                          tenantName: tenant.name,
+                          startDate: new Date(newLease.startDate),
+                          endDate: new Date(newLease.endDate),
+                          monthlyRent: newLease.monthlyRent,
+                          deposit: newLease.deposit,
+                        } : l
+                      ))
+                    } else {
+                      const lease: Lease = {
+                        id: Date.now().toString(),
+                        propertyId: newLease.propertyId,
+                        propertyAddress: property.address,
+                        tenantId: newLease.tenantId,
+                        tenantName: tenant.name,
+                        startDate: new Date(newLease.startDate),
+                        endDate: new Date(newLease.endDate),
+                        monthlyRent: newLease.monthlyRent,
+                        deposit: newLease.deposit,
+                        status: 'active',
+                        paymentStatus: 'pending',
+                      }
+                      setLeases([...leases, lease])
+                      // Update property status to rented
+                      setProperties(properties.map(p => 
+                        p.id === newLease.propertyId ? { 
+                          ...p, 
+                          status: 'rented' as const,
+                          tenantId: newLease.tenantId,
+                          tenantName: tenant.name
+                        } : p
+                      ))
+                      // Update tenant to link with property
+                      setTenants(tenants.map(t => 
+                        t.id === newLease.tenantId ? { 
+                          ...t, 
+                          propertyId: newLease.propertyId,
+                          propertyAddress: property.address,
+                          leaseId: lease.id,
+                          monthlyRent: newLease.monthlyRent,
+                          status: 'active' as const
+                        } : t
+                      ))
                     }
-                    setLeases([...leases, lease])
                     setShowLeaseModal(false)
+                    setEditingLease(null)
                     setNewLease({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
                   }
                 }
               }}
               className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
             >
-              Ajouter
+              {editingLease ? 'Enregistrer' : 'Ajouter'}
             </button>
           </div>
         </div>
@@ -875,9 +1353,10 @@ export default function RealEstatePage() {
         isOpen={showMaintenanceModal}
         onClose={() => {
           setShowMaintenanceModal(false)
-          setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium' })
+          setEditingMaintenance(null)
+          setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium', cost: 0 })
         }}
-        title="Nouvelle demande de maintenance"
+        title={editingMaintenance ? "Modifier la demande de maintenance" : "Nouvelle demande de maintenance"}
         size="lg"
       >
         <div className="space-y-4">
@@ -888,6 +1367,7 @@ export default function RealEstatePage() {
                 value={newMaintenance.propertyId}
                 onChange={(e) => setNewMaintenance({ ...newMaintenance, propertyId: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                disabled={!!editingMaintenance}
               >
                 <option value="">Sélectionner un bien</option>
                 {properties.map(property => (
@@ -903,6 +1383,7 @@ export default function RealEstatePage() {
                 value={newMaintenance.tenantId}
                 onChange={(e) => setNewMaintenance({ ...newMaintenance, tenantId: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                disabled={!!editingMaintenance}
               >
                 <option value="">Sélectionner un locataire</option>
                 {tenants.map(tenant => (
@@ -938,38 +1419,122 @@ export default function RealEstatePage() {
             <button
               onClick={() => {
                 setShowMaintenanceModal(false)
-                setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium' })
+                setEditingMaintenance(null)
+                setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium', cost: 0 })
               }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Coût (DZD) - Optionnel</label>
+              <input
+                type="number"
+                value={newMaintenance.cost}
+                onChange={(e) => setNewMaintenance({ ...newMaintenance, cost: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+                placeholder="0"
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  setShowMaintenanceModal(false)
+                  setEditingMaintenance(null)
+                  setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium', cost: 0 })
+                }}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => {
+                  if (newMaintenance.propertyId && newMaintenance.tenantId && newMaintenance.description) {
+                    const property = properties.find(p => p.id === newMaintenance.propertyId)
+                    const tenant = tenants.find(t => t.id === newMaintenance.tenantId)
+                    if (property && tenant) {
+                      if (editingMaintenance) {
+                        setMaintenanceRequests(maintenanceRequests.map(m => 
+                          m.id === editingMaintenance.id ? {
+                            ...m,
+                            propertyId: newMaintenance.propertyId,
+                            propertyAddress: property.address,
+                            tenantId: newMaintenance.tenantId,
+                            tenantName: tenant.name,
+                            description: newMaintenance.description,
+                            priority: newMaintenance.priority,
+                            cost: newMaintenance.cost || undefined,
+                          } : m
+                        ))
+                      } else {
+                        const maintenance: MaintenanceRequest = {
+                          id: Date.now().toString(),
+                          propertyId: newMaintenance.propertyId,
+                          propertyAddress: property.address,
+                          tenantId: newMaintenance.tenantId,
+                          tenantName: tenant.name,
+                          description: newMaintenance.description,
+                          priority: newMaintenance.priority,
+                          status: 'pending',
+                          createdAt: new Date(),
+                          cost: newMaintenance.cost || undefined,
+                        }
+                        setMaintenanceRequests([...maintenanceRequests, maintenance])
+                      }
+                      setShowMaintenanceModal(false)
+                      setEditingMaintenance(null)
+                      setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium', cost: 0 })
+                    }
+                  }
+                }}
+                className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
+                {editingMaintenance ? 'Enregistrer' : 'Ajouter'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={deleteConfirm !== null}
+        onClose={() => setDeleteConfirm(null)}
+        title="Confirmer la suppression"
+        size="md"
+      >
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 text-red-600">
+            <AlertCircle className="w-6 h-6" />
+            <p className="font-medium">
+              Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.
+            </p>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setDeleteConfirm(null)}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
               Annuler
             </button>
             <button
               onClick={() => {
-                if (newMaintenance.propertyId && newMaintenance.tenantId && newMaintenance.description) {
-                  const property = properties.find(p => p.id === newMaintenance.propertyId)
-                  const tenant = tenants.find(t => t.id === newMaintenance.tenantId)
-                  if (property && tenant) {
-                    const maintenance: MaintenanceRequest = {
-                      id: Date.now().toString(),
-                      propertyId: newMaintenance.propertyId,
-                      propertyAddress: property.address,
-                      tenantId: newMaintenance.tenantId,
-                      tenantName: tenant.name,
-                      description: newMaintenance.description,
-                      priority: newMaintenance.priority,
-                      status: 'pending',
-                      createdAt: new Date(),
-                    }
-                    setMaintenanceRequests([...maintenanceRequests, maintenance])
-                    setShowMaintenanceModal(false)
-                    setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium' })
+                if (deleteConfirm) {
+                  if (deleteConfirm.type === 'property') {
+                    handleDeleteProperty(deleteConfirm.id)
+                  } else if (deleteConfirm.type === 'tenant') {
+                    handleDeleteTenant(deleteConfirm.id)
+                  } else if (deleteConfirm.type === 'lease') {
+                    handleDeleteLease(deleteConfirm.id)
+                  } else if (deleteConfirm.type === 'maintenance') {
+                    handleDeleteMaintenance(deleteConfirm.id)
                   }
                 }
               }}
-              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
-              Ajouter
+              Supprimer
             </button>
           </div>
         </div>

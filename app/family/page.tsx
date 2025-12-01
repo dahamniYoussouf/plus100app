@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Users, Calendar, CheckCircle, Gift, BarChart3, Clock, MessageSquare, ShoppingCart } from 'lucide-react'
 
 type TabType = 'dashboard' | 'members' | 'calendar' | 'tasks' | 'shopping' | 'events'
@@ -55,6 +56,14 @@ export default function FamilyPage() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [shopping, setShopping] = useState<ShoppingItem[]>([])
+  const [showMemberModal, setShowMemberModal] = useState(false)
+  const [showTaskModal, setShowTaskModal] = useState(false)
+  const [showEventModal, setShowEventModal] = useState(false)
+  const [showShoppingModal, setShowShoppingModal] = useState(false)
+  const [newMember, setNewMember] = useState({ name: '', role: 'parent' as 'parent' | 'child' | 'grandparent' | 'other', email: '', phone: '', dateOfBirth: '' })
+  const [newTask, setNewTask] = useState({ title: '', description: '', assignedTo: [] as string[], dueDate: '', priority: 'medium' as 'low' | 'medium' | 'high', category: 'chores' as 'chores' | 'shopping' | 'appointments' | 'other' })
+  const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', time: '', participants: [] as string[], type: 'event' as 'appointment' | 'event' | 'reminder' | 'birthday', recurring: '' as '' | 'daily' | 'weekly' | 'monthly' | 'yearly' })
+  const [newShoppingItem, setNewShoppingItem] = useState({ name: '', quantity: 1, category: '', priority: 'medium' as 'low' | 'medium' | 'high' })
 
   useEffect(() => {
     const savedMembers = localStorage.getItem('family-members')
@@ -334,7 +343,10 @@ export default function FamilyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Membres de la Famille</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowMemberModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Ajouter Membre
               </button>
             </div>
@@ -370,7 +382,10 @@ export default function FamilyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Tâches</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowTaskModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Nouvelle Tâche
               </button>
             </div>
@@ -429,7 +444,10 @@ export default function FamilyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Calendrier</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowEventModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Nouvel Événement
               </button>
             </div>
@@ -477,7 +495,10 @@ export default function FamilyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Liste de Courses</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowShoppingModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Ajouter Article
               </button>
             </div>
@@ -539,6 +560,463 @@ export default function FamilyPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showMemberModal}
+        onClose={() => {
+          setShowMemberModal(false)
+          setNewMember({ name: '', role: 'parent', email: '', phone: '', dateOfBirth: '' })
+        }}
+        title="Ajouter Membre"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newMember.name}
+              onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Nom complet"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Rôle</label>
+              <select
+                value={newMember.role}
+                onChange={(e) => setNewMember({ ...newMember, role: e.target.value as 'parent' | 'child' | 'grandparent' | 'other' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="parent">Parent</option>
+                <option value="child">Enfant</option>
+                <option value="grandparent">Grand-parent</option>
+                <option value="other">Autre</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de naissance (optionnel)</label>
+              <input
+                type="date"
+                value={newMember.dateOfBirth}
+                onChange={(e) => setNewMember({ ...newMember, dateOfBirth: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email (optionnel)</label>
+              <input
+                type="email"
+                value={newMember.email}
+                onChange={(e) => setNewMember({ ...newMember, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="email@example.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone (optionnel)</label>
+              <input
+                type="text"
+                value={newMember.phone}
+                onChange={(e) => setNewMember({ ...newMember, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="+213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMemberModal(false)
+                setNewMember({ name: '', role: 'parent', email: '', phone: '', dateOfBirth: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMember.name) {
+                  const member: FamilyMember = {
+                    id: Date.now().toString(),
+                    name: newMember.name,
+                    role: newMember.role,
+                    email: newMember.email || undefined,
+                    phone: newMember.phone || undefined,
+                    dateOfBirth: newMember.dateOfBirth ? new Date(newMember.dateOfBirth) : undefined,
+                  }
+                  setMembers([...members, member])
+                  setShowMemberModal(false)
+                  setNewMember({ name: '', role: 'parent', email: '', phone: '', dateOfBirth: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showTaskModal}
+        onClose={() => {
+          setShowTaskModal(false)
+          setNewTask({ title: '', description: '', assignedTo: [], dueDate: '', priority: 'medium', category: 'chores' })
+        }}
+        title="Nouvelle Tâche"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+            <input
+              type="text"
+              value={newTask.title}
+              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Titre de la tâche"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description (optionnel)</label>
+            <textarea
+              value={newTask.description}
+              onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
+              <select
+                value={newTask.priority}
+                onChange={(e) => setNewTask({ ...newTask, priority: e.target.value as 'low' | 'medium' | 'high' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="low">Basse</option>
+                <option value="medium">Moyenne</option>
+                <option value="high">Haute</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newTask.category}
+                onChange={(e) => setNewTask({ ...newTask, category: e.target.value as 'chores' | 'shopping' | 'appointments' | 'other' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="chores">Corvées</option>
+                <option value="shopping">Courses</option>
+                <option value="appointments">Rendez-vous</option>
+                <option value="other">Autre</option>
+              </select>
+            </div>
+          </div>
+          {members.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Assigné à</label>
+              <div className="space-y-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-2">
+                {members.map(member => (
+                  <label key={member.id} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
+                    <input
+                      type="checkbox"
+                      checked={newTask.assignedTo.includes(member.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setNewTask({ ...newTask, assignedTo: [...newTask.assignedTo, member.id] })
+                        } else {
+                          setNewTask({ ...newTask, assignedTo: newTask.assignedTo.filter(id => id !== member.id) })
+                        }
+                      }}
+                      className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                    />
+                    <span className="text-sm">{member.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date d'échéance (optionnel)</label>
+            <input
+              type="date"
+              value={newTask.dueDate}
+              onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowTaskModal(false)
+                setNewTask({ title: '', description: '', assignedTo: [], dueDate: '', priority: 'medium', category: 'chores' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newTask.title && newTask.assignedTo.length > 0) {
+                  const task: Task = {
+                    id: Date.now().toString(),
+                    title: newTask.title,
+                    description: newTask.description || undefined,
+                    assignedTo: newTask.assignedTo,
+                    dueDate: newTask.dueDate ? new Date(newTask.dueDate) : undefined,
+                    priority: newTask.priority,
+                    status: 'pending',
+                    category: newTask.category,
+                    createdBy: members[0]?.id || '',
+                    createdAt: new Date(),
+                  }
+                  setTasks([...tasks, task])
+                  setShowTaskModal(false)
+                  setNewTask({ title: '', description: '', assignedTo: [], dueDate: '', priority: 'medium', category: 'chores' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showEventModal}
+        onClose={() => {
+          setShowEventModal(false)
+          setNewEvent({ title: '', description: '', date: '', time: '', participants: [], type: 'event', recurring: '' })
+        }}
+        title="Nouvel Événement"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+            <input
+              type="text"
+              value={newEvent.title}
+              onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Titre de l'événement"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description (optionnel)</label>
+            <textarea
+              value={newEvent.description}
+              onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newEvent.date}
+                onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure (optionnel)</label>
+              <input
+                type="time"
+                value={newEvent.time}
+                onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newEvent.type}
+                onChange={(e) => setNewEvent({ ...newEvent, type: e.target.value as 'appointment' | 'event' | 'reminder' | 'birthday' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="appointment">Rendez-vous</option>
+                <option value="event">Événement</option>
+                <option value="reminder">Rappel</option>
+                <option value="birthday">Anniversaire</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Récurrence (optionnel)</label>
+              <select
+                value={newEvent.recurring}
+                onChange={(e) => setNewEvent({ ...newEvent, recurring: e.target.value as '' | 'daily' | 'weekly' | 'monthly' | 'yearly' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="">Aucune</option>
+                <option value="daily">Quotidien</option>
+                <option value="weekly">Hebdomadaire</option>
+                <option value="monthly">Mensuel</option>
+                <option value="yearly">Annuel</option>
+              </select>
+            </div>
+          </div>
+          {members.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Participants</label>
+              <div className="space-y-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-2">
+                {members.map(member => (
+                  <label key={member.id} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
+                    <input
+                      type="checkbox"
+                      checked={newEvent.participants.includes(member.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setNewEvent({ ...newEvent, participants: [...newEvent.participants, member.id] })
+                        } else {
+                          setNewEvent({ ...newEvent, participants: newEvent.participants.filter(id => id !== member.id) })
+                        }
+                      }}
+                      className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                    />
+                    <span className="text-sm">{member.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowEventModal(false)
+                setNewEvent({ title: '', description: '', date: '', time: '', participants: [], type: 'event', recurring: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newEvent.title && newEvent.date && newEvent.participants.length > 0) {
+                  const event: CalendarEvent = {
+                    id: Date.now().toString(),
+                    title: newEvent.title,
+                    description: newEvent.description || undefined,
+                    date: new Date(newEvent.date),
+                    time: newEvent.time || undefined,
+                    participants: newEvent.participants,
+                    type: newEvent.type,
+                    recurring: newEvent.recurring || undefined,
+                  }
+                  setEvents([...events, event])
+                  setShowEventModal(false)
+                  setNewEvent({ title: '', description: '', date: '', time: '', participants: [], type: 'event', recurring: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showShoppingModal}
+        onClose={() => {
+          setShowShoppingModal(false)
+          setNewShoppingItem({ name: '', quantity: 1, category: '', priority: 'medium' })
+        }}
+        title="Ajouter Article"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newShoppingItem.name}
+              onChange={(e) => setNewShoppingItem({ ...newShoppingItem, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Nom de l'article"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+              <input
+                type="number"
+                value={newShoppingItem.quantity}
+                onChange={(e) => setNewShoppingItem({ ...newShoppingItem, quantity: parseInt(e.target.value) || 1 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newShoppingItem.category}
+                onChange={(e) => setNewShoppingItem({ ...newShoppingItem, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Ex: Alimentation"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
+            <select
+              value={newShoppingItem.priority}
+              onChange={(e) => setNewShoppingItem({ ...newShoppingItem, priority: e.target.value as 'low' | 'medium' | 'high' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            >
+              <option value="low">Basse</option>
+              <option value="medium">Moyenne</option>
+              <option value="high">Haute</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowShoppingModal(false)
+                setNewShoppingItem({ name: '', quantity: 1, category: '', priority: 'medium' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newShoppingItem.name) {
+                  const item: ShoppingItem = {
+                    id: Date.now().toString(),
+                    name: newShoppingItem.name,
+                    quantity: newShoppingItem.quantity,
+                    category: newShoppingItem.category,
+                    addedBy: members[0]?.id || '',
+                    status: 'pending',
+                    priority: newShoppingItem.priority,
+                  }
+                  setShopping([...shopping, item])
+                  setShowShoppingModal(false)
+                  setNewShoppingItem({ name: '', quantity: 1, category: '', priority: 'medium' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

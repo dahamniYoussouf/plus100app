@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { ShoppingBag, ShoppingCart, Users, BarChart3, Package, Tag, Star, TrendingUp } from 'lucide-react'
 
 type TabType = 'dashboard' | 'products' | 'sales' | 'customers' | 'inventory'
@@ -51,6 +52,12 @@ export default function FashionPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [sales, setSales] = useState<Sale[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
+  const [showProductModal, setShowProductModal] = useState(false)
+  const [showSaleModal, setShowSaleModal] = useState(false)
+  const [showCustomerModal, setShowCustomerModal] = useState(false)
+  const [newProduct, setNewProduct] = useState({ name: '', description: '', category: 'women' as 'men' | 'women' | 'kids' | 'accessories' | 'shoes', brand: '', price: 0, cost: 0, stock: 0, sold: 0, sizes: [] as string[], colors: [] as string[], season: 'all' as 'all' | 'spring' | 'summer' | 'autumn' | 'winter' })
+  const [newSale, setNewSale] = useState({ customerId: '', items: [{ productId: '', quantity: 1, size: '', color: '' }], paymentMethod: 'cash' as 'cash' | 'card' | 'installment', discount: 0 })
+  const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '', address: '' })
 
   useEffect(() => {
     const savedProducts = localStorage.getItem('fashion-products')
@@ -271,7 +278,10 @@ export default function FashionPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Produits</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowProductModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Ajouter un produit
               </button>
             </div>
@@ -324,7 +334,10 @@ export default function FashionPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Ventes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowSaleModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Nouvelle vente
               </button>
             </div>
@@ -372,7 +385,10 @@ export default function FashionPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowCustomerModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Nouveau client
               </button>
             </div>
@@ -458,6 +474,442 @@ export default function FashionPage() {
       </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showProductModal}
+        onClose={() => {
+          setShowProductModal(false)
+          setNewProduct({ name: '', description: '', category: 'women', brand: '', price: 0, cost: 0, stock: 0, sold: 0, sizes: [], colors: [], season: 'all' })
+        }}
+        title="Ajouter un produit"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newProduct.name}
+              onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Nom du produit"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newProduct.description}
+              onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value as 'men' | 'women' | 'kids' | 'accessories' | 'shoes' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="men">Homme</option>
+                <option value="women">Femme</option>
+                <option value="kids">Enfant</option>
+                <option value="accessories">Accessoires</option>
+                <option value="shoes">Chaussures</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Marque</label>
+              <input
+                type="text"
+                value={newProduct.brand}
+                onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Marque"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Coût (DZD)</label>
+              <input
+                type="number"
+                value={newProduct.cost}
+                onChange={(e) => setNewProduct({ ...newProduct, cost: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+              <input
+                type="number"
+                value={newProduct.stock}
+                onChange={(e) => setNewProduct({ ...newProduct, stock: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tailles (séparées par des virgules)</label>
+            <input
+              type="text"
+              value={newProduct.sizes.join(', ')}
+              onChange={(e) => setNewProduct({ ...newProduct, sizes: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Ex: S, M, L, XL"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Couleurs (séparées par des virgules)</label>
+            <input
+              type="text"
+              value={newProduct.colors.join(', ')}
+              onChange={(e) => setNewProduct({ ...newProduct, colors: e.target.value.split(',').map(c => c.trim()).filter(c => c) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Ex: Noir, Rouge, Bleu"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Saison</label>
+            <select
+              value={newProduct.season}
+              onChange={(e) => setNewProduct({ ...newProduct, season: e.target.value as 'all' | 'spring' | 'summer' | 'autumn' | 'winter' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            >
+              <option value="all">Toutes saisons</option>
+              <option value="spring">Printemps</option>
+              <option value="summer">Été</option>
+              <option value="autumn">Automne</option>
+              <option value="winter">Hiver</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowProductModal(false)
+                setNewProduct({ name: '', description: '', category: 'women', brand: '', price: 0, cost: 0, stock: 0, sold: 0, sizes: [], colors: [], season: 'all' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newProduct.name && newProduct.brand && newProduct.price > 0 && newProduct.colors.length > 0) {
+                  const product: Product = {
+                    id: Date.now().toString(),
+                    name: newProduct.name,
+                    description: newProduct.description,
+                    category: newProduct.category,
+                    brand: newProduct.brand,
+                    price: newProduct.price,
+                    cost: newProduct.cost,
+                    stock: newProduct.stock,
+                    sold: newProduct.sold,
+                    sizes: newProduct.sizes.length > 0 ? newProduct.sizes : undefined,
+                    colors: newProduct.colors,
+                    season: newProduct.season,
+                  }
+                  setProducts([...products, product])
+                  setShowProductModal(false)
+                  setNewProduct({ name: '', description: '', category: 'women', brand: '', price: 0, cost: 0, stock: 0, sold: 0, sizes: [], colors: [], season: 'all' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSaleModal}
+        onClose={() => {
+          setShowSaleModal(false)
+          setNewSale({ customerId: '', items: [{ productId: '', quantity: 1, size: '', color: '' }], paymentMethod: 'cash', discount: 0 })
+        }}
+        title="Nouvelle vente"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {customers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newSale.customerId}
+                onChange={(e) => setNewSale({ ...newSale, customerId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="">Client anonyme</option>
+                {customers.map(customer => (
+                  <option key={customer.id} value={customer.id}>{customer.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Articles</label>
+            {newSale.items.map((item, idx) => (
+              <div key={idx} className="space-y-2 mb-4 p-3 border border-gray-200 rounded-lg">
+                <div className="grid grid-cols-2 gap-2">
+                  <select
+                    value={item.productId}
+                    onChange={(e) => {
+                      const updatedItems = [...newSale.items]
+                      updatedItems[idx].productId = e.target.value
+                      setNewSale({ ...newSale, items: updatedItems })
+                    }}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  >
+                    <option value="">Produit</option>
+                    {products.map(product => (
+                      <option key={product.id} value={product.id}>{product.name}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    onChange={(e) => {
+                      const updatedItems = [...newSale.items]
+                      updatedItems[idx].quantity = parseInt(e.target.value) || 1
+                      setNewSale({ ...newSale, items: updatedItems })
+                    }}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    min="1"
+                    placeholder="Qté"
+                  />
+                </div>
+                {products.find(p => p.id === item.productId)?.sizes && (
+                  <select
+                    value={item.size}
+                    onChange={(e) => {
+                      const updatedItems = [...newSale.items]
+                      updatedItems[idx].size = e.target.value
+                      setNewSale({ ...newSale, items: updatedItems })
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  >
+                    <option value="">Taille</option>
+                    {products.find(p => p.id === item.productId)?.sizes?.map(size => (
+                      <option key={size} value={size}>{size}</option>
+                    ))}
+                  </select>
+                )}
+                <div className="grid grid-cols-2 gap-2">
+                  <select
+                    value={item.color}
+                    onChange={(e) => {
+                      const updatedItems = [...newSale.items]
+                      updatedItems[idx].color = e.target.value
+                      setNewSale({ ...newSale, items: updatedItems })
+                    }}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  >
+                    <option value="">Couleur</option>
+                    {products.find(p => p.id === item.productId)?.colors.map(color => (
+                      <option key={color} value={color}>{color}</option>
+                    ))}
+                  </select>
+                  {newSale.items.length > 1 && (
+                    <button
+                      onClick={() => {
+                        setNewSale({ ...newSale, items: newSale.items.filter((_, i) => i !== idx) })
+                      }}
+                      className="px-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                    >
+                      Supprimer
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={() => {
+                setNewSale({ ...newSale, items: [...newSale.items, { productId: '', quantity: 1, size: '', color: '' }] })
+              }}
+              className="text-sm text-pink-600 hover:text-pink-700"
+            >
+              + Ajouter un article
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Méthode de paiement</label>
+              <select
+                value={newSale.paymentMethod}
+                onChange={(e) => setNewSale({ ...newSale, paymentMethod: e.target.value as 'cash' | 'card' | 'installment' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="cash">Espèces</option>
+                <option value="card">Carte</option>
+                <option value="installment">Tranches</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Remise (DZD)</label>
+              <input
+                type="number"
+                value={newSale.discount}
+                onChange={(e) => setNewSale({ ...newSale, discount: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowSaleModal(false)
+                setNewSale({ customerId: '', items: [{ productId: '', quantity: 1, size: '', color: '' }], paymentMethod: 'cash', discount: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newSale.items.every(item => item.productId && item.quantity > 0)) {
+                  const customer = newSale.customerId ? customers.find(c => c.id === newSale.customerId) : null
+                  const saleItems = newSale.items.map(item => {
+                    const product = products.find(p => p.id === item.productId)
+                    return {
+                      productId: item.productId,
+                      productName: product?.name || '',
+                      quantity: item.quantity,
+                      price: product?.price || 0,
+                      size: item.size || undefined,
+                      color: item.color || undefined,
+                    }
+                  })
+                  const subtotal = saleItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                  const total = subtotal - newSale.discount
+                  const sale: Sale = {
+                    id: Date.now().toString(),
+                    customerId: newSale.customerId || '',
+                    customerName: customer?.name || 'Client anonyme',
+                    date: new Date(),
+                    items: saleItems,
+                    total,
+                    discount: newSale.discount > 0 ? newSale.discount : undefined,
+                    paymentMethod: newSale.paymentMethod,
+                    status: 'completed',
+                  }
+                  setSales([...sales, sale])
+                  setShowSaleModal(false)
+                  setNewSale({ customerId: '', items: [{ productId: '', quantity: 1, size: '', color: '' }], paymentMethod: 'cash', discount: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showCustomerModal}
+        onClose={() => {
+          setShowCustomerModal(false)
+          setNewCustomer({ name: '', email: '', phone: '', address: '' })
+        }}
+        title="Nouveau client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+            <input
+              type="text"
+              value={newCustomer.name}
+              onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Nom complet"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newCustomer.email}
+                onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="email@example.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="text"
+                value={newCustomer.phone}
+                onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="+213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse (optionnel)</label>
+            <input
+              type="text"
+              value={newCustomer.address}
+              onChange={(e) => setNewCustomer({ ...newCustomer, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Adresse"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowCustomerModal(false)
+                setNewCustomer({ name: '', email: '', phone: '', address: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCustomer.name && newCustomer.email && newCustomer.phone) {
+                  const customer: Customer = {
+                    id: Date.now().toString(),
+                    name: newCustomer.name,
+                    email: newCustomer.email,
+                    phone: newCustomer.phone,
+                    address: newCustomer.address || undefined,
+                    totalPurchases: 0,
+                    totalSpent: 0,
+                    loyaltyPoints: 0,
+                  }
+                  setCustomers([...customers, customer])
+                  setShowCustomerModal(false)
+                  setNewCustomer({ name: '', email: '', phone: '', address: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

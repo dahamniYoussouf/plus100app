@@ -63,9 +63,11 @@ export default function CarpartsPage() {
   const [showPartModal, setShowPartModal] = useState(false)
   const [showSupplierModal, setShowSupplierModal] = useState(false)
   const [showCustomerModal, setShowCustomerModal] = useState(false)
+  const [showSaleModal, setShowSaleModal] = useState(false)
   const [newPart, setNewPart] = useState({ name: '', partNumber: '', category: '', brand: '', price: 0, cost: 0, quantity: 0, minStock: 5, location: '', supplierId: '', supplierName: '' })
   const [newSupplier, setNewSupplier] = useState({ name: '', contact: '', phone: '', email: '', address: '' })
   const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', vehicleInfo: '' })
+  const [newSale, setNewSale] = useState({ customerId: '', items: [{ partId: '', quantity: 1 }] })
 
   useEffect(() => {
     const savedParts = localStorage.getItem('carparts-parts')
@@ -436,7 +438,10 @@ export default function CarpartsPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Ventes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowSaleModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Vente
               </button>
             </div>

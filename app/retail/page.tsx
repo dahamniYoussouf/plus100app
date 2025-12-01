@@ -43,8 +43,10 @@ export default function RetailPage() {
   const [customers, setCustomers] = useState<Customer[]>([])
   const [showProductModal, setShowProductModal] = useState(false)
   const [showCustomerModal, setShowCustomerModal] = useState(false)
+  const [showSaleModal, setShowSaleModal] = useState(false)
   const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, cost: 0, category: '', stock: 0, sku: '' })
   const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '' })
+  const [newSale, setNewSale] = useState({ customerId: '', items: [{ productId: '', quantity: 1 }], paymentMethod: 'cash' as 'cash' | 'card' | 'mobile', customerName: '' })
 
   useEffect(() => {
     const savedProducts = localStorage.getItem('retail-products')
@@ -273,7 +275,10 @@ export default function RetailPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Ventes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+              <button 
+                onClick={() => setShowSaleModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
                 Nouvelle Vente
               </button>
             </div>
@@ -537,6 +542,139 @@ export default function RetailPage() {
                   setCustomers([...customers, customer])
                   setShowCustomerModal(false)
                   setNewCustomer({ name: '', email: '', phone: '' })
+                }
+              }}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSaleModal}
+        onClose={() => {
+          setShowSaleModal(false)
+          setNewSale({ customerId: '', items: [{ productId: '', quantity: 1 }], paymentMethod: 'cash', customerName: '' })
+        }}
+        title="Nouvelle Vente"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Client (optionnel)</label>
+            <select
+              value={newSale.customerId}
+              onChange={(e) => {
+                const customer = customers.find(c => c.id === e.target.value)
+                setNewSale({ ...newSale, customerId: e.target.value, customerName: customer?.name || '' })
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+              <option value="">Client anonyme</option>
+              {customers.map(customer => (
+                <option key={customer.id} value={customer.id}>{customer.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Articles</label>
+            {newSale.items.map((item, idx) => (
+              <div key={idx} className="grid grid-cols-3 gap-2 mb-2">
+                <select
+                  value={item.productId}
+                  onChange={(e) => {
+                    const updatedItems = [...newSale.items]
+                    updatedItems[idx].productId = e.target.value
+                    setNewSale({ ...newSale, items: updatedItems })
+                  }}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="">Produit</option>
+                  {products.map(product => (
+                    <option key={product.id} value={product.id}>{product.name} - DZD{product.price}</option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  onChange={(e) => {
+                    const updatedItems = [...newSale.items]
+                    updatedItems[idx].quantity = parseInt(e.target.value) || 1
+                    setNewSale({ ...newSale, items: updatedItems })
+                  }}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  min="1"
+                  placeholder="Qté"
+                />
+                {newSale.items.length > 1 && (
+                  <button
+                    onClick={() => {
+                      setNewSale({ ...newSale, items: newSale.items.filter((_, i) => i !== idx) })
+                    }}
+                    className="px-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              onClick={() => {
+                setNewSale({ ...newSale, items: [...newSale.items, { productId: '', quantity: 1 }] })
+              }}
+              className="text-sm text-purple-600 hover:text-purple-700"
+            >
+              + Ajouter un article
+            </button>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Méthode de paiement</label>
+            <select
+              value={newSale.paymentMethod}
+              onChange={(e) => setNewSale({ ...newSale, paymentMethod: e.target.value as 'cash' | 'card' | 'mobile' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+              <option value="cash">Espèces</option>
+              <option value="card">Carte</option>
+              <option value="mobile">Mobile</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowSaleModal(false)
+                setNewSale({ customerId: '', items: [{ productId: '', quantity: 1 }], paymentMethod: 'cash', customerName: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newSale.items.every(item => item.productId && item.quantity > 0)) {
+                  const saleItems = newSale.items.map(item => {
+                    const product = products.find(p => p.id === item.productId)
+                    return {
+                      productId: item.productId,
+                      name: product?.name || '',
+                      quantity: item.quantity,
+                      price: product?.price || 0,
+                    }
+                  })
+                  const total = saleItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                  const sale: Sale = {
+                    id: Date.now().toString(),
+                    items: saleItems,
+                    total,
+                    customerName: newSale.customerName || undefined,
+                    date: new Date(),
+                    paymentMethod: newSale.paymentMethod,
+                  }
+                  setSales([...sales, sale])
+                  setShowSaleModal(false)
+                  setNewSale({ customerId: '', items: [{ productId: '', quantity: 1 }], paymentMethod: 'cash', customerName: '' })
                 }
               }}
               className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"

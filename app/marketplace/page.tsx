@@ -71,8 +71,12 @@ export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showProductModal, setShowProductModal] = useState(false)
   const [showSellerModal, setShowSellerModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
   const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, sellerId: '', categoryId: '', stock: 0 })
   const [newSeller, setNewSeller] = useState({ name: '', email: '', phone: '', shopName: '' })
+  const [newOrder, setNewOrder] = useState({ productId: '', buyerName: '', buyerEmail: '', quantity: 1 })
+  const [newCategory, setNewCategory] = useState({ name: '', description: '', icon: '📦' })
 
   useEffect(() => {
     const savedProducts = localStorage.getItem('marketplace-products')
@@ -435,6 +439,12 @@ export default function MarketplacePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Commandes</h2>
+              <button 
+                onClick={() => setShowOrderModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Nouvelle Commande
+              </button>
             </div>
             <div className="space-y-4">
               {orders.map((order) => (
@@ -473,7 +483,10 @@ export default function MarketplacePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Catégories</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowCategoryModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouvelle catégorie
               </button>
             </div>
@@ -707,6 +720,181 @@ export default function MarketplacePage() {
                   setSellers([...sellers, seller])
                   setShowSellerModal(false)
                   setNewSeller({ name: '', email: '', phone: '', shopName: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showOrderModal}
+        onClose={() => {
+          setShowOrderModal(false)
+          setNewOrder({ productId: '', buyerName: '', buyerEmail: '', quantity: 1 })
+        }}
+        title="Nouvelle Commande"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {products.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Produit</label>
+              <select
+                value={newOrder.productId}
+                onChange={(e) => setNewOrder({ ...newOrder, productId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un produit</option>
+                {products.map(product => (
+                  <option key={product.id} value={product.id}>{product.name} - DZD{product.price}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l'acheteur</label>
+              <input
+                type="text"
+                value={newOrder.buyerName}
+                onChange={(e) => setNewOrder({ ...newOrder, buyerName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Nom complet"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newOrder.buyerEmail}
+                onChange={(e) => setNewOrder({ ...newOrder, buyerEmail: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="email@example.com"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+            <input
+              type="number"
+              value={newOrder.quantity}
+              onChange={(e) => setNewOrder({ ...newOrder, quantity: parseInt(e.target.value) || 1 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              min="1"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowOrderModal(false)
+                setNewOrder({ productId: '', buyerName: '', buyerEmail: '', quantity: 1 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newOrder.productId && newOrder.buyerName && newOrder.buyerEmail && newOrder.quantity > 0) {
+                  const product = products.find(p => p.id === newOrder.productId)
+                  if (product) {
+                    const order: Order = {
+                      id: Date.now().toString(),
+                      orderNumber: `ORD-${Date.now()}`,
+                      productId: newOrder.productId,
+                      productName: product.name,
+                      sellerId: product.sellerId,
+                      sellerName: product.sellerName,
+                      buyerName: newOrder.buyerName,
+                      buyerEmail: newOrder.buyerEmail,
+                      quantity: newOrder.quantity,
+                      price: product.price,
+                      total: product.price * newOrder.quantity,
+                      status: 'pending',
+                      createdAt: new Date(),
+                    }
+                    setOrders([...orders, order])
+                    setShowOrderModal(false)
+                    setNewOrder({ productId: '', buyerName: '', buyerEmail: '', quantity: 1 })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showCategoryModal}
+        onClose={() => {
+          setShowCategoryModal(false)
+          setNewCategory({ name: '', description: '', icon: '📦' })
+        }}
+        title="Nouvelle Catégorie"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newCategory.name}
+              onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Nom de la catégorie"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newCategory.description}
+              onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description (optionnel)"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Icône (emoji)</label>
+            <input
+              type="text"
+              value={newCategory.icon}
+              onChange={(e) => setNewCategory({ ...newCategory, icon: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-2xl"
+              placeholder="📦"
+              maxLength={2}
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowCategoryModal(false)
+                setNewCategory({ name: '', description: '', icon: '📦' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCategory.name) {
+                  const category: Category = {
+                    id: Date.now().toString(),
+                    name: newCategory.name,
+                    description: newCategory.description || undefined,
+                    products: 0,
+                    icon: newCategory.icon,
+                  }
+                  setCategories([...categories, category])
+                  setShowCategoryModal(false)
+                  setNewCategory({ name: '', description: '', icon: '📦' })
                 }
               }}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Baby, Users, Calendar, Activity, BarChart3, Clock, CheckCircle } from 'lucide-react'
 import { Child, Activity as ActivityType, Attendance } from '@/types/kids'
 
@@ -11,6 +12,10 @@ export default function KidsPage() {
   const [children, setChildren] = useState<Child[]>([])
   const [activities, setActivities] = useState<ActivityType[]>([])
   const [attendances, setAttendances] = useState<Attendance[]>([])
+  const [showChildModal, setShowChildModal] = useState(false)
+  const [showActivityModal, setShowActivityModal] = useState(false)
+  const [newChild, setNewChild] = useState({ firstName: '', lastName: '', dateOfBirth: '', parentIds: [] as string[], emergencyContact: '', emergencyPhone: '', allergies: [] as string[] })
+  const [newActivity, setNewActivity] = useState({ name: '', description: '', category: 'art' as 'art' | 'sports' | 'educational' | 'music' | 'outdoor', ageRange: '', duration: 0, capacity: 0, schedule: '' })
 
   useEffect(() => {
     const savedChildren = localStorage.getItem('kids-children')
@@ -244,7 +249,10 @@ export default function KidsPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Enfants</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowChildModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Ajouter Enfant
               </button>
             </div>
@@ -291,7 +299,10 @@ export default function KidsPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Activités</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowActivityModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Ajouter Activité
               </button>
             </div>
@@ -357,6 +368,241 @@ export default function KidsPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showChildModal}
+        onClose={() => {
+          setShowChildModal(false)
+          setNewChild({ firstName: '', lastName: '', dateOfBirth: '', parentIds: [], emergencyContact: '', emergencyPhone: '', allergies: [] })
+        }}
+        title="Ajouter Enfant"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+              <input
+                type="text"
+                value={newChild.firstName}
+                onChange={(e) => setNewChild({ ...newChild, firstName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Prénom"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+              <input
+                type="text"
+                value={newChild.lastName}
+                onChange={(e) => setNewChild({ ...newChild, lastName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Nom"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
+            <input
+              type="date"
+              value={newChild.dateOfBirth}
+              onChange={(e) => setNewChild({ ...newChild, dateOfBirth: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Contact d'urgence</label>
+              <input
+                type="text"
+                value={newChild.emergencyContact}
+                onChange={(e) => setNewChild({ ...newChild, emergencyContact: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Nom du contact"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone d'urgence</label>
+              <input
+                type="text"
+                value={newChild.emergencyPhone}
+                onChange={(e) => setNewChild({ ...newChild, emergencyPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="+33 6 12 34 56 78"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Allergies (séparées par des virgules)</label>
+            <input
+              type="text"
+              value={newChild.allergies.join(', ')}
+              onChange={(e) => setNewChild({ ...newChild, allergies: e.target.value.split(',').map(a => a.trim()).filter(a => a) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Arachides, Lait, etc."
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowChildModal(false)
+                setNewChild({ firstName: '', lastName: '', dateOfBirth: '', parentIds: [], emergencyContact: '', emergencyPhone: '', allergies: [] })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newChild.firstName && newChild.lastName && newChild.dateOfBirth && newChild.emergencyContact && newChild.emergencyPhone) {
+                  const child: Child = {
+                    id: Date.now().toString(),
+                    firstName: newChild.firstName,
+                    lastName: newChild.lastName,
+                    dateOfBirth: new Date(newChild.dateOfBirth),
+                    parentIds: newChild.parentIds,
+                    emergencyContact: newChild.emergencyContact,
+                    emergencyPhone: newChild.emergencyPhone,
+                    allergies: newChild.allergies.length > 0 ? newChild.allergies : undefined,
+                  }
+                  setChildren([...children, child])
+                  setShowChildModal(false)
+                  setNewChild({ firstName: '', lastName: '', dateOfBirth: '', parentIds: [], emergencyContact: '', emergencyPhone: '', allergies: [] })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showActivityModal}
+        onClose={() => {
+          setShowActivityModal(false)
+          setNewActivity({ name: '', description: '', category: 'art', ageRange: '', duration: 0, capacity: 0, schedule: '' })
+        }}
+        title="Ajouter Activité"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newActivity.name}
+              onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Nom de l'activité"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newActivity.description}
+              onChange={(e) => setNewActivity({ ...newActivity, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newActivity.category}
+                onChange={(e) => setNewActivity({ ...newActivity, category: e.target.value as 'art' | 'sports' | 'educational' | 'music' | 'outdoor' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="art">Art</option>
+                <option value="sports">Sport</option>
+                <option value="educational">Éducatif</option>
+                <option value="music">Musique</option>
+                <option value="outdoor">Extérieur</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Tranche d'âge</label>
+              <input
+                type="text"
+                value={newActivity.ageRange}
+                onChange={(e) => setNewActivity({ ...newActivity, ageRange: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Ex: 3-6 ans"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (min)</label>
+              <input
+                type="number"
+                value={newActivity.duration}
+                onChange={(e) => setNewActivity({ ...newActivity, duration: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Capacité</label>
+              <input
+                type="number"
+                value={newActivity.capacity}
+                onChange={(e) => setNewActivity({ ...newActivity, capacity: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Horaire</label>
+              <input
+                type="text"
+                value={newActivity.schedule}
+                onChange={(e) => setNewActivity({ ...newActivity, schedule: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Ex: Lundi 10h-10h45"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowActivityModal(false)
+                setNewActivity({ name: '', description: '', category: 'art', ageRange: '', duration: 0, capacity: 0, schedule: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newActivity.name && newActivity.description && newActivity.duration > 0 && newActivity.capacity > 0) {
+                  const activity: ActivityType = {
+                    id: Date.now().toString(),
+                    name: newActivity.name,
+                    description: newActivity.description,
+                    category: newActivity.category,
+                    ageRange: newActivity.ageRange,
+                    duration: newActivity.duration,
+                    capacity: newActivity.capacity,
+                    enrolled: 0,
+                    schedule: newActivity.schedule,
+                  }
+                  setActivities([...activities, activity])
+                  setShowActivityModal(false)
+                  setNewActivity({ name: '', description: '', category: 'art', ageRange: '', duration: 0, capacity: 0, schedule: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

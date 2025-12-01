@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Zap, Calendar, Users, FileText, BarChart3, DollarSign, Wrench } from 'lucide-react'
 
 type TabType = 'dashboard' | 'interventions' | 'clients' | 'quotes' | 'technicians'
@@ -60,6 +61,14 @@ export default function ElectricianPage() {
   const [clients, setClients] = useState<Client[]>([])
   const [quotes, setQuotes] = useState<Quote[]>([])
   const [technicians, setTechnicians] = useState<Technician[]>([])
+  const [showInterventionModal, setShowInterventionModal] = useState(false)
+  const [showClientModal, setShowClientModal] = useState(false)
+  const [showQuoteModal, setShowQuoteModal] = useState(false)
+  const [showTechnicianModal, setShowTechnicianModal] = useState(false)
+  const [newIntervention, setNewIntervention] = useState({ clientId: '', address: '', type: 'repair' as 'repair' | 'installation' | 'maintenance' | 'emergency' | 'inspection', description: '', scheduledDate: '', scheduledTime: '', technicianId: '', price: 0, duration: 0 })
+  const [newClient, setNewClient] = useState({ name: '', phone: '', email: '', address: '' })
+  const [newQuote, setNewQuote] = useState({ clientId: '', description: '', items: [{ name: '', quantity: 1, price: 0 }], validUntil: '' })
+  const [newTechnician, setNewTechnician] = useState({ name: '', phone: '', email: '', specializations: [] as string[] })
 
   useEffect(() => {
     const savedInterventions = localStorage.getItem('electrician-interventions')
@@ -280,7 +289,10 @@ export default function ElectricianPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Interventions</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+              <button 
+                onClick={() => setShowInterventionModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
                 Nouvelle Intervention
               </button>
             </div>
@@ -341,7 +353,10 @@ export default function ElectricianPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+              <button 
+                onClick={() => setShowClientModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -427,7 +442,10 @@ export default function ElectricianPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Techniciens</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+              <button 
+                onClick={() => setShowTechnicianModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
                 Nouveau Technicien
               </button>
             </div>
@@ -475,6 +493,490 @@ export default function ElectricianPage() {
           </div>
         )}
       </main>
+
+      {/* Modals - Same structure as plumber but with yellow colors */}
+      <Modal
+        isOpen={showInterventionModal}
+        onClose={() => {
+          setShowInterventionModal(false)
+          setNewIntervention({ clientId: '', address: '', type: 'repair', description: '', scheduledDate: '', scheduledTime: '', technicianId: '', price: 0, duration: 0 })
+        }}
+        title="Nouvelle Intervention"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {clients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newIntervention.clientId}
+                onChange={(e) => setNewIntervention({ ...newIntervention, clientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un client</option>
+                {clients.map(client => (
+                  <option key={client.id} value={client.id}>{client.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+            <input
+              type="text"
+              value={newIntervention.address}
+              onChange={(e) => setNewIntervention({ ...newIntervention, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Adresse de l'intervention"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newIntervention.type}
+                onChange={(e) => setNewIntervention({ ...newIntervention, type: e.target.value as 'repair' | 'installation' | 'maintenance' | 'emergency' | 'inspection' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              >
+                <option value="repair">Réparation</option>
+                <option value="installation">Installation</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="emergency">Urgence</option>
+                <option value="inspection">Inspection</option>
+              </select>
+            </div>
+            {technicians.length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Technicien</label>
+                <select
+                  value={newIntervention.technicianId}
+                  onChange={(e) => setNewIntervention({ ...newIntervention, technicianId: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                >
+                  <option value="">Sélectionner un technicien</option>
+                  {technicians.map(tech => (
+                    <option key={tech.id} value={tech.id}>{tech.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newIntervention.description}
+              onChange={(e) => setNewIntervention({ ...newIntervention, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description de l'intervention..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newIntervention.scheduledDate}
+                onChange={(e) => setNewIntervention({ ...newIntervention, scheduledDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newIntervention.scheduledTime}
+                onChange={(e) => setNewIntervention({ ...newIntervention, scheduledTime: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD, optionnel)</label>
+              <input
+                type="number"
+                value={newIntervention.price}
+                onChange={(e) => setNewIntervention({ ...newIntervention, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (minutes, optionnel)</label>
+              <input
+                type="number"
+                value={newIntervention.duration}
+                onChange={(e) => setNewIntervention({ ...newIntervention, duration: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowInterventionModal(false)
+                setNewIntervention({ clientId: '', address: '', type: 'repair', description: '', scheduledDate: '', scheduledTime: '', technicianId: '', price: 0, duration: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newIntervention.clientId && newIntervention.address && newIntervention.description && newIntervention.scheduledDate && newIntervention.scheduledTime) {
+                  const client = clients.find(c => c.id === newIntervention.clientId)
+                  const technician = newIntervention.technicianId ? technicians.find(t => t.id === newIntervention.technicianId) : undefined
+                  if (client) {
+                    const intervention: Intervention = {
+                      id: Date.now().toString(),
+                      clientId: newIntervention.clientId,
+                      clientName: client.name,
+                      address: newIntervention.address,
+                      type: newIntervention.type,
+                      description: newIntervention.description,
+                      scheduledDate: new Date(newIntervention.scheduledDate),
+                      scheduledTime: newIntervention.scheduledTime,
+                      technicianId: newIntervention.technicianId || undefined,
+                      technicianName: technician?.name,
+                      status: 'scheduled',
+                      price: newIntervention.price > 0 ? newIntervention.price : undefined,
+                      duration: newIntervention.duration > 0 ? newIntervention.duration : undefined,
+                    }
+                    setInterventions([...interventions, intervention])
+                    setShowInterventionModal(false)
+                    setNewIntervention({ clientId: '', address: '', type: 'repair', description: '', scheduledDate: '', scheduledTime: '', technicianId: '', price: 0, duration: 0 })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showClientModal}
+        onClose={() => {
+          setShowClientModal(false)
+          setNewClient({ name: '', phone: '', email: '', address: '' })
+        }}
+        title="Nouveau Client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newClient.name}
+              onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Nom complet"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="text"
+                value={newClient.phone}
+                onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="+213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email (optionnel)</label>
+              <input
+                type="email"
+                value={newClient.email}
+                onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="email@example.com"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+            <input
+              type="text"
+              value={newClient.address}
+              onChange={(e) => setNewClient({ ...newClient, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Adresse complète"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowClientModal(false)
+                setNewClient({ name: '', phone: '', email: '', address: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newClient.name && newClient.phone && newClient.address) {
+                  const client: Client = {
+                    id: Date.now().toString(),
+                    name: newClient.name,
+                    phone: newClient.phone,
+                    email: newClient.email || undefined,
+                    address: newClient.address,
+                    totalInterventions: 0,
+                  }
+                  setClients([...clients, client])
+                  setShowClientModal(false)
+                  setNewClient({ name: '', phone: '', email: '', address: '' })
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showQuoteModal}
+        onClose={() => {
+          setShowQuoteModal(false)
+          setNewQuote({ clientId: '', description: '', items: [{ name: '', quantity: 1, price: 0 }], validUntil: '' })
+        }}
+        title="Nouveau Devis"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {clients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newQuote.clientId}
+                onChange={(e) => setNewQuote({ ...newQuote, clientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un client</option>
+                {clients.map(client => (
+                  <option key={client.id} value={client.id}>{client.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newQuote.description}
+              onChange={(e) => setNewQuote({ ...newQuote, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du devis..."
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Articles</label>
+            {newQuote.items.map((item, idx) => (
+              <div key={idx} className="grid grid-cols-4 gap-2 mb-2">
+                <input
+                  type="text"
+                  value={item.name}
+                  onChange={(e) => {
+                    const updatedItems = [...newQuote.items]
+                    updatedItems[idx].name = e.target.value
+                    setNewQuote({ ...newQuote, items: updatedItems })
+                  }}
+                  className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder="Nom"
+                />
+                <input
+                  type="number"
+                  value={item.quantity}
+                  onChange={(e) => {
+                    const updatedItems = [...newQuote.items]
+                    updatedItems[idx].quantity = parseInt(e.target.value) || 1
+                    setNewQuote({ ...newQuote, items: updatedItems })
+                  }}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  min="1"
+                  placeholder="Qté"
+                />
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={item.price}
+                    onChange={(e) => {
+                      const updatedItems = [...newQuote.items]
+                      updatedItems[idx].price = parseFloat(e.target.value) || 0
+                      setNewQuote({ ...newQuote, items: updatedItems })
+                    }}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    min="0"
+                    placeholder="Prix"
+                  />
+                  {newQuote.items.length > 1 && (
+                    <button
+                      onClick={() => {
+                        setNewQuote({ ...newQuote, items: newQuote.items.filter((_, i) => i !== idx) })
+                      }}
+                      className="px-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={() => {
+                setNewQuote({ ...newQuote, items: [...newQuote.items, { name: '', quantity: 1, price: 0 }] })
+              }}
+              className="text-sm text-yellow-600 hover:text-yellow-700"
+            >
+              + Ajouter un article
+            </button>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Valide jusqu'au (optionnel)</label>
+            <input
+              type="date"
+              value={newQuote.validUntil}
+              onChange={(e) => setNewQuote({ ...newQuote, validUntil: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowQuoteModal(false)
+                setNewQuote({ clientId: '', description: '', items: [{ name: '', quantity: 1, price: 0 }], validUntil: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newQuote.clientId && newQuote.description && newQuote.items.every(item => item.name && item.quantity > 0 && item.price > 0)) {
+                  const client = clients.find(c => c.id === newQuote.clientId)
+                  if (client) {
+                    const total = newQuote.items.reduce((sum, item) => sum + (item.quantity * item.price), 0)
+                    const quote: Quote = {
+                      id: Date.now().toString(),
+                      clientId: newQuote.clientId,
+                      clientName: client.name,
+                      description: newQuote.description,
+                      items: newQuote.items,
+                      total,
+                      status: 'pending',
+                      createdAt: new Date(),
+                      validUntil: newQuote.validUntil ? new Date(newQuote.validUntil) : undefined,
+                    }
+                    setQuotes([...quotes, quote])
+                    setShowQuoteModal(false)
+                    setNewQuote({ clientId: '', description: '', items: [{ name: '', quantity: 1, price: 0 }], validUntil: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showTechnicianModal}
+        onClose={() => {
+          setShowTechnicianModal(false)
+          setNewTechnician({ name: '', phone: '', email: '', specializations: [] })
+        }}
+        title="Nouveau Technicien"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+            <input
+              type="text"
+              value={newTechnician.name}
+              onChange={(e) => setNewTechnician({ ...newTechnician, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Nom complet"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="text"
+                value={newTechnician.phone}
+                onChange={(e) => setNewTechnician({ ...newTechnician, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="+213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newTechnician.email}
+                onChange={(e) => setNewTechnician({ ...newTechnician, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="email@example.com"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Spécialisations (séparées par des virgules)</label>
+            <input
+              type="text"
+              value={newTechnician.specializations.join(', ')}
+              onChange={(e) => setNewTechnician({ ...newTechnician, specializations: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Ex: Réparation, Installation, Maintenance"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowTechnicianModal(false)
+                setNewTechnician({ name: '', phone: '', email: '', specializations: [] })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newTechnician.name && newTechnician.phone && newTechnician.email) {
+                  const technician: Technician = {
+                    id: Date.now().toString(),
+                    name: newTechnician.name,
+                    phone: newTechnician.phone,
+                    email: newTechnician.email,
+                    specializations: newTechnician.specializations,
+                    status: 'available',
+                    totalInterventions: 0,
+                  }
+                  setTechnicians([...technicians, technician])
+                  setShowTechnicianModal(false)
+                  setNewTechnician({ name: '', phone: '', email: '', specializations: [] })
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

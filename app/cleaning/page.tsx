@@ -65,7 +65,11 @@ export default function CleaningPage() {
   const [clients, setClients] = useState<Client[]>([])
   const [equipment, setEquipment] = useState<Equipment[]>([])
   const [showClientModal, setShowClientModal] = useState(false)
+  const [showTeamModal, setShowTeamModal] = useState(false)
+  const [showMissionModal, setShowMissionModal] = useState(false)
   const [newClient, setNewClient] = useState({ name: '', contactPerson: '', phone: '', email: '', address: '', serviceFrequency: 'one_time' as 'one_time' | 'weekly' | 'bi_weekly' | 'monthly' })
+  const [newTeam, setNewTeam] = useState({ name: '', supervisor: '', members: [] as string[], specializations: [] as string[] })
+  const [newMission, setNewMission] = useState({ clientId: '', teamId: '', type: 'regular' as 'regular' | 'deep' | 'window' | 'carpet' | 'post_construction', scheduledDate: '', scheduledTime: '', address: '', notes: '' })
 
   useEffect(() => {
     const savedTeams = localStorage.getItem('cleaning-teams')
@@ -348,7 +352,10 @@ export default function CleaningPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Équipes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowTeamModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Équipe
               </button>
             </div>
@@ -400,7 +407,10 @@ export default function CleaningPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Missions</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowMissionModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Mission
               </button>
             </div>

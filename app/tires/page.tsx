@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Car, Package, Calendar, DollarSign, BarChart3, Users, AlertCircle, Settings } from 'lucide-react'
 
 type TabType = 'dashboard' | 'tires' | 'services' | 'customers' | 'stock'
@@ -54,6 +55,14 @@ export default function TiresPage() {
   const [services, setServices] = useState<Service[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
   const [sales, setSales] = useState<Sale[]>([])
+  const [showTireModal, setShowTireModal] = useState(false)
+  const [showServiceModal, setShowServiceModal] = useState(false)
+  const [showCustomerModal, setShowCustomerModal] = useState(false)
+  const [showSaleModal, setShowSaleModal] = useState(false)
+  const [newTire, setNewTire] = useState({ brand: '', model: '', size: '', type: 'all_season' as 'summer' | 'winter' | 'all_season' | 'performance', price: 0, quantity: 0, minStock: 10, supplier: '', warranty: 24 })
+  const [newService, setNewService] = useState({ name: '', description: '', price: 0, duration: 0, category: 'mounting' as 'mounting' | 'balancing' | 'rotation' | 'repair' | 'inspection' })
+  const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', vehiclePlate: '' })
+  const [newSale, setNewSale] = useState({ customerId: '', tireIds: [] as string[], serviceIds: [] as string[] })
 
   useEffect(() => {
     const savedTires = localStorage.getItem('tires-stock')
@@ -317,7 +326,10 @@ export default function TiresPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Pneus</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => setShowTireModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
                 Ajouter Pneu
               </button>
             </div>
@@ -371,7 +383,10 @@ export default function TiresPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Services</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => setShowServiceModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
                 Ajouter Service
               </button>
             </div>
@@ -399,7 +414,10 @@ export default function TiresPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => setShowCustomerModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -488,6 +506,466 @@ export default function TiresPage() {
       </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showTireModal}
+        onClose={() => {
+          setShowTireModal(false)
+          setNewTire({ brand: '', model: '', size: '', type: 'all_season', price: 0, quantity: 0, minStock: 10, supplier: '', warranty: 24 })
+        }}
+        title="Ajouter Pneu"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Marque</label>
+              <input
+                type="text"
+                value={newTire.brand}
+                onChange={(e) => setNewTire({ ...newTire, brand: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="Ex: Michelin"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Modèle</label>
+              <input
+                type="text"
+                value={newTire.model}
+                onChange={(e) => setNewTire({ ...newTire, model: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="Ex: Energy Saver"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Taille</label>
+              <input
+                type="text"
+                value={newTire.size}
+                onChange={(e) => setNewTire({ ...newTire, size: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="Ex: 195/65 R15"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newTire.type}
+                onChange={(e) => setNewTire({ ...newTire, type: e.target.value as 'summer' | 'winter' | 'all_season' | 'performance' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              >
+                <option value="summer">Été</option>
+                <option value="winter">Hiver</option>
+                <option value="all_season">Toutes saisons</option>
+                <option value="performance">Performance</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newTire.price}
+                onChange={(e) => setNewTire({ ...newTire, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+              <input
+                type="number"
+                value={newTire.quantity}
+                onChange={(e) => setNewTire({ ...newTire, quantity: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Stock min</label>
+              <input
+                type="number"
+                value={newTire.minStock}
+                onChange={(e) => setNewTire({ ...newTire, minStock: parseInt(e.target.value) || 10 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Fournisseur</label>
+              <input
+                type="text"
+                value={newTire.supplier}
+                onChange={(e) => setNewTire({ ...newTire, supplier: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="Nom du fournisseur"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Garantie (mois)</label>
+              <input
+                type="number"
+                value={newTire.warranty}
+                onChange={(e) => setNewTire({ ...newTire, warranty: parseInt(e.target.value) || 24 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowTireModal(false)
+                setNewTire({ brand: '', model: '', size: '', type: 'all_season', price: 0, quantity: 0, minStock: 10, supplier: '', warranty: 24 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newTire.brand && newTire.model && newTire.size && newTire.price > 0 && newTire.supplier) {
+                  const tire: Tire = {
+                    id: Date.now().toString(),
+                    brand: newTire.brand,
+                    model: newTire.model,
+                    size: newTire.size,
+                    type: newTire.type,
+                    price: newTire.price,
+                    quantity: newTire.quantity,
+                    minStock: newTire.minStock,
+                    supplier: newTire.supplier,
+                    warranty: newTire.warranty,
+                  }
+                  setTires([...tires, tire])
+                  setShowTireModal(false)
+                  setNewTire({ brand: '', model: '', size: '', type: 'all_season', price: 0, quantity: 0, minStock: 10, supplier: '', warranty: 24 })
+                }
+              }}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showServiceModal}
+        onClose={() => {
+          setShowServiceModal(false)
+          setNewService({ name: '', description: '', price: 0, duration: 0, category: 'mounting' })
+        }}
+        title="Ajouter Service"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newService.name}
+              onChange={(e) => setNewService({ ...newService, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              placeholder="Nom du service"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newService.description}
+              onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du service..."
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newService.price}
+                onChange={(e) => setNewService({ ...newService, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (min)</label>
+              <input
+                type="number"
+                value={newService.duration}
+                onChange={(e) => setNewService({ ...newService, duration: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newService.category}
+                onChange={(e) => setNewService({ ...newService, category: e.target.value as 'mounting' | 'balancing' | 'rotation' | 'repair' | 'inspection' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              >
+                <option value="mounting">Montage</option>
+                <option value="balancing">Équilibrage</option>
+                <option value="rotation">Rotation</option>
+                <option value="repair">Réparation</option>
+                <option value="inspection">Inspection</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowServiceModal(false)
+                setNewService({ name: '', description: '', price: 0, duration: 0, category: 'mounting' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newService.name && newService.description && newService.price > 0 && newService.duration > 0) {
+                  const service: Service = {
+                    id: Date.now().toString(),
+                    name: newService.name,
+                    description: newService.description,
+                    price: newService.price,
+                    duration: newService.duration,
+                    category: newService.category,
+                  }
+                  setServices([...services, service])
+                  setShowServiceModal(false)
+                  setNewService({ name: '', description: '', price: 0, duration: 0, category: 'mounting' })
+                }
+              }}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showCustomerModal}
+        onClose={() => {
+          setShowCustomerModal(false)
+          setNewCustomer({ name: '', phone: '', email: '', vehiclePlate: '' })
+        }}
+        title="Nouveau Client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+            <input
+              type="text"
+              value={newCustomer.name}
+              onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              placeholder="Nom complet"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="text"
+                value={newCustomer.phone}
+                onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="+213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email (optionnel)</label>
+              <input
+                type="email"
+                value={newCustomer.email}
+                onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="email@example.com"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Plaque d'immatriculation</label>
+            <input
+              type="text"
+              value={newCustomer.vehiclePlate}
+              onChange={(e) => setNewCustomer({ ...newCustomer, vehiclePlate: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              placeholder="Ex: 123456-A-16"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowCustomerModal(false)
+                setNewCustomer({ name: '', phone: '', email: '', vehiclePlate: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCustomer.name && newCustomer.phone && newCustomer.vehiclePlate) {
+                  const customer: Customer = {
+                    id: Date.now().toString(),
+                    name: newCustomer.name,
+                    phone: newCustomer.phone,
+                    email: newCustomer.email || undefined,
+                    vehiclePlate: newCustomer.vehiclePlate,
+                    totalPurchases: 0,
+                  }
+                  setCustomers([...customers, customer])
+                  setShowCustomerModal(false)
+                  setNewCustomer({ name: '', phone: '', email: '', vehiclePlate: '' })
+                }
+              }}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSaleModal}
+        onClose={() => {
+          setShowSaleModal(false)
+          setNewSale({ customerId: '', tireIds: [], serviceIds: [] })
+        }}
+        title="Nouvelle Vente"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {customers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newSale.customerId}
+                onChange={(e) => setNewSale({ ...newSale, customerId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un client</option>
+                {customers.map(customer => (
+                  <option key={customer.id} value={customer.id}>{customer.name} - {customer.vehiclePlate}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pneus</label>
+            <div className="space-y-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-2">
+              {tires.map(tire => (
+                <label key={tire.id} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
+                  <input
+                    type="checkbox"
+                    checked={newSale.tireIds.includes(tire.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setNewSale({ ...newSale, tireIds: [...newSale.tireIds, tire.id] })
+                      } else {
+                        setNewSale({ ...newSale, tireIds: newSale.tireIds.filter(id => id !== tire.id) })
+                      }
+                    }}
+                    className="w-4 h-4 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
+                  />
+                  <span className="text-sm">{tire.brand} {tire.model} - {tire.size} - DZD{tire.price}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Services</label>
+            <div className="space-y-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-2">
+              {services.map(service => (
+                <label key={service.id} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
+                  <input
+                    type="checkbox"
+                    checked={newSale.serviceIds.includes(service.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setNewSale({ ...newSale, serviceIds: [...newSale.serviceIds, service.id] })
+                      } else {
+                        setNewSale({ ...newSale, serviceIds: newSale.serviceIds.filter(id => id !== service.id) })
+                      }
+                    }}
+                    className="w-4 h-4 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
+                  />
+                  <span className="text-sm">{service.name} - DZD{service.price}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowSaleModal(false)
+                setNewSale({ customerId: '', tireIds: [], serviceIds: [] })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newSale.customerId && (newSale.tireIds.length > 0 || newSale.serviceIds.length > 0)) {
+                  const customer = customers.find(c => c.id === newSale.customerId)
+                  if (customer) {
+                    const tireTotal = newSale.tireIds.reduce((sum, id) => {
+                      const tire = tires.find(t => t.id === id)
+                      return sum + (tire?.price || 0)
+                    }, 0)
+                    const serviceTotal = newSale.serviceIds.reduce((sum, id) => {
+                      const service = services.find(s => s.id === id)
+                      return sum + (service?.price || 0)
+                    }, 0)
+                    const total = tireTotal + serviceTotal
+                    const sale: Sale = {
+                      id: Date.now().toString(),
+                      customerId: newSale.customerId,
+                      customerName: customer.name,
+                      tireIds: newSale.tireIds,
+                      serviceIds: newSale.serviceIds,
+                      total,
+                      date: new Date(),
+                      status: 'completed',
+                    }
+                    setSales([...sales, sale])
+                    // Update stock
+                    newSale.tireIds.forEach(id => {
+                      const tire = tires.find(t => t.id === id)
+                      if (tire && tire.quantity > 0) {
+                        setTires(tires.map(t => t.id === id ? { ...t, quantity: t.quantity - 1 } : t))
+                      }
+                    })
+                    setShowSaleModal(false)
+                    setNewSale({ customerId: '', tireIds: [], serviceIds: [] })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
