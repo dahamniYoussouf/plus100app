@@ -87,7 +87,7 @@ export default function ClinicPage() {
   const [showDossierModal, setShowDossierModal] = useState(false)
   const [newPatient, setNewPatient] = useState({ name: '', email: '', phone: '', dateOfBirth: '', gender: 'male' as 'male' | 'female', address: '', city: '' })
   const [newRdv, setNewRdv] = useState({ patientId: '', date: '', time: '', reason: '', type: 'consultation' as 'consultation' | 'followup' | 'emergency' | 'vaccination' | 'checkup', doctor: '' })
-  const [newDossier, setNewDossier] = useState({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '' })
+  const [newDossier, setNewDossier] = useState({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '', doctor: '' })
 
   useEffect(() => {
     const savedPatients = localStorage.getItem('clinic-patients')
@@ -1178,7 +1178,7 @@ export default function ClinicPage() {
         isOpen={showDossierModal}
         onClose={() => {
           setShowDossierModal(false)
-          setNewDossier({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '' })
+          setNewDossier({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '', doctor: '' })
         }}
         title="Nouveau Dossier"
         size="lg"
@@ -1248,11 +1248,21 @@ export default function ClinicPage() {
               placeholder="Ex: Antibiotiques, Repos"
             />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Médecin</label>
+            <input
+              type="text"
+              value={newDossier.doctor}
+              onChange={(e) => setNewDossier({ ...newDossier, doctor: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Dr. Ahmed Benali"
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
               onClick={() => {
                 setShowDossierModal(false)
-                setNewDossier({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '' })
+                setNewDossier({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '', doctor: '' })
               }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
@@ -1274,10 +1284,11 @@ export default function ClinicPage() {
                       diagnosis: newDossier.diagnosis.split(',').map(d => d.trim()).filter(d => d),
                       treatment: newDossier.treatment.split(',').map(t => t.trim()).filter(t => t),
                       medications: [],
+                      doctor: newDossier.doctor || 'Dr. Non spécifié',
                     }
                     setRecords([...records, record])
                     setShowDossierModal(false)
-                    setNewDossier({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '' })
+                    setNewDossier({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '', doctor: '' })
                   }
                 }
               }}

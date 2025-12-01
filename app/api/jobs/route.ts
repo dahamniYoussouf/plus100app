@@ -205,7 +205,7 @@ function getFallbackJobs(keywords: string = ''): JobOffer[] {
     },
     {
       id: 'fallback-2',
-      title: '  (React/Node.js)',
+      title: 'Développeur Full Stack (React/Node.js)',
       company: 'StartupXYZ',
       location: 'Remote',
       salary: '70k - 100k USD',

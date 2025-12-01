@@ -922,14 +922,14 @@ export default function ConstructionPage() {
             <button
               onClick={() => {
                 if (newEquipment.name && newEquipment.type) {
-                  const equipment: Equipment = {
+                  const newEquipmentItem: Equipment = {
                     id: Date.now().toString(),
                     name: newEquipment.name,
                     type: newEquipment.type,
                     status: 'available',
                     location: newEquipment.location || undefined,
                   }
-                  setEquipment([...equipment, equipment])
+                  setEquipment([...equipment, newEquipmentItem])
                   setShowEquipmentModal(false)
                   setNewEquipment({ name: '', type: '', location: '' })
                 }

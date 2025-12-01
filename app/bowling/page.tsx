@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Gamepad2, Users, Calendar, Clock, Trophy, BarChart3, Target, Zap } from 'lucide-react'
+import { Users, Calendar, Trophy, BarChart3, Target, Zap } from 'lucide-react'
 import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'lanes' | 'bookings' | 'tournaments' | 'members'
