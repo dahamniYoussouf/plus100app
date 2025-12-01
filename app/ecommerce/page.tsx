@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Store, Package, ShoppingCart, Users, BarChart3, TrendingUp, DollarSign, Clock } from 'lucide-react'
 
 type TabType = 'dashboard' | 'products' | 'orders' | 'customers'
@@ -43,6 +44,10 @@ export default function EcommercePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
+  const [showProductModal, setShowProductModal] = useState(false)
+  const [showCustomerModal, setShowCustomerModal] = useState(false)
+  const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, category: '', stock: 0, sku: '' })
+  const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '' })
 
   useEffect(() => {
     const savedProducts = localStorage.getItem('ecommerce-products')
@@ -261,7 +266,10 @@ export default function EcommercePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Produits</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+              <button 
+                onClick={() => setShowProductModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
                 Ajouter Produit
               </button>
             </div>
@@ -341,7 +349,10 @@ export default function EcommercePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+              <button 
+                onClick={() => setShowCustomerModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -374,6 +385,192 @@ export default function EcommercePage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showProductModal}
+        onClose={() => {
+          setShowProductModal(false)
+          setNewProduct({ name: '', description: '', price: 0, category: '', stock: 0, sku: '' })
+        }}
+        title="Ajouter Produit"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du produit</label>
+            <input
+              type="text"
+              value={newProduct.name}
+              onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Ex: Smartphone Pro Max"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newProduct.description}
+              onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du produit"
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Ex: Électronique"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+              <input
+                type="number"
+                value={newProduct.stock}
+                onChange={(e) => setNewProduct({ ...newProduct, stock: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+            <input
+              type="text"
+              value={newProduct.sku}
+              onChange={(e) => setNewProduct({ ...newProduct, sku: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Ex: PROD-001"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowProductModal(false)
+                setNewProduct({ name: '', description: '', price: 0, category: '', stock: 0, sku: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newProduct.name && newProduct.description && newProduct.category && newProduct.sku) {
+                  const product: Product = {
+                    id: Date.now().toString(),
+                    name: newProduct.name,
+                    description: newProduct.description,
+                    price: newProduct.price,
+                    category: newProduct.category,
+                    stock: newProduct.stock,
+                    sku: newProduct.sku,
+                    status: 'active',
+                  }
+                  setProducts([...products, product])
+                  setShowProductModal(false)
+                  setNewProduct({ name: '', description: '', price: 0, category: '', stock: 0, sku: '' })
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showCustomerModal}
+        onClose={() => {
+          setShowCustomerModal(false)
+          setNewCustomer({ name: '', email: '', phone: '' })
+        }}
+        title="Nouveau Client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newCustomer.name}
+              onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newCustomer.email}
+                onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newCustomer.phone}
+                onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowCustomerModal(false)
+                setNewCustomer({ name: '', email: '', phone: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCustomer.name && newCustomer.email && newCustomer.phone) {
+                  const customer: Customer = {
+                    id: Date.now().toString(),
+                    name: newCustomer.name,
+                    email: newCustomer.email,
+                    phone: newCustomer.phone,
+                    totalOrders: 0,
+                    totalSpent: 0,
+                    joinDate: new Date(),
+                  }
+                  setCustomers([...customers, customer])
+                  setShowCustomerModal(false)
+                  setNewCustomer({ name: '', email: '', phone: '' })
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import Image from 'next/image'
 import { Home, Users, Calendar, DollarSign, BarChart3, MapPin, Bed, Bath, Square, TrendingUp, Key, FileText } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'properties' | 'tenants' | 'leases' | 'maintenance'
 
@@ -72,6 +73,12 @@ export default function RealEstatePage() {
   const [tenants, setTenants] = useState<Tenant[]>([])
   const [leases, setLeases] = useState<Lease[]>([])
   const [maintenanceRequests, setMaintenanceRequests] = useState<MaintenanceRequest[]>([])
+  const [showPropertyModal, setShowPropertyModal] = useState(false)
+  const [showTenantModal, setShowTenantModal] = useState(false)
+  const [showLeaseModal, setShowLeaseModal] = useState(false)
+  const [newProperty, setNewProperty] = useState({ address: '', type: 'apartment' as 'apartment' | 'house' | 'commercial' | 'land', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '' })
+  const [newTenant, setNewTenant] = useState({ name: '', email: '', phone: '' })
+  const [newLease, setNewLease] = useState({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
 
   useEffect(() => {
     const savedProperties = localStorage.getItem('realestate-properties')
@@ -293,7 +300,10 @@ export default function RealEstatePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Biens immobiliers</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowPropertyModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Nouveau bien
               </button>
             </div>
@@ -364,7 +374,10 @@ export default function RealEstatePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Locataires</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowTenantModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Nouveau locataire
               </button>
             </div>
@@ -418,7 +431,10 @@ export default function RealEstatePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Baux</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowLeaseModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Nouveau bail
               </button>
             </div>
@@ -512,9 +528,343 @@ export default function RealEstatePage() {
                 </div>
               ))}
             </div>
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showPropertyModal}
+        onClose={() => {
+          setShowPropertyModal(false)
+          setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '' })
+        }}
+        title="Nouveau bien"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+            <input
+              type="text"
+              value={newProperty.address}
+              onChange={(e) => setNewProperty({ ...newProperty, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Ex: 123 Rue Didouche Mourad, Alger"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newProperty.type}
+                onChange={(e) => setNewProperty({ ...newProperty, type: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              >
+                <option value="apartment">Appartement</option>
+                <option value="house">Maison</option>
+                <option value="commercial">Commercial</option>
+                <option value="land">Terrain</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Propriétaire</label>
+              <input
+                type="text"
+                value={newProperty.ownerName}
+                onChange={(e) => setNewProperty({ ...newProperty, ownerName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+          </div>
+          {(newProperty.type === 'apartment' || newProperty.type === 'house') && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Chambres</label>
+                <input
+                  type="number"
+                  value={newProperty.bedrooms}
+                  onChange={(e) => setNewProperty({ ...newProperty, bedrooms: parseInt(e.target.value) || 0 })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                  min="0"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Salles de bain</label>
+                <input
+                  type="number"
+                  value={newProperty.bathrooms}
+                  onChange={(e) => setNewProperty({ ...newProperty, bathrooms: parseInt(e.target.value) || 0 })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                  min="0"
+                />
+              </div>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Superficie (m²)</label>
+              <input
+                type="number"
+                value={newProperty.area}
+                onChange={(e) => setNewProperty({ ...newProperty, area: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix/Mois (DZD)</label>
+              <input
+                type="number"
+                value={newProperty.price}
+                onChange={(e) => setNewProperty({ ...newProperty, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowPropertyModal(false)
+                setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newProperty.address && newProperty.ownerName && newProperty.area > 0) {
+                  const property: Property = {
+                    id: Date.now().toString(),
+                    address: newProperty.address,
+                    type: newProperty.type,
+                    bedrooms: newProperty.bedrooms || undefined,
+                    bathrooms: newProperty.bathrooms || undefined,
+                    area: newProperty.area,
+                    price: newProperty.price,
+                    status: 'available',
+                    ownerId: Date.now().toString(),
+                    ownerName: newProperty.ownerName,
+                    images: [],
+                    features: [],
+                    createdAt: new Date(),
+                  }
+                  setProperties([...properties, property])
+                  setShowPropertyModal(false)
+                  setNewProperty({ address: '', type: 'apartment', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '' })
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showTenantModal}
+        onClose={() => {
+          setShowTenantModal(false)
+          setNewTenant({ name: '', email: '', phone: '' })
+        }}
+        title="Nouveau locataire"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newTenant.name}
+              onChange={(e) => setNewTenant({ ...newTenant, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newTenant.email}
+                onChange={(e) => setNewTenant({ ...newTenant, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newTenant.phone}
+                onChange={(e) => setNewTenant({ ...newTenant, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowTenantModal(false)
+                setNewTenant({ name: '', email: '', phone: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newTenant.name && newTenant.email && newTenant.phone) {
+                  const tenant: Tenant = {
+                    id: Date.now().toString(),
+                    name: newTenant.name,
+                    email: newTenant.email,
+                    phone: newTenant.phone,
+                    status: 'pending',
+                    joinDate: new Date(),
+                  }
+                  setTenants([...tenants, tenant])
+                  setShowTenantModal(false)
+                  setNewTenant({ name: '', email: '', phone: '' })
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showLeaseModal}
+        onClose={() => {
+          setShowLeaseModal(false)
+          setNewLease({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
+        }}
+        title="Nouveau bail"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {properties.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Bien</label>
+              <select
+                value={newLease.propertyId}
+                onChange={(e) => setNewLease({ ...newLease, propertyId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un bien</option>
+                {properties.filter(p => p.status === 'available').map(property => (
+                  <option key={property.id} value={property.id}>{property.address}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {tenants.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Locataire</label>
+              <select
+                value={newLease.tenantId}
+                onChange={(e) => setNewLease({ ...newLease, tenantId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un locataire</option>
+                {tenants.map(tenant => (
+                  <option key={tenant.id} value={tenant.id}>{tenant.name} - {tenant.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+              <input
+                type="date"
+                value={newLease.startDate}
+                onChange={(e) => setNewLease({ ...newLease, startDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
+              <input
+                type="date"
+                value={newLease.endDate}
+                onChange={(e) => setNewLease({ ...newLease, endDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Loyer mensuel (DZD)</label>
+              <input
+                type="number"
+                value={newLease.monthlyRent}
+                onChange={(e) => setNewLease({ ...newLease, monthlyRent: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Dépôt de garantie (DZD)</label>
+              <input
+                type="number"
+                value={newLease.deposit}
+                onChange={(e) => setNewLease({ ...newLease, deposit: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowLeaseModal(false)
+                setNewLease({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newLease.propertyId && newLease.tenantId && newLease.startDate && newLease.endDate) {
+                  const property = properties.find(p => p.id === newLease.propertyId)
+                  const tenant = tenants.find(t => t.id === newLease.tenantId)
+                  if (property && tenant) {
+                    const lease: Lease = {
+                      id: Date.now().toString(),
+                      propertyId: newLease.propertyId,
+                      propertyAddress: property.address,
+                      tenantId: newLease.tenantId,
+                      tenantName: tenant.name,
+                      startDate: new Date(newLease.startDate),
+                      endDate: new Date(newLease.endDate),
+                      monthlyRent: newLease.monthlyRent,
+                      deposit: newLease.deposit,
+                      status: 'active',
+                      paymentStatus: 'pending',
+                    }
+                    setLeases([...leases, lease])
+                    setShowLeaseModal(false)
+                    setNewLease({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

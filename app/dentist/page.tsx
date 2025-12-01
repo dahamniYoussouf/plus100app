@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Stethoscope, Users, Calendar, FileText, BarChart3, Clock, Activity } from 'lucide-react'
 
 type TabType = 'dashboard' | 'patients' | 'appointments' | 'treatments'
@@ -40,6 +41,12 @@ export default function DentistPage() {
   const [patients, setPatients] = useState<Patient[]>([])
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [treatments, setTreatments] = useState<Treatment[]>([])
+  const [showPatientModal, setShowPatientModal] = useState(false)
+  const [showRdvModal, setShowRdvModal] = useState(false)
+  const [showTreatmentModal, setShowTreatmentModal] = useState(false)
+  const [newPatient, setNewPatient] = useState({ name: '', email: '', phone: '', dateOfBirth: '' })
+  const [newRdv, setNewRdv] = useState({ patientId: '', date: '', time: '', treatment: '' })
+  const [newTreatment, setNewTreatment] = useState({ patientId: '', type: 'cleaning' as 'cleaning' | 'filling' | 'extraction' | 'crown' | 'root_canal' | 'orthodontic', date: '', cost: 0, notes: '' })
 
   useEffect(() => {
     const savedPatients = localStorage.getItem('dentist-patients')
@@ -235,7 +242,10 @@ export default function DentistPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Patients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors">
+              <button 
+                onClick={() => setShowPatientModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
+              >
                 Nouveau Patient
               </button>
             </div>
@@ -265,7 +275,10 @@ export default function DentistPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Rendez-vous</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors">
+              <button 
+                onClick={() => setShowRdvModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
+              >
                 Nouveau RDV
               </button>
             </div>
@@ -306,7 +319,10 @@ export default function DentistPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Traitements</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors">
+              <button 
+                onClick={() => setShowTreatmentModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
+              >
                 Nouveau Traitement
               </button>
             </div>
@@ -335,9 +351,296 @@ export default function DentistPage() {
                 ))}
               </div>
             )}
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showPatientModal}
+        onClose={() => {
+          setShowPatientModal(false)
+          setNewPatient({ name: '', email: '', phone: '', dateOfBirth: '' })
+        }}
+        title="Nouveau Patient"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newPatient.name}
+              onChange={(e) => setNewPatient({ ...newPatient, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newPatient.email}
+                onChange={(e) => setNewPatient({ ...newPatient, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newPatient.phone}
+                onChange={(e) => setNewPatient({ ...newPatient, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
+            <input
+              type="date"
+              value={newPatient.dateOfBirth}
+              onChange={(e) => setNewPatient({ ...newPatient, dateOfBirth: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowPatientModal(false)
+                setNewPatient({ name: '', email: '', phone: '', dateOfBirth: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newPatient.name && newPatient.email && newPatient.phone && newPatient.dateOfBirth) {
+                  const patient: Patient = {
+                    id: Date.now().toString(),
+                    name: newPatient.name,
+                    email: newPatient.email,
+                    phone: newPatient.phone,
+                    dateOfBirth: new Date(newPatient.dateOfBirth),
+                  }
+                  setPatients([...patients, patient])
+                  setShowPatientModal(false)
+                  setNewPatient({ name: '', email: '', phone: '', dateOfBirth: '' })
+                }
+              }}
+              className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showRdvModal}
+        onClose={() => {
+          setShowRdvModal(false)
+          setNewRdv({ patientId: '', date: '', time: '', treatment: '' })
+        }}
+        title="Nouveau RDV"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {patients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Patient</label>
+              <select
+                value={newRdv.patientId}
+                onChange={(e) => setNewRdv({ ...newRdv, patientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un patient</option>
+                {patients.map(patient => (
+                  <option key={patient.id} value={patient.id}>{patient.name} - {patient.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newRdv.date}
+                onChange={(e) => setNewRdv({ ...newRdv, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newRdv.time}
+                onChange={(e) => setNewRdv({ ...newRdv, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Traitement</label>
+            <input
+              type="text"
+              value={newRdv.treatment}
+              onChange={(e) => setNewRdv({ ...newRdv, treatment: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              placeholder="Ex: Nettoyage dentaire"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowRdvModal(false)
+                setNewRdv({ patientId: '', date: '', time: '', treatment: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newRdv.patientId && newRdv.date && newRdv.time && newRdv.treatment) {
+                  const patient = patients.find(p => p.id === newRdv.patientId)
+                  if (patient) {
+                    const appointment: Appointment = {
+                      id: Date.now().toString(),
+                      patientId: newRdv.patientId,
+                      patientName: patient.name,
+                      date: new Date(newRdv.date),
+                      time: newRdv.time,
+                      treatment: newRdv.treatment,
+                      status: 'scheduled',
+                    }
+                    setAppointments([...appointments, appointment])
+                    setShowRdvModal(false)
+                    setNewRdv({ patientId: '', date: '', time: '', treatment: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showTreatmentModal}
+        onClose={() => {
+          setShowTreatmentModal(false)
+          setNewTreatment({ patientId: '', type: 'cleaning', date: '', cost: 0, notes: '' })
+        }}
+        title="Nouveau Traitement"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {patients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Patient</label>
+              <select
+                value={newTreatment.patientId}
+                onChange={(e) => setNewTreatment({ ...newTreatment, patientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un patient</option>
+                {patients.map(patient => (
+                  <option key={patient.id} value={patient.id}>{patient.name} - {patient.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newTreatment.type}
+                onChange={(e) => setNewTreatment({ ...newTreatment, type: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              >
+                <option value="cleaning">Nettoyage</option>
+                <option value="filling">Plombage</option>
+                <option value="extraction">Extraction</option>
+                <option value="crown">Couronne</option>
+                <option value="root_canal">Traitement de canal</option>
+                <option value="orthodontic">Orthodontie</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newTreatment.date}
+                onChange={(e) => setNewTreatment({ ...newTreatment, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Coût (DZD)</label>
+            <input
+              type="number"
+              value={newTreatment.cost}
+              onChange={(e) => setNewTreatment({ ...newTreatment, cost: parseFloat(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optionnel)</label>
+            <textarea
+              value={newTreatment.notes}
+              onChange={(e) => setNewTreatment({ ...newTreatment, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              rows={3}
+              placeholder="Notes sur le traitement"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowTreatmentModal(false)
+                setNewTreatment({ patientId: '', type: 'cleaning', date: '', cost: 0, notes: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newTreatment.patientId && newTreatment.date) {
+                  const patient = patients.find(p => p.id === newTreatment.patientId)
+                  if (patient) {
+                    const treatment: Treatment = {
+                      id: Date.now().toString(),
+                      patientId: newTreatment.patientId,
+                      patientName: patient.name,
+                      type: newTreatment.type,
+                      date: new Date(newTreatment.date),
+                      cost: newTreatment.cost,
+                      notes: newTreatment.notes || undefined,
+                    }
+                    setTreatments([...treatments, treatment])
+                    setShowTreatmentModal(false)
+                    setNewTreatment({ patientId: '', type: 'cleaning', date: '', cost: 0, notes: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Truck, Users, MapPin, Route, BarChart3, Clock, CheckCircle, AlertCircle, TrendingUp, Package } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'vehicles' | 'drivers' | 'routes' | 'shipments'
 
@@ -70,6 +71,10 @@ export default function TransportPage() {
   const [drivers, setDrivers] = useState<Driver[]>([])
   const [routes, setRoutes] = useState<Route[]>([])
   const [shipments, setShipments] = useState<Shipment[]>([])
+  const [showVehicleModal, setShowVehicleModal] = useState(false)
+  const [showDriverModal, setShowDriverModal] = useState(false)
+  const [newVehicle, setNewVehicle] = useState({ plateNumber: '', type: 'truck' as 'truck' | 'van' | 'car' | 'motorcycle', brand: '', model: '', capacity: 0, mileage: 0 })
+  const [newDriver, setNewDriver] = useState({ name: '', phone: '', email: '', licenseNumber: '' })
 
   useEffect(() => {
     const savedVehicles = localStorage.getItem('transport-vehicles')
@@ -285,7 +290,10 @@ export default function TransportPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Véhicules</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowVehicleModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Nouveau véhicule
               </button>
             </div>
@@ -346,7 +354,10 @@ export default function TransportPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Chauffeurs</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowDriverModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Nouveau chauffeur
               </button>
             </div>
@@ -494,9 +505,212 @@ export default function TransportPage() {
                 </div>
               ))}
             </div>
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showVehicleModal}
+        onClose={() => {
+          setShowVehicleModal(false)
+          setNewVehicle({ plateNumber: '', type: 'truck', brand: '', model: '', capacity: 0, mileage: 0 })
+        }}
+        title="Nouveau véhicule"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Plaque d'immatriculation</label>
+            <input
+              type="text"
+              value={newVehicle.plateNumber}
+              onChange={(e) => setNewVehicle({ ...newVehicle, plateNumber: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: 12345-A-16"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newVehicle.type}
+                onChange={(e) => setNewVehicle({ ...newVehicle, type: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="truck">Camion</option>
+                <option value="van">Fourgon</option>
+                <option value="car">Voiture</option>
+                <option value="motorcycle">Moto</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Capacité (kg)</label>
+              <input
+                type="number"
+                value={newVehicle.capacity}
+                onChange={(e) => setNewVehicle({ ...newVehicle, capacity: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Marque</label>
+              <input
+                type="text"
+                value={newVehicle.brand}
+                onChange={(e) => setNewVehicle({ ...newVehicle, brand: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Mercedes"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Modèle</label>
+              <input
+                type="text"
+                value={newVehicle.model}
+                onChange={(e) => setNewVehicle({ ...newVehicle, model: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Sprinter"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Kilométrage</label>
+            <input
+              type="number"
+              value={newVehicle.mileage}
+              onChange={(e) => setNewVehicle({ ...newVehicle, mileage: parseInt(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowVehicleModal(false)
+                setNewVehicle({ plateNumber: '', type: 'truck', brand: '', model: '', capacity: 0, mileage: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newVehicle.plateNumber && newVehicle.brand && newVehicle.model) {
+                  const vehicle: Vehicle = {
+                    id: Date.now().toString(),
+                    plateNumber: newVehicle.plateNumber,
+                    type: newVehicle.type,
+                    brand: newVehicle.brand,
+                    model: newVehicle.model,
+                    capacity: newVehicle.capacity,
+                    status: 'available',
+                    mileage: newVehicle.mileage,
+                  }
+                  setVehicles([...vehicles, vehicle])
+                  setShowVehicleModal(false)
+                  setNewVehicle({ plateNumber: '', type: 'truck', brand: '', model: '', capacity: 0, mileage: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showDriverModal}
+        onClose={() => {
+          setShowDriverModal(false)
+          setNewDriver({ name: '', phone: '', email: '', licenseNumber: '' })
+        }}
+        title="Nouveau chauffeur"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newDriver.name}
+              onChange={(e) => setNewDriver({ ...newDriver, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newDriver.phone}
+                onChange={(e) => setNewDriver({ ...newDriver, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newDriver.email}
+                onChange={(e) => setNewDriver({ ...newDriver, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de permis</label>
+            <input
+              type="text"
+              value={newDriver.licenseNumber}
+              onChange={(e) => setNewDriver({ ...newDriver, licenseNumber: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: PER-123456"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowDriverModal(false)
+                setNewDriver({ name: '', phone: '', email: '', licenseNumber: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newDriver.name && newDriver.phone && newDriver.email && newDriver.licenseNumber) {
+                  const driver: Driver = {
+                    id: Date.now().toString(),
+                    name: newDriver.name,
+                    phone: newDriver.phone,
+                    email: newDriver.email,
+                    licenseNumber: newDriver.licenseNumber,
+                    status: 'available',
+                    totalDeliveries: 0,
+                    rating: 5,
+                    joinDate: new Date(),
+                  }
+                  setDrivers([...drivers, driver])
+                  setShowDriverModal(false)
+                  setNewDriver({ name: '', phone: '', email: '', licenseNumber: '' })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

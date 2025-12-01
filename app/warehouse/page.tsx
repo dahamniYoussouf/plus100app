@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Warehouse, Package, BarChart3, AlertCircle, TrendingUp, CheckCircle } from 'lucide-react'
 
 type TabType = 'dashboard' | 'inventory' | 'movements' | 'locations' | 'reports'
@@ -46,6 +47,12 @@ export default function WarehousePage() {
   const [items, setItems] = useState<Item[]>([])
   const [movements, setMovements] = useState<Movement[]>([])
   const [locations, setLocations] = useState<Location[]>([])
+  const [showItemModal, setShowItemModal] = useState(false)
+  const [showMovementModal, setShowMovementModal] = useState(false)
+  const [showLocationModal, setShowLocationModal] = useState(false)
+  const [newItem, setNewItem] = useState({ name: '', sku: '', category: '', quantity: 0, unit: '', minStock: 10, maxStock: 1000, location: '', cost: 0, supplier: '' })
+  const [newMovement, setNewMovement] = useState({ itemId: '', type: 'in' as 'in' | 'out' | 'transfer', quantity: 0, fromLocation: '', toLocation: '', reason: '', operator: '' })
+  const [newLocation, setNewLocation] = useState({ name: '', type: 'shelf' as 'shelf' | 'rack' | 'zone' | 'room', capacity: 0 })
 
   useEffect(() => {
     const savedItems = localStorage.getItem('warehouse-items')
@@ -253,7 +260,10 @@ export default function WarehousePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Inventaire</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowItemModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Ajouter Article
               </button>
             </div>
@@ -296,7 +306,10 @@ export default function WarehousePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Mouvements</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowMovementModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Nouveau Mouvement
               </button>
             </div>
@@ -347,7 +360,10 @@ export default function WarehousePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Emplacements</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowLocationModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Ajouter Emplacement
               </button>
             </div>
@@ -418,6 +434,375 @@ export default function WarehousePage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showItemModal}
+        onClose={() => {
+          setShowItemModal(false)
+          setNewItem({ name: '', sku: '', category: '', quantity: 0, unit: '', minStock: 10, maxStock: 1000, location: '', cost: 0, supplier: '' })
+        }}
+        title="Ajouter Article"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newItem.name}
+              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Ex: Produit A"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+              <input
+                type="text"
+                value={newItem.sku}
+                onChange={(e) => setNewItem({ ...newItem, sku: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: SKU-001"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newItem.category}
+                onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: Électronique"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+              <input
+                type="number"
+                value={newItem.quantity}
+                onChange={(e) => setNewItem({ ...newItem, quantity: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Unité</label>
+              <input
+                type="text"
+                value={newItem.unit}
+                onChange={(e) => setNewItem({ ...newItem, unit: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: pièce, kg"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Emplacement</label>
+              <input
+                type="text"
+                value={newItem.location}
+                onChange={(e) => setNewItem({ ...newItem, location: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: A-12-05"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Stock min</label>
+              <input
+                type="number"
+                value={newItem.minStock}
+                onChange={(e) => setNewItem({ ...newItem, minStock: parseInt(e.target.value) || 10 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Stock max</label>
+              <input
+                type="number"
+                value={newItem.maxStock}
+                onChange={(e) => setNewItem({ ...newItem, maxStock: parseInt(e.target.value) || 1000 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Coût (DZD)</label>
+              <input
+                type="number"
+                value={newItem.cost}
+                onChange={(e) => setNewItem({ ...newItem, cost: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Fournisseur (optionnel)</label>
+            <input
+              type="text"
+              value={newItem.supplier}
+              onChange={(e) => setNewItem({ ...newItem, supplier: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Ex: Fournisseur ABC"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowItemModal(false)
+                setNewItem({ name: '', sku: '', category: '', quantity: 0, unit: '', minStock: 10, maxStock: 1000, location: '', cost: 0, supplier: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newItem.name && newItem.sku && newItem.category && newItem.unit && newItem.location) {
+                  const item: Item = {
+                    id: Date.now().toString(),
+                    name: newItem.name,
+                    sku: newItem.sku,
+                    category: newItem.category,
+                    quantity: newItem.quantity,
+                    unit: newItem.unit,
+                    minStock: newItem.minStock,
+                    maxStock: newItem.maxStock,
+                    location: newItem.location,
+                    cost: newItem.cost,
+                    supplier: newItem.supplier || undefined,
+                  }
+                  setItems([...items, item])
+                  setShowItemModal(false)
+                  setNewItem({ name: '', sku: '', category: '', quantity: 0, unit: '', minStock: 10, maxStock: 1000, location: '', cost: 0, supplier: '' })
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showMovementModal}
+        onClose={() => {
+          setShowMovementModal(false)
+          setNewMovement({ itemId: '', type: 'in', quantity: 0, fromLocation: '', toLocation: '', reason: '', operator: '' })
+        }}
+        title="Nouveau Mouvement"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {items.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Article</label>
+              <select
+                value={newMovement.itemId}
+                onChange={(e) => setNewMovement({ ...newMovement, itemId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un article</option>
+                {items.map(item => (
+                  <option key={item.id} value={item.id}>{item.name} ({item.sku})</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select
+              value={newMovement.type}
+              onChange={(e) => setNewMovement({ ...newMovement, type: e.target.value as any })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+            >
+              <option value="in">Entrée</option>
+              <option value="out">Sortie</option>
+              <option value="transfer">Transfert</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+              <input
+                type="number"
+                value={newMovement.quantity}
+                onChange={(e) => setNewMovement({ ...newMovement, quantity: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Opérateur</label>
+              <input
+                type="text"
+                value={newMovement.operator}
+                onChange={(e) => setNewMovement({ ...newMovement, operator: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+          </div>
+          {newMovement.type === 'transfer' && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">De</label>
+                <input
+                  type="text"
+                  value={newMovement.fromLocation}
+                  onChange={(e) => setNewMovement({ ...newMovement, fromLocation: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                  placeholder="Ex: A-12-05"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Vers</label>
+                <input
+                  type="text"
+                  value={newMovement.toLocation}
+                  onChange={(e) => setNewMovement({ ...newMovement, toLocation: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                  placeholder="Ex: B-15-10"
+                />
+              </div>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Raison</label>
+            <input
+              type="text"
+              value={newMovement.reason}
+              onChange={(e) => setNewMovement({ ...newMovement, reason: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Ex: Réception commande"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMovementModal(false)
+                setNewMovement({ itemId: '', type: 'in', quantity: 0, fromLocation: '', toLocation: '', reason: '', operator: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMovement.itemId && newMovement.quantity > 0 && newMovement.reason && newMovement.operator) {
+                  const item = items.find(i => i.id === newMovement.itemId)
+                  if (item) {
+                    const movement: Movement = {
+                      id: Date.now().toString(),
+                      itemId: newMovement.itemId,
+                      itemName: item.name,
+                      type: newMovement.type,
+                      quantity: newMovement.quantity,
+                      fromLocation: newMovement.fromLocation || undefined,
+                      toLocation: newMovement.toLocation || undefined,
+                      reason: newMovement.reason,
+                      date: new Date(),
+                      operator: newMovement.operator,
+                    }
+                    setMovements([...movements, movement])
+                    setShowMovementModal(false)
+                    setNewMovement({ itemId: '', type: 'in', quantity: 0, fromLocation: '', toLocation: '', reason: '', operator: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showLocationModal}
+        onClose={() => {
+          setShowLocationModal(false)
+          setNewLocation({ name: '', type: 'shelf', capacity: 0 })
+        }}
+        title="Ajouter Emplacement"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newLocation.name}
+              onChange={(e) => setNewLocation({ ...newLocation, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              placeholder="Ex: A-12-05"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newLocation.type}
+                onChange={(e) => setNewLocation({ ...newLocation, type: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              >
+                <option value="shelf">Étagère</option>
+                <option value="rack">Rack</option>
+                <option value="zone">Zone</option>
+                <option value="room">Salle</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Capacité</label>
+              <input
+                type="number"
+                value={newLocation.capacity}
+                onChange={(e) => setNewLocation({ ...newLocation, capacity: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowLocationModal(false)
+                setNewLocation({ name: '', type: 'shelf', capacity: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newLocation.name && newLocation.capacity > 0) {
+                  const location: Location = {
+                    id: Date.now().toString(),
+                    name: newLocation.name,
+                    type: newLocation.type,
+                    capacity: newLocation.capacity,
+                    currentOccupancy: 0,
+                    status: 'available',
+                  }
+                  setLocations([...locations, location])
+                  setShowLocationModal(false)
+                  setNewLocation({ name: '', type: 'shelf', capacity: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -54,6 +54,9 @@ export default function LanguagePage() {
   const [showCoursModal, setShowCoursModal] = useState(false)
   const [showEtudiantModal, setShowEtudiantModal] = useState(false)
   const [showInstructeurModal, setShowInstructeurModal] = useState(false)
+  const [newCourse, setNewCourse] = useState({ name: '', language: '', level: 'beginner' as 'beginner' | 'intermediate' | 'advanced', instructorId: '', schedule: '', day: '', duration: 60, capacity: 20, price: 0 })
+  const [newStudent, setNewStudent] = useState({ name: '', email: '', phone: '', level: 'beginner' as 'beginner' | 'intermediate' | 'advanced' })
+  const [newInstructor, setNewInstructor] = useState({ name: '', email: '', phone: '', languages: '', experience: 0 })
 
   useEffect(() => {
     const savedCourses = localStorage.getItem('language-courses')
@@ -467,13 +470,154 @@ export default function LanguagePage() {
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau cours.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du cours</label>
+            <input
+              type="text"
+              value={newCourse.name}
+              onChange={(e) => setNewCourse({ ...newCourse, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Anglais Débutant"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Langue</label>
+              <input
+                type="text"
+                value={newCourse.language}
+                onChange={(e) => setNewCourse({ ...newCourse, language: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                placeholder="Ex: Anglais"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Niveau</label>
+              <select
+                value={newCourse.level}
+                onChange={(e) => setNewCourse({ ...newCourse, level: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              >
+                <option value="beginner">Débutant</option>
+                <option value="intermediate">Intermédiaire</option>
+                <option value="advanced">Avancé</option>
+              </select>
+            </div>
+          </div>
+          {instructors.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Instructeur</label>
+              <select
+                value={newCourse.instructorId}
+                onChange={(e) => setNewCourse({ ...newCourse, instructorId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un instructeur</option>
+                {instructors.map(instructor => (
+                  <option key={instructor.id} value={instructor.id}>{instructor.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Horaire</label>
+              <input
+                type="time"
+                value={newCourse.schedule}
+                onChange={(e) => setNewCourse({ ...newCourse, schedule: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Jour</label>
+              <select
+                value={newCourse.day}
+                onChange={(e) => setNewCourse({ ...newCourse, day: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner</option>
+                <option value="Lundi">Lundi</option>
+                <option value="Mardi">Mardi</option>
+                <option value="Mercredi">Mercredi</option>
+                <option value="Jeudi">Jeudi</option>
+                <option value="Vendredi">Vendredi</option>
+                <option value="Samedi">Samedi</option>
+                <option value="Dimanche">Dimanche</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (min)</label>
+              <input
+                type="number"
+                value={newCourse.duration}
+                onChange={(e) => setNewCourse({ ...newCourse, duration: parseInt(e.target.value) || 60 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Capacité</label>
+              <input
+                type="number"
+                value={newCourse.capacity}
+                onChange={(e) => setNewCourse({ ...newCourse, capacity: parseInt(e.target.value) || 20 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newCourse.price}
+                onChange={(e) => setNewCourse({ ...newCourse, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowCoursModal(false)}
+              onClick={() => {
+                setShowCoursModal(false)
+                setNewCourse({ name: '', language: '', level: 'beginner', instructorId: '', schedule: '', day: '', duration: 60, capacity: 20, price: 0 })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCourse.name && newCourse.language && newCourse.instructorId && newCourse.schedule && newCourse.day) {
+                  const instructor = instructors.find(i => i.id === newCourse.instructorId)
+                  if (instructor) {
+                    const course: Course = {
+                      id: Date.now().toString(),
+                      name: newCourse.name,
+                      language: newCourse.language,
+                      level: newCourse.level,
+                      instructorId: newCourse.instructorId,
+                      instructorName: instructor.name,
+                      schedule: newCourse.schedule,
+                      day: newCourse.day,
+                      duration: newCourse.duration,
+                      capacity: newCourse.capacity,
+                      enrolled: 0,
+                      price: newCourse.price,
+                      status: 'upcoming',
+                    }
+                    setCourses([...courses, course])
+                    setShowCoursModal(false)
+                    setNewCourse({ name: '', language: '', level: 'beginner', instructorId: '', schedule: '', day: '', duration: 60, capacity: 20, price: 0 })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -486,13 +630,82 @@ export default function LanguagePage() {
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouvel étudiant.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newStudent.name}
+              onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newStudent.email}
+                onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newStudent.phone}
+                onChange={(e) => setNewStudent({ ...newStudent, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Niveau</label>
+            <select
+              value={newStudent.level}
+              onChange={(e) => setNewStudent({ ...newStudent, level: e.target.value as any })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            >
+              <option value="beginner">Débutant</option>
+              <option value="intermediate">Intermédiaire</option>
+              <option value="advanced">Avancé</option>
+            </select>
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowEtudiantModal(false)}
+              onClick={() => {
+                setShowEtudiantModal(false)
+                setNewStudent({ name: '', email: '', phone: '', level: 'beginner' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newStudent.name && newStudent.email && newStudent.phone) {
+                  const student: Student = {
+                    id: Date.now().toString(),
+                    name: newStudent.name,
+                    email: newStudent.email,
+                    phone: newStudent.phone,
+                    enrolledCourses: [],
+                    level: newStudent.level,
+                    joinDate: new Date(),
+                    totalLessons: 0,
+                    completedLessons: 0,
+                  }
+                  setStudents([...students, student])
+                  setShowEtudiantModal(false)
+                  setNewStudent({ name: '', email: '', phone: '', level: 'beginner' })
+                }
+              }}
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -505,13 +718,91 @@ export default function LanguagePage() {
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouvel instructeur.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newInstructor.name}
+              onChange={(e) => setNewInstructor({ ...newInstructor, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Sarah Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newInstructor.email}
+                onChange={(e) => setNewInstructor({ ...newInstructor, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                placeholder="Ex: sarah@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newInstructor.phone}
+                onChange={(e) => setNewInstructor({ ...newInstructor, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Langues (séparées par des virgules)</label>
+              <input
+                type="text"
+                value={newInstructor.languages}
+                onChange={(e) => setNewInstructor({ ...newInstructor, languages: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                placeholder="Ex: Anglais, Français, Espagnol"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Expérience (années)</label>
+              <input
+                type="number"
+                value={newInstructor.experience}
+                onChange={(e) => setNewInstructor({ ...newInstructor, experience: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowInstructeurModal(false)}
+              onClick={() => {
+                setShowInstructeurModal(false)
+                setNewInstructor({ name: '', email: '', phone: '', languages: '', experience: 0 })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newInstructor.name && newInstructor.email && newInstructor.phone && newInstructor.languages) {
+                  const instructor: Instructor = {
+                    id: Date.now().toString(),
+                    name: newInstructor.name,
+                    email: newInstructor.email,
+                    phone: newInstructor.phone,
+                    languages: newInstructor.languages.split(',').map(l => l.trim()).filter(l => l),
+                    experience: newInstructor.experience,
+                    rating: 5,
+                    activeCourses: 0,
+                  }
+                  setInstructors([...instructors, instructor])
+                  setShowInstructeurModal(false)
+                  setNewInstructor({ name: '', email: '', phone: '', languages: '', experience: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>

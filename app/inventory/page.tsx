@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Package, TrendingDown, TrendingUp, AlertTriangle, BarChart3, ShoppingCart, Box } from 'lucide-react'
 
 type TabType = 'dashboard' | 'products' | 'movements' | 'alerts'
@@ -33,6 +34,10 @@ export default function InventoryPage() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [products, setProducts] = useState<Product[]>([])
   const [movements, setMovements] = useState<Movement[]>([])
+  const [showProductModal, setShowProductModal] = useState(false)
+  const [showMovementModal, setShowMovementModal] = useState(false)
+  const [newProduct, setNewProduct] = useState({ name: '', sku: '', category: '', quantity: 0, minQuantity: 10, maxQuantity: 1000, unit: '', location: '' })
+  const [newMovement, setNewMovement] = useState({ productId: '', type: 'in' as 'in' | 'out' | 'transfer' | 'adjustment', quantity: 0, reason: '', user: '' })
 
   useEffect(() => {
     const savedProducts = localStorage.getItem('inventory-products')
@@ -208,7 +213,10 @@ export default function InventoryPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Produits</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+              <button 
+                onClick={() => setShowProductModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
                 Ajouter Produit
               </button>
             </div>
@@ -254,7 +262,10 @@ export default function InventoryPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Mouvements</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+              <button 
+                onClick={() => setShowMovementModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
                 Nouveau Mouvement
               </button>
             </div>
@@ -337,6 +348,249 @@ export default function InventoryPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showProductModal}
+        onClose={() => {
+          setShowProductModal(false)
+          setNewProduct({ name: '', sku: '', category: '', quantity: 0, minQuantity: 10, maxQuantity: 1000, unit: '', location: '' })
+        }}
+        title="Ajouter Produit"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newProduct.name}
+              onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              placeholder="Ex: Produit A"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+              <input
+                type="text"
+                value={newProduct.sku}
+                onChange={(e) => setNewProduct({ ...newProduct, sku: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: PROD-001"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: Électronique"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+              <input
+                type="number"
+                value={newProduct.quantity}
+                onChange={(e) => setNewProduct({ ...newProduct, quantity: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Unité</label>
+              <input
+                type="text"
+                value={newProduct.unit}
+                onChange={(e) => setNewProduct({ ...newProduct, unit: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: pièces"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Emplacement</label>
+              <input
+                type="text"
+                value={newProduct.location}
+                onChange={(e) => setNewProduct({ ...newProduct, location: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: Entrepôt A"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité min</label>
+              <input
+                type="number"
+                value={newProduct.minQuantity}
+                onChange={(e) => setNewProduct({ ...newProduct, minQuantity: parseInt(e.target.value) || 10 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité max</label>
+              <input
+                type="number"
+                value={newProduct.maxQuantity}
+                onChange={(e) => setNewProduct({ ...newProduct, maxQuantity: parseInt(e.target.value) || 1000 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowProductModal(false)
+                setNewProduct({ name: '', sku: '', category: '', quantity: 0, minQuantity: 10, maxQuantity: 1000, unit: '', location: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newProduct.name && newProduct.sku && newProduct.category && newProduct.unit && newProduct.location) {
+                  const product: Product = {
+                    id: Date.now().toString(),
+                    name: newProduct.name,
+                    sku: newProduct.sku,
+                    category: newProduct.category,
+                    quantity: newProduct.quantity,
+                    minQuantity: newProduct.minQuantity,
+                    maxQuantity: newProduct.maxQuantity,
+                    unit: newProduct.unit,
+                    location: newProduct.location,
+                  }
+                  setProducts([...products, product])
+                  setShowProductModal(false)
+                  setNewProduct({ name: '', sku: '', category: '', quantity: 0, minQuantity: 10, maxQuantity: 1000, unit: '', location: '' })
+                }
+              }}
+              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showMovementModal}
+        onClose={() => {
+          setShowMovementModal(false)
+          setNewMovement({ productId: '', type: 'in', quantity: 0, reason: '', user: '' })
+        }}
+        title="Nouveau Mouvement"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {products.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Produit</label>
+              <select
+                value={newMovement.productId}
+                onChange={(e) => setNewMovement({ ...newMovement, productId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un produit</option>
+                {products.map(product => (
+                  <option key={product.id} value={product.id}>{product.name} ({product.sku})</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select
+              value={newMovement.type}
+              onChange={(e) => setNewMovement({ ...newMovement, type: e.target.value as any })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+            >
+              <option value="in">Entrée</option>
+              <option value="out">Sortie</option>
+              <option value="transfer">Transfert</option>
+              <option value="adjustment">Ajustement</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+              <input
+                type="number"
+                value={newMovement.quantity}
+                onChange={(e) => setNewMovement({ ...newMovement, quantity: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Utilisateur</label>
+              <input
+                type="text"
+                value={newMovement.user}
+                onChange={(e) => setNewMovement({ ...newMovement, user: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Raison</label>
+            <input
+              type="text"
+              value={newMovement.reason}
+              onChange={(e) => setNewMovement({ ...newMovement, reason: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              placeholder="Ex: Réception commande"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMovementModal(false)
+                setNewMovement({ productId: '', type: 'in', quantity: 0, reason: '', user: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMovement.productId && newMovement.quantity > 0 && newMovement.reason && newMovement.user) {
+                  const product = products.find(p => p.id === newMovement.productId)
+                  if (product) {
+                    const movement: Movement = {
+                      id: Date.now().toString(),
+                      productId: newMovement.productId,
+                      productName: product.name,
+                      type: newMovement.type,
+                      quantity: newMovement.quantity,
+                      reason: newMovement.reason,
+                      date: new Date(),
+                      user: newMovement.user,
+                    }
+                    setMovements([...movements, movement])
+                    setShowMovementModal(false)
+                    setNewMovement({ productId: '', type: 'in', quantity: 0, reason: '', user: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

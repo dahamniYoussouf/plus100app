@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Heart, Users, Calendar, Star, BarChart3, TrendingUp, Clock } from 'lucide-react'
 
 type TabType = 'dashboard' | 'services' | 'appointments' | 'clients'
@@ -44,6 +45,12 @@ export default function SpaPage() {
   const [services, setServices] = useState<Service[]>([])
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [clients, setClients] = useState<Client[]>([])
+  const [showServiceModal, setShowServiceModal] = useState(false)
+  const [showRdvModal, setShowRdvModal] = useState(false)
+  const [showClientModal, setShowClientModal] = useState(false)
+  const [newService, setNewService] = useState({ name: '', description: '', duration: 60, price: 0, category: 'massage' as 'massage' | 'facial' | 'body' | 'wellness' })
+  const [newRdv, setNewRdv] = useState({ clientId: '', serviceId: '', date: '', time: '', therapist: '' })
+  const [newClient, setNewClient] = useState({ name: '', email: '', phone: '' })
 
   useEffect(() => {
     const savedServices = localStorage.getItem('spa-services')
@@ -299,7 +306,10 @@ export default function SpaPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Services</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors">
+              <button 
+                onClick={() => setShowServiceModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors"
+              >
                 Ajouter Service
               </button>
             </div>
@@ -330,7 +340,10 @@ export default function SpaPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Rendez-vous</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors">
+              <button 
+                onClick={() => setShowRdvModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors"
+              >
                 Nouveau RDV
               </button>
             </div>
@@ -377,7 +390,10 @@ export default function SpaPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors">
+              <button 
+                onClick={() => setShowClientModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -418,6 +434,295 @@ export default function SpaPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showServiceModal}
+        onClose={() => {
+          setShowServiceModal(false)
+          setNewService({ name: '', description: '', duration: 60, price: 0, category: 'massage' })
+        }}
+        title="Ajouter Service"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du service</label>
+            <input
+              type="text"
+              value={newService.name}
+              onChange={(e) => setNewService({ ...newService, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              placeholder="Ex: Massage Relaxant"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newService.description}
+              onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du service"
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newService.category}
+                onChange={(e) => setNewService({ ...newService, category: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              >
+                <option value="massage">Massage</option>
+                <option value="facial">Soin visage</option>
+                <option value="body">Soin corps</option>
+                <option value="wellness">Bien-être</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (min)</label>
+              <input
+                type="number"
+                value={newService.duration}
+                onChange={(e) => setNewService({ ...newService, duration: parseInt(e.target.value) || 60 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newService.price}
+                onChange={(e) => setNewService({ ...newService, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowServiceModal(false)
+                setNewService({ name: '', description: '', duration: 60, price: 0, category: 'massage' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newService.name && newService.description) {
+                  const service: Service = {
+                    id: Date.now().toString(),
+                    name: newService.name,
+                    description: newService.description,
+                    duration: newService.duration,
+                    price: newService.price,
+                    category: newService.category,
+                    available: true,
+                  }
+                  setServices([...services, service])
+                  setShowServiceModal(false)
+                  setNewService({ name: '', description: '', duration: 60, price: 0, category: 'massage' })
+                }
+              }}
+              className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showRdvModal}
+        onClose={() => {
+          setShowRdvModal(false)
+          setNewRdv({ clientId: '', serviceId: '', date: '', time: '', therapist: '' })
+        }}
+        title="Nouveau RDV"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {clients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newRdv.clientId}
+                onChange={(e) => setNewRdv({ ...newRdv, clientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un client</option>
+                {clients.map(client => (
+                  <option key={client.id} value={client.id}>{client.name} - {client.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {services.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Service</label>
+              <select
+                value={newRdv.serviceId}
+                onChange={(e) => setNewRdv({ ...newRdv, serviceId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un service</option>
+                {services.map(service => (
+                  <option key={service.id} value={service.id}>{service.name} - DZD{service.price}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newRdv.date}
+                onChange={(e) => setNewRdv({ ...newRdv, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newRdv.time}
+                onChange={(e) => setNewRdv({ ...newRdv, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Thérapeute (optionnel)</label>
+            <input
+              type="text"
+              value={newRdv.therapist}
+              onChange={(e) => setNewRdv({ ...newRdv, therapist: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              placeholder="Ex: Karim Benali"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowRdvModal(false)
+                setNewRdv({ clientId: '', serviceId: '', date: '', time: '', therapist: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newRdv.clientId && newRdv.serviceId && newRdv.date && newRdv.time) {
+                  const client = clients.find(c => c.id === newRdv.clientId)
+                  const service = services.find(s => s.id === newRdv.serviceId)
+                  if (client && service) {
+                    const appointment: Appointment = {
+                      id: Date.now().toString(),
+                      clientId: newRdv.clientId,
+                      clientName: client.name,
+                      serviceId: newRdv.serviceId,
+                      serviceName: service.name,
+                      date: new Date(newRdv.date),
+                      time: newRdv.time,
+                      duration: service.duration,
+                      price: service.price,
+                      status: 'scheduled',
+                      therapist: newRdv.therapist || undefined,
+                    }
+                    setAppointments([...appointments, appointment])
+                    setShowRdvModal(false)
+                    setNewRdv({ clientId: '', serviceId: '', date: '', time: '', therapist: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showClientModal}
+        onClose={() => {
+          setShowClientModal(false)
+          setNewClient({ name: '', email: '', phone: '' })
+        }}
+        title="Nouveau Client"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newClient.name}
+              onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newClient.email}
+                onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newClient.phone}
+                onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowClientModal(false)
+                setNewClient({ name: '', email: '', phone: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newClient.name && newClient.email && newClient.phone) {
+                  const client: Client = {
+                    id: Date.now().toString(),
+                    name: newClient.name,
+                    email: newClient.email,
+                    phone: newClient.phone,
+                    visitCount: 0,
+                  }
+                  setClients([...clients, client])
+                  setShowClientModal(false)
+                  setNewClient({ name: '', email: '', phone: '' })
+                }
+              }}
+              className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

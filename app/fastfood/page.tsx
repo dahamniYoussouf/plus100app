@@ -42,7 +42,7 @@ export default function FastfoodPage() {
         { id: '2', name: 'Sandwich Poulet Halal', description: 'Sandwich poulet halal croustillant', price: 7.50, category: 'sandwich', halal: true, available: true, stock: 40 },
         { id: '3', name: 'Frites Halal', description: 'Frites maison certifiées halal', price: 3.99, category: 'fries', halal: true, available: true, stock: 100 },
         { id: '4', name: 'Menu Combo Halal', description: 'Burger + Frites + Boisson halal', price: 12.99, category: 'combo', halal: true, available: true, stock: 30 },
-        { id: '5', name: 'Coca Cola', description: 'Boisson gazeuse', price: 2.50, category: 'drink', halal: true, available: true, stock: 80 },
+        { id: '5', name: ' hammoudCola', description: 'Boisson gazeuse', price: 2.50, category: 'drink', halal: true, available: true, stock: 80 },
       ]
       setMenuItems(sample)
       localStorage.setItem('fastfood-menu', JSON.stringify(sample))

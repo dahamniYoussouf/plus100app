@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import Image from 'next/image'
 import { Store, Package, Users, ShoppingCart, BarChart3, TrendingUp, Star, Search, Plus, DollarSign, Tag } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'products' | 'sellers' | 'orders' | 'categories'
 
@@ -68,6 +69,10 @@ export default function MarketplacePage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [showProductModal, setShowProductModal] = useState(false)
+  const [showSellerModal, setShowSellerModal] = useState(false)
+  const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, sellerId: '', categoryId: '', stock: 0 })
+  const [newSeller, setNewSeller] = useState({ name: '', email: '', phone: '', shopName: '' })
 
   useEffect(() => {
     const savedProducts = localStorage.getItem('marketplace-products')
@@ -309,7 +314,10 @@ export default function MarketplacePage() {
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
-                <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap flex items-center gap-2">
+                <button 
+                  onClick={() => setShowProductModal(true)}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap flex items-center gap-2"
+                >
                   <Plus className="w-4 h-4" />
                   Nouveau produit
                 </button>
@@ -371,7 +379,10 @@ export default function MarketplacePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Vendeurs</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowSellerModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau vendeur
               </button>
             </div>
@@ -482,9 +493,229 @@ export default function MarketplacePage() {
                 </div>
               ))}
             </div>
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showProductModal}
+        onClose={() => {
+          setShowProductModal(false)
+          setNewProduct({ name: '', description: '', price: 0, sellerId: '', categoryId: '', stock: 0 })
+        }}
+        title="Nouveau produit"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du produit</label>
+            <input
+              type="text"
+              value={newProduct.name}
+              onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Smartphone Pro Max"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newProduct.description}
+              onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du produit"
+            />
+          </div>
+          {sellers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Vendeur</label>
+              <select
+                value={newProduct.sellerId}
+                onChange={(e) => setNewProduct({ ...newProduct, sellerId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un vendeur</option>
+                {sellers.map(seller => (
+                  <option key={seller.id} value={seller.id}>{seller.shopName} - {seller.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {categories.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newProduct.categoryId}
+                onChange={(e) => setNewProduct({ ...newProduct, categoryId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner une catégorie</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+              <input
+                type="number"
+                value={newProduct.stock}
+                onChange={(e) => setNewProduct({ ...newProduct, stock: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowProductModal(false)
+                setNewProduct({ name: '', description: '', price: 0, sellerId: '', categoryId: '', stock: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newProduct.name && newProduct.description && newProduct.sellerId && newProduct.categoryId) {
+                  const seller = sellers.find(s => s.id === newProduct.sellerId)
+                  const category = categories.find(c => c.id === newProduct.categoryId)
+                  if (seller && category) {
+                    const product: Product = {
+                      id: Date.now().toString(),
+                      name: newProduct.name,
+                      description: newProduct.description,
+                      price: newProduct.price,
+                      sellerId: newProduct.sellerId,
+                      sellerName: seller.name,
+                      categoryId: newProduct.categoryId,
+                      categoryName: category.name,
+                      images: [],
+                      stock: newProduct.stock,
+                      sold: 0,
+                      rating: 0,
+                      reviews: 0,
+                      status: 'active',
+                      createdAt: new Date(),
+                    }
+                    setProducts([...products, product])
+                    setShowProductModal(false)
+                    setNewProduct({ name: '', description: '', price: 0, sellerId: '', categoryId: '', stock: 0 })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSellerModal}
+        onClose={() => {
+          setShowSellerModal(false)
+          setNewSeller({ name: '', email: '', phone: '', shopName: '' })
+        }}
+        title="Nouveau vendeur"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newSeller.name}
+              onChange={(e) => setNewSeller({ ...newSeller, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom de la boutique</label>
+            <input
+              type="text"
+              value={newSeller.shopName}
+              onChange={(e) => setNewSeller({ ...newSeller, shopName: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Tech Store"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newSeller.email}
+                onChange={(e) => setNewSeller({ ...newSeller, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newSeller.phone}
+                onChange={(e) => setNewSeller({ ...newSeller, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowSellerModal(false)
+                setNewSeller({ name: '', email: '', phone: '', shopName: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newSeller.name && newSeller.email && newSeller.phone && newSeller.shopName) {
+                  const seller: Seller = {
+                    id: Date.now().toString(),
+                    name: newSeller.name,
+                    email: newSeller.email,
+                    phone: newSeller.phone,
+                    shopName: newSeller.shopName,
+                    products: 0,
+                    totalSales: 0,
+                    rating: 5,
+                    joinDate: new Date(),
+                    status: 'active',
+                  }
+                  setSellers([...sellers, seller])
+                  setShowSellerModal(false)
+                  setNewSeller({ name: '', email: '', phone: '', shopName: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

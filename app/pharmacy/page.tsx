@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Pill, Package, FileText, AlertTriangle, BarChart3, Calendar, Users, TrendingUp } from 'lucide-react'
 import { Medication, Prescription } from '@/types/pharmacy'
 
@@ -10,6 +11,8 @@ export default function PharmacyPage() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [medications, setMedications] = useState<Medication[]>([])
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
+  const [showMedicationModal, setShowMedicationModal] = useState(false)
+  const [newMedication, setNewMedication] = useState({ name: '', genericName: '', category: 'otc' as 'otc' | 'prescription', dosage: '', form: 'tablet' as 'tablet' | 'capsule' | 'syrup' | 'injection', stock: 0, expiryDate: '', price: 0, cost: 0, prescriptionRequired: false, manufacturer: '' })
 
   useEffect(() => {
     const savedMeds = localStorage.getItem('pharmacy-medications')
@@ -199,7 +202,10 @@ export default function PharmacyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Médicaments</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowMedicationModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Ajouter Médicament
               </button>
             </div>
@@ -276,6 +282,166 @@ export default function PharmacyPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showMedicationModal}
+        onClose={() => {
+          setShowMedicationModal(false)
+          setNewMedication({ name: '', genericName: '', category: 'otc', dosage: '', form: 'tablet', stock: 0, expiryDate: '', price: 0, cost: 0, prescriptionRequired: false, manufacturer: '' })
+        }}
+        title="Ajouter Médicament"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom commercial</label>
+            <input
+              type="text"
+              value={newMedication.name}
+              onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Paracétamol 500mg"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom générique (optionnel)</label>
+            <input
+              type="text"
+              value={newMedication.genericName}
+              onChange={(e) => setNewMedication({ ...newMedication, genericName: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Acetaminophen"
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newMedication.category}
+                onChange={(e) => setNewMedication({ ...newMedication, category: e.target.value as any, prescriptionRequired: e.target.value === 'prescription' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="otc">Sans ordonnance</option>
+                <option value="prescription">Sur ordonnance</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Dosage</label>
+              <input
+                type="text"
+                value={newMedication.dosage}
+                onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: 500mg"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Forme</label>
+              <select
+                value={newMedication.form}
+                onChange={(e) => setNewMedication({ ...newMedication, form: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="tablet">Comprimé</option>
+                <option value="capsule">Capsule</option>
+                <option value="syrup">Sirop</option>
+                <option value="injection">Injection</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+              <input
+                type="number"
+                value={newMedication.stock}
+                onChange={(e) => setNewMedication({ ...newMedication, stock: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newMedication.price}
+                onChange={(e) => setNewMedication({ ...newMedication, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Coût (DZD)</label>
+              <input
+                type="number"
+                value={newMedication.cost}
+                onChange={(e) => setNewMedication({ ...newMedication, cost: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date d'expiration</label>
+              <input
+                type="date"
+                value={newMedication.expiryDate}
+                onChange={(e) => setNewMedication({ ...newMedication, expiryDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Fabricant (optionnel)</label>
+              <input
+                type="text"
+                value={newMedication.manufacturer}
+                onChange={(e) => setNewMedication({ ...newMedication, manufacturer: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: Pharma Corp"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMedicationModal(false)
+                setNewMedication({ name: '', genericName: '', category: 'otc', dosage: '', form: 'tablet', stock: 0, expiryDate: '', price: 0, cost: 0, prescriptionRequired: false, manufacturer: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMedication.name && newMedication.dosage && newMedication.expiryDate) {
+                  const medication: Medication = {
+                    id: Date.now().toString(),
+                    name: newMedication.name,
+                    genericName: newMedication.genericName || undefined,
+                    category: newMedication.category,
+                    dosage: newMedication.dosage,
+                    form: newMedication.form,
+                    stock: newMedication.stock,
+                    expiryDate: new Date(newMedication.expiryDate),
+                    price: newMedication.price,
+                    cost: newMedication.cost,
+                    prescriptionRequired: newMedication.prescriptionRequired,
+                    manufacturer: newMedication.manufacturer || undefined,
+                  }
+                  setMedications([...medications, medication])
+                  setShowMedicationModal(false)
+                  setNewMedication({ name: '', genericName: '', category: 'otc', dosage: '', form: 'tablet', stock: 0, expiryDate: '', price: 0, cost: 0, prescriptionRequired: false, manufacturer: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

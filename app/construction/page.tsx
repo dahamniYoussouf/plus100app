@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Building2, Users, Calendar, DollarSign, BarChart3, Hammer, CheckCircle, AlertCircle } from 'lucide-react'
 
 type TabType = 'dashboard' | 'projects' | 'workers' | 'materials' | 'equipment' | 'invoices'
@@ -58,6 +59,14 @@ export default function ConstructionPage() {
   const [workers, setWorkers] = useState<Worker[]>([])
   const [materials, setMaterials] = useState<Material[]>([])
   const [equipment, setEquipment] = useState<Equipment[]>([])
+  const [showProjectModal, setShowProjectModal] = useState(false)
+  const [showWorkerModal, setShowWorkerModal] = useState(false)
+  const [showMaterialModal, setShowMaterialModal] = useState(false)
+  const [showEquipmentModal, setShowEquipmentModal] = useState(false)
+  const [newProject, setNewProject] = useState({ name: '', client: '', location: '', type: 'residential' as 'residential' | 'commercial' | 'industrial' | 'infrastructure', startDate: '', budget: 0 })
+  const [newWorker, setNewWorker] = useState({ name: '', role: 'laborer' as 'engineer' | 'foreman' | 'carpenter' | 'electrician' | 'plumber' | 'laborer', phone: '', email: '', hourlyRate: 0 })
+  const [newMaterial, setNewMaterial] = useState({ name: '', category: '', unit: '', quantity: 0, cost: 0, supplier: '' })
+  const [newEquipment, setNewEquipment] = useState({ name: '', type: '', location: '' })
 
   useEffect(() => {
     const savedProjects = localStorage.getItem('construction-projects')
@@ -325,7 +334,10 @@ export default function ConstructionPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Projets</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowProjectModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Nouveau Projet
               </button>
             </div>
@@ -388,7 +400,10 @@ export default function ConstructionPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Ouvriers</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowWorkerModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Ajouter Ouvrier
               </button>
             </div>
@@ -436,7 +451,10 @@ export default function ConstructionPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Matériaux</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowMaterialModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Ajouter Matériau
               </button>
             </div>
@@ -471,7 +489,10 @@ export default function ConstructionPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Équipements</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowEquipmentModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Ajouter Équipement
               </button>
             </div>
@@ -517,6 +538,409 @@ export default function ConstructionPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showProjectModal}
+        onClose={() => {
+          setShowProjectModal(false)
+          setNewProject({ name: '', client: '', location: '', type: 'residential', startDate: '', budget: 0 })
+        }}
+        title="Nouveau Projet"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du projet</label>
+            <input
+              type="text"
+              value={newProject.name}
+              onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Résidence Les Jardins"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <input
+                type="text"
+                value={newProject.client}
+                onChange={(e) => setNewProject({ ...newProject, client: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Société ABC"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newProject.type}
+                onChange={(e) => setNewProject({ ...newProject, type: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="residential">Résidentiel</option>
+                <option value="commercial">Commercial</option>
+                <option value="industrial">Industriel</option>
+                <option value="infrastructure">Infrastructure</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Localisation</label>
+            <input
+              type="text"
+              value={newProject.location}
+              onChange={(e) => setNewProject({ ...newProject, location: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Alger, Algérie"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+              <input
+                type="date"
+                value={newProject.startDate}
+                onChange={(e) => setNewProject({ ...newProject, startDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Budget (DZD)</label>
+              <input
+                type="number"
+                value={newProject.budget}
+                onChange={(e) => setNewProject({ ...newProject, budget: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowProjectModal(false)
+                setNewProject({ name: '', client: '', location: '', type: 'residential', startDate: '', budget: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newProject.name && newProject.client && newProject.location && newProject.startDate) {
+                  const project: Project = {
+                    id: Date.now().toString(),
+                    name: newProject.name,
+                    client: newProject.client,
+                    location: newProject.location,
+                    type: newProject.type,
+                    status: 'planning',
+                    startDate: new Date(newProject.startDate),
+                    budget: newProject.budget,
+                    spent: 0,
+                    progress: 0,
+                    workers: [],
+                  }
+                  setProjects([...projects, project])
+                  setShowProjectModal(false)
+                  setNewProject({ name: '', client: '', location: '', type: 'residential', startDate: '', budget: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showWorkerModal}
+        onClose={() => {
+          setShowWorkerModal(false)
+          setNewWorker({ name: '', role: 'laborer', phone: '', email: '', hourlyRate: 0 })
+        }}
+        title="Ajouter Ouvrier"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newWorker.name}
+              onChange={(e) => setNewWorker({ ...newWorker, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Rôle</label>
+              <select
+                value={newWorker.role}
+                onChange={(e) => setNewWorker({ ...newWorker, role: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="engineer">Ingénieur</option>
+                <option value="foreman">Contremaître</option>
+                <option value="carpenter">Menuisier</option>
+                <option value="electrician">Électricien</option>
+                <option value="plumber">Plombier</option>
+                <option value="laborer">Ouvrier</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Taux horaire (DZD)</label>
+              <input
+                type="number"
+                value={newWorker.hourlyRate}
+                onChange={(e) => setNewWorker({ ...newWorker, hourlyRate: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newWorker.phone}
+                onChange={(e) => setNewWorker({ ...newWorker, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email (optionnel)</label>
+              <input
+                type="email"
+                value={newWorker.email}
+                onChange={(e) => setNewWorker({ ...newWorker, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowWorkerModal(false)
+                setNewWorker({ name: '', role: 'laborer', phone: '', email: '', hourlyRate: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newWorker.name && newWorker.phone) {
+                  const worker: Worker = {
+                    id: Date.now().toString(),
+                    name: newWorker.name,
+                    role: newWorker.role,
+                    phone: newWorker.phone,
+                    email: newWorker.email || undefined,
+                    projects: [],
+                    hourlyRate: newWorker.hourlyRate,
+                    status: 'available',
+                  }
+                  setWorkers([...workers, worker])
+                  setShowWorkerModal(false)
+                  setNewWorker({ name: '', role: 'laborer', phone: '', email: '', hourlyRate: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showMaterialModal}
+        onClose={() => {
+          setShowMaterialModal(false)
+          setNewMaterial({ name: '', category: '', unit: '', quantity: 0, cost: 0, supplier: '' })
+        }}
+        title="Ajouter Matériau"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newMaterial.name}
+              onChange={(e) => setNewMaterial({ ...newMaterial, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Ciment"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newMaterial.category}
+                onChange={(e) => setNewMaterial({ ...newMaterial, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Matériaux de base"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Unité</label>
+              <input
+                type="text"
+                value={newMaterial.unit}
+                onChange={(e) => setNewMaterial({ ...newMaterial, unit: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: kg, m², m³"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+              <input
+                type="number"
+                value={newMaterial.quantity}
+                onChange={(e) => setNewMaterial({ ...newMaterial, quantity: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Coût unitaire (DZD)</label>
+              <input
+                type="number"
+                value={newMaterial.cost}
+                onChange={(e) => setNewMaterial({ ...newMaterial, cost: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Fournisseur</label>
+            <input
+              type="text"
+              value={newMaterial.supplier}
+              onChange={(e) => setNewMaterial({ ...newMaterial, supplier: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Matériaux Plus"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMaterialModal(false)
+                setNewMaterial({ name: '', category: '', unit: '', quantity: 0, cost: 0, supplier: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMaterial.name && newMaterial.category && newMaterial.unit && newMaterial.supplier) {
+                  const material: Material = {
+                    id: Date.now().toString(),
+                    name: newMaterial.name,
+                    category: newMaterial.category,
+                    unit: newMaterial.unit,
+                    quantity: newMaterial.quantity,
+                    cost: newMaterial.cost,
+                    supplier: newMaterial.supplier,
+                  }
+                  setMaterials([...materials, material])
+                  setShowMaterialModal(false)
+                  setNewMaterial({ name: '', category: '', unit: '', quantity: 0, cost: 0, supplier: '' })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showEquipmentModal}
+        onClose={() => {
+          setShowEquipmentModal(false)
+          setNewEquipment({ name: '', type: '', location: '' })
+        }}
+        title="Ajouter Équipement"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newEquipment.name}
+              onChange={(e) => setNewEquipment({ ...newEquipment, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Excavatrice"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <input
+              type="text"
+              value={newEquipment.type}
+              onChange={(e) => setNewEquipment({ ...newEquipment, type: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Machinerie lourde"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Localisation (optionnel)</label>
+            <input
+              type="text"
+              value={newEquipment.location}
+              onChange={(e) => setNewEquipment({ ...newEquipment, location: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Chantier A"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowEquipmentModal(false)
+                setNewEquipment({ name: '', type: '', location: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newEquipment.name && newEquipment.type) {
+                  const equipment: Equipment = {
+                    id: Date.now().toString(),
+                    name: newEquipment.name,
+                    type: newEquipment.type,
+                    status: 'available',
+                    location: newEquipment.location || undefined,
+                  }
+                  setEquipment([...equipment, equipment])
+                  setShowEquipmentModal(false)
+                  setNewEquipment({ name: '', type: '', location: '' })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

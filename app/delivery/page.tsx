@@ -66,6 +66,7 @@ export default function DeliveryPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [showDeliveryModal, setShowDeliveryModal] = useState(false)
   const [showDriverModal, setShowDriverModal] = useState(false)
+  const [newDriver, setNewDriver] = useState({ name: '', phone: '', email: '', vehicleType: 'bike' as 'bike' | 'motorcycle' | 'car' | 'van', vehiclePlate: '', licenseNumber: '' })
 
   useEffect(() => {
     const savedDeliveries = localStorage.getItem('delivery-deliveries')
@@ -598,13 +599,108 @@ export default function DeliveryPage() {
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau livreur.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newDriver.name}
+              onChange={(e) => setNewDriver({ ...newDriver, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newDriver.phone}
+                onChange={(e) => setNewDriver({ ...newDriver, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newDriver.email}
+                onChange={(e) => setNewDriver({ ...newDriver, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type de véhicule</label>
+              <select
+                value={newDriver.vehicleType}
+                onChange={(e) => setNewDriver({ ...newDriver, vehicleType: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="bike">Vélo</option>
+                <option value="motorcycle">Moto</option>
+                <option value="car">Voiture</option>
+                <option value="van">Fourgon</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Plaque d'immatriculation</label>
+              <input
+                type="text"
+                value={newDriver.vehiclePlate}
+                onChange={(e) => setNewDriver({ ...newDriver, vehiclePlate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: 12345-A-16"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de permis</label>
+            <input
+              type="text"
+              value={newDriver.licenseNumber}
+              onChange={(e) => setNewDriver({ ...newDriver, licenseNumber: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: PER-123456"
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowDriverModal(false)}
+              onClick={() => {
+                setShowDriverModal(false)
+                setNewDriver({ name: '', phone: '', email: '', vehicleType: 'bike', vehiclePlate: '', licenseNumber: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newDriver.name && newDriver.phone && newDriver.email && newDriver.vehiclePlate && newDriver.licenseNumber) {
+                  const driver: Driver = {
+                    id: Date.now().toString(),
+                    name: newDriver.name,
+                    phone: newDriver.phone,
+                    email: newDriver.email,
+                    vehicleType: newDriver.vehicleType,
+                    vehiclePlate: newDriver.vehiclePlate,
+                    licenseNumber: newDriver.licenseNumber,
+                    status: 'available',
+                    totalDeliveries: 0,
+                    rating: 5,
+                    joinDate: new Date(),
+                    totalEarnings: 0,
+                  }
+                  setDrivers([...drivers, driver])
+                  setShowDriverModal(false)
+                  setNewDriver({ name: '', phone: '', email: '', vehicleType: 'bike', vehiclePlate: '', licenseNumber: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>

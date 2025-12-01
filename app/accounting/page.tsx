@@ -45,6 +45,7 @@ export default function AccountingPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [clients, setClients] = useState<Client[]>([])
   const [showClientModal, setShowClientModal] = useState(false)
+  const [newClient, setNewClient] = useState({ name: '', email: '', phone: '', company: '' })
 
   useEffect(() => {
     const savedTransactions = localStorage.getItem('accounting-transactions')
@@ -411,13 +412,79 @@ export default function AccountingPage() {
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau client.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newClient.name}
+              onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newClient.email}
+                onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newClient.phone}
+                onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Entreprise (optionnel)</label>
+            <input
+              type="text"
+              value={newClient.company}
+              onChange={(e) => setNewClient({ ...newClient, company: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Société ABC"
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowClientModal(false)}
+              onClick={() => {
+                setShowClientModal(false)
+                setNewClient({ name: '', email: '', phone: '', company: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newClient.name && newClient.email && newClient.phone) {
+                  const client: Client = {
+                    id: Date.now().toString(),
+                    name: newClient.name,
+                    email: newClient.email,
+                    phone: newClient.phone,
+                    company: newClient.company || undefined,
+                    totalInvoiced: 0,
+                    totalPaid: 0,
+                    balance: 0,
+                  }
+                  setClients([...clients, client])
+                  setShowClientModal(false)
+                  setNewClient({ name: '', email: '', phone: '', company: '' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>

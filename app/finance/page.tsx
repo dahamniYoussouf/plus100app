@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { DollarSign, TrendingUp, TrendingDown, CreditCard, BarChart3, Wallet, PiggyBank, AlertTriangle } from 'lucide-react'
 
 type TabType = 'dashboard' | 'accounts' | 'transactions' | 'budgets' | 'reports'
@@ -47,6 +48,10 @@ export default function FinancePage() {
   const [accounts, setAccounts] = useState<Account[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [budgets, setBudgets] = useState<Budget[]>([])
+  const [showAccountModal, setShowAccountModal] = useState(false)
+  const [showBudgetModal, setShowBudgetModal] = useState(false)
+  const [newAccount, setNewAccount] = useState({ name: '', type: 'checking' as 'checking' | 'savings' | 'investment' | 'credit', balance: 0, currency: 'DZD', bank: '', accountNumber: '' })
+  const [newBudget, setNewBudget] = useState({ name: '', category: '', amount: 0, period: 'monthly' as 'monthly' | 'quarterly' | 'yearly', startDate: '' })
 
   useEffect(() => {
     const savedAccounts = localStorage.getItem('finance-accounts')
@@ -336,7 +341,10 @@ export default function FinancePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Comptes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowAccountModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau Compte
               </button>
             </div>
@@ -465,7 +473,10 @@ export default function FinancePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Budgets</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowBudgetModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau Budget
               </button>
             </div>
@@ -555,6 +566,233 @@ export default function FinancePage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showAccountModal}
+        onClose={() => {
+          setShowAccountModal(false)
+          setNewAccount({ name: '', type: 'checking', balance: 0, currency: 'DZD', bank: '', accountNumber: '' })
+        }}
+        title="Nouveau Compte"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du compte</label>
+            <input
+              type="text"
+              value={newAccount.name}
+              onChange={(e) => setNewAccount({ ...newAccount, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Compte Courant Principal"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newAccount.type}
+                onChange={(e) => setNewAccount({ ...newAccount, type: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="checking">Compte courant</option>
+                <option value="savings">Épargne</option>
+                <option value="investment">Investissement</option>
+                <option value="credit">Crédit</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Devise</label>
+              <select
+                value={newAccount.currency}
+                onChange={(e) => setNewAccount({ ...newAccount, currency: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="DZD">DZD</option>
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Solde initial</label>
+            <input
+              type="number"
+              value={newAccount.balance}
+              onChange={(e) => setNewAccount({ ...newAccount, balance: parseFloat(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Banque (optionnel)</label>
+              <input
+                type="text"
+                value={newAccount.bank}
+                onChange={(e) => setNewAccount({ ...newAccount, bank: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: Bank of Algeria"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de compte (optionnel)</label>
+              <input
+                type="text"
+                value={newAccount.accountNumber}
+                onChange={(e) => setNewAccount({ ...newAccount, accountNumber: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: 1234 5678 9012 3456"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowAccountModal(false)
+                setNewAccount({ name: '', type: 'checking', balance: 0, currency: 'DZD', bank: '', accountNumber: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newAccount.name) {
+                  const account: Account = {
+                    id: Date.now().toString(),
+                    name: newAccount.name,
+                    type: newAccount.type,
+                    balance: newAccount.balance,
+                    currency: newAccount.currency,
+                    bank: newAccount.bank || undefined,
+                    accountNumber: newAccount.accountNumber || undefined,
+                    status: 'active',
+                  }
+                  setAccounts([...accounts, account])
+                  setShowAccountModal(false)
+                  setNewAccount({ name: '', type: 'checking', balance: 0, currency: 'DZD', bank: '', accountNumber: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showBudgetModal}
+        onClose={() => {
+          setShowBudgetModal(false)
+          setNewBudget({ name: '', category: '', amount: 0, period: 'monthly', startDate: '' })
+        }}
+        title="Nouveau Budget"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du budget</label>
+            <input
+              type="text"
+              value={newBudget.name}
+              onChange={(e) => setNewBudget({ ...newBudget, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Budget Alimentation"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newBudget.category}
+                onChange={(e) => setNewBudget({ ...newBudget, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: Alimentation"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Période</label>
+              <select
+                value={newBudget.period}
+                onChange={(e) => setNewBudget({ ...newBudget, period: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="monthly">Mensuel</option>
+                <option value="quarterly">Trimestriel</option>
+                <option value="yearly">Annuel</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Montant (DZD)</label>
+              <input
+                type="number"
+                value={newBudget.amount}
+                onChange={(e) => setNewBudget({ ...newBudget, amount: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+              <input
+                type="date"
+                value={newBudget.startDate}
+                onChange={(e) => setNewBudget({ ...newBudget, startDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowBudgetModal(false)
+                setNewBudget({ name: '', category: '', amount: 0, period: 'monthly', startDate: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newBudget.name && newBudget.category && newBudget.amount > 0 && newBudget.startDate) {
+                  const startDate = new Date(newBudget.startDate)
+                  const endDate = new Date(startDate)
+                  if (newBudget.period === 'monthly') {
+                    endDate.setMonth(endDate.getMonth() + 1)
+                  } else if (newBudget.period === 'quarterly') {
+                    endDate.setMonth(endDate.getMonth() + 3)
+                  } else {
+                    endDate.setFullYear(endDate.getFullYear() + 1)
+                  }
+                  const budget: Budget = {
+                    id: Date.now().toString(),
+                    name: newBudget.name,
+                    category: newBudget.category,
+                    amount: newBudget.amount,
+                    spent: 0,
+                    period: newBudget.period,
+                    startDate,
+                    endDate,
+                    status: 'active',
+                  }
+                  setBudgets([...budgets, budget])
+                  setShowBudgetModal(false)
+                  setNewBudget({ name: '', category: '', amount: 0, period: 'monthly', startDate: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

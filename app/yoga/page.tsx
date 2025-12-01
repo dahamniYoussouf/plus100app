@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Activity, Users, Calendar, BookOpen, BarChart3, Clock, Award } from 'lucide-react'
 
 type TabType = 'dashboard' | 'classes' | 'students' | 'schedule'
@@ -31,6 +32,8 @@ export default function YogaPage() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [classes, setClasses] = useState<YogaClass[]>([])
   const [students, setStudents] = useState<Student[]>([])
+  const [showClassModal, setShowClassModal] = useState(false)
+  const [newClass, setNewClass] = useState({ name: '', instructor: '', level: 'beginner' as 'beginner' | 'intermediate' | 'advanced', duration: 60, capacity: 20, schedule: '', day: '' })
 
   useEffect(() => {
     const savedClasses = localStorage.getItem('yoga-classes')
@@ -188,7 +191,10 @@ export default function YogaPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Cours</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+              <button 
+                onClick={() => setShowClassModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
                 Nouveau Cours
               </button>
             </div>
@@ -284,9 +290,139 @@ export default function YogaPage() {
                 })}
               </div>
             </div>
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showClassModal}
+        onClose={() => {
+          setShowClassModal(false)
+          setNewClass({ name: '', instructor: '', level: 'beginner', duration: 60, capacity: 20, schedule: '', day: '' })
+        }}
+        title="Nouveau Cours"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du cours</label>
+            <input
+              type="text"
+              value={newClass.name}
+              onChange={(e) => setNewClass({ ...newClass, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="Ex: Yoga Hatha"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Instructeur</label>
+              <input
+                type="text"
+                value={newClass.instructor}
+                onChange={(e) => setNewClass({ ...newClass, instructor: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="Ex: Sarah"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Niveau</label>
+              <select
+                value={newClass.level}
+                onChange={(e) => setNewClass({ ...newClass, level: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              >
+                <option value="beginner">Débutant</option>
+                <option value="intermediate">Intermédiaire</option>
+                <option value="advanced">Avancé</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (min)</label>
+              <input
+                type="number"
+                value={newClass.duration}
+                onChange={(e) => setNewClass({ ...newClass, duration: parseInt(e.target.value) || 60 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Capacité</label>
+              <input
+                type="number"
+                value={newClass.capacity}
+                onChange={(e) => setNewClass({ ...newClass, capacity: parseInt(e.target.value) || 20 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Horaire</label>
+              <input
+                type="time"
+                value={newClass.schedule}
+                onChange={(e) => setNewClass({ ...newClass, schedule: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Jour</label>
+            <select
+              value={newClass.day}
+              onChange={(e) => setNewClass({ ...newClass, day: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            >
+              <option value="">Sélectionner</option>
+              <option value="Lundi">Lundi</option>
+              <option value="Mardi">Mardi</option>
+              <option value="Mercredi">Mercredi</option>
+              <option value="Jeudi">Jeudi</option>
+              <option value="Vendredi">Vendredi</option>
+              <option value="Samedi">Samedi</option>
+              <option value="Dimanche">Dimanche</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowClassModal(false)
+                setNewClass({ name: '', instructor: '', level: 'beginner', duration: 60, capacity: 20, schedule: '', day: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newClass.name && newClass.instructor && newClass.schedule && newClass.day) {
+                  const classItem: YogaClass = {
+                    id: Date.now().toString(),
+                    name: newClass.name,
+                    instructor: newClass.instructor,
+                    level: newClass.level,
+                    duration: newClass.duration,
+                    capacity: newClass.capacity,
+                    enrolled: 0,
+                    schedule: newClass.schedule,
+                    day: newClass.day,
+                  }
+                  setClasses([...classes, classItem])
+                  setShowClassModal(false)
+                  setNewClass({ name: '', instructor: '', level: 'beginner', duration: 60, capacity: 20, schedule: '', day: '' })
+                }
+              }}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

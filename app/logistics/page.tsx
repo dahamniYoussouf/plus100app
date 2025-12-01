@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Truck, Package, Users, BarChart3, MapPin, Clock, CheckCircle } from 'lucide-react'
 
 type TabType = 'dashboard' | 'shipments' | 'vehicles' | 'drivers' | 'routes' | 'warehouses'
@@ -56,6 +57,10 @@ export default function LogisticsPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [drivers, setDrivers] = useState<Driver[]>([])
   const [routes, setRoutes] = useState<Route[]>([])
+  const [showVehicleModal, setShowVehicleModal] = useState(false)
+  const [showDriverModal, setShowDriverModal] = useState(false)
+  const [newVehicle, setNewVehicle] = useState({ licensePlate: '', type: 'truck' as 'truck' | 'van' | 'container', capacity: 0 })
+  const [newDriver, setNewDriver] = useState({ name: '', phone: '', licenseNumber: '' })
 
   useEffect(() => {
     const savedShipments = localStorage.getItem('logistics-shipments')
@@ -326,7 +331,10 @@ export default function LogisticsPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Véhicules</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowVehicleModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Ajouter Véhicule
               </button>
             </div>
@@ -373,7 +381,10 @@ export default function LogisticsPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Chauffeurs</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowDriverModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Ajouter Chauffeur
               </button>
             </div>
@@ -461,6 +472,160 @@ export default function LogisticsPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showVehicleModal}
+        onClose={() => {
+          setShowVehicleModal(false)
+          setNewVehicle({ licensePlate: '', type: 'truck', capacity: 0 })
+        }}
+        title="Ajouter Véhicule"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Plaque d'immatriculation</label>
+            <input
+              type="text"
+              value={newVehicle.licensePlate}
+              onChange={(e) => setNewVehicle({ ...newVehicle, licensePlate: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: 12345-A-16"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newVehicle.type}
+                onChange={(e) => setNewVehicle({ ...newVehicle, type: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="truck">Camion</option>
+                <option value="van">Fourgon</option>
+                <option value="container">Conteneur</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Capacité (kg)</label>
+              <input
+                type="number"
+                value={newVehicle.capacity}
+                onChange={(e) => setNewVehicle({ ...newVehicle, capacity: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowVehicleModal(false)
+                setNewVehicle({ licensePlate: '', type: 'truck', capacity: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newVehicle.licensePlate && newVehicle.capacity > 0) {
+                  const vehicle: Vehicle = {
+                    id: Date.now().toString(),
+                    licensePlate: newVehicle.licensePlate,
+                    type: newVehicle.type,
+                    capacity: newVehicle.capacity,
+                    status: 'available',
+                  }
+                  setVehicles([...vehicles, vehicle])
+                  setShowVehicleModal(false)
+                  setNewVehicle({ licensePlate: '', type: 'truck', capacity: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showDriverModal}
+        onClose={() => {
+          setShowDriverModal(false)
+          setNewDriver({ name: '', phone: '', licenseNumber: '' })
+        }}
+        title="Ajouter Chauffeur"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newDriver.name}
+              onChange={(e) => setNewDriver({ ...newDriver, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newDriver.phone}
+                onChange={(e) => setNewDriver({ ...newDriver, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de permis</label>
+              <input
+                type="text"
+                value={newDriver.licenseNumber}
+                onChange={(e) => setNewDriver({ ...newDriver, licenseNumber: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: PER-123456"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowDriverModal(false)
+                setNewDriver({ name: '', phone: '', licenseNumber: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newDriver.name && newDriver.phone && newDriver.licenseNumber) {
+                  const driver: Driver = {
+                    id: Date.now().toString(),
+                    name: newDriver.name,
+                    phone: newDriver.phone,
+                    licenseNumber: newDriver.licenseNumber,
+                    status: 'available',
+                    deliveriesCompleted: 0,
+                  }
+                  setDrivers([...drivers, driver])
+                  setShowDriverModal(false)
+                  setNewDriver({ name: '', phone: '', licenseNumber: '' })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

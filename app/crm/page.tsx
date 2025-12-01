@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Users, Briefcase, TrendingUp, Phone, Mail, Calendar, BarChart3, DollarSign, Target } from 'lucide-react'
 
 type TabType = 'dashboard' | 'contacts' | 'opportunities' | 'sales'
@@ -45,6 +46,8 @@ export default function CRMPage() {
   const [contacts, setContacts] = useState<Contact[]>([])
   const [opportunities, setOpportunities] = useState<Opportunity[]>([])
   const [sales, setSales] = useState<Sale[]>([])
+  const [showContactModal, setShowContactModal] = useState(false)
+  const [newContact, setNewContact] = useState({ name: '', email: '', phone: '', company: '', position: '', status: 'lead' as 'lead' | 'customer' | 'partner' })
 
   useEffect(() => {
     const savedContacts = localStorage.getItem('crm-contacts')
@@ -282,7 +285,10 @@ export default function CRMPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Contacts</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+              <button 
+                onClick={() => setShowContactModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
                 Nouveau Contact
               </button>
             </div>
@@ -430,6 +436,119 @@ export default function CRMPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showContactModal}
+        onClose={() => {
+          setShowContactModal(false)
+          setNewContact({ name: '', email: '', phone: '', company: '', position: '', status: 'lead' })
+        }}
+        title="Nouveau Contact"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newContact.name}
+              onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newContact.email}
+                onChange={(e) => setNewContact({ ...newContact, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newContact.phone}
+                onChange={(e) => setNewContact({ ...newContact, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Entreprise (optionnel)</label>
+              <input
+                type="text"
+                value={newContact.company}
+                onChange={(e) => setNewContact({ ...newContact, company: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="Ex: Société ABC"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Poste (optionnel)</label>
+              <input
+                type="text"
+                value={newContact.position}
+                onChange={(e) => setNewContact({ ...newContact, position: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="Ex: Directeur"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+            <select
+              value={newContact.status}
+              onChange={(e) => setNewContact({ ...newContact, status: e.target.value as any })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            >
+              <option value="lead">Prospect</option>
+              <option value="customer">Client</option>
+              <option value="partner">Partenaire</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowContactModal(false)
+                setNewContact({ name: '', email: '', phone: '', company: '', position: '', status: 'lead' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newContact.name && newContact.email && newContact.phone) {
+                  const contact: Contact = {
+                    id: Date.now().toString(),
+                    name: newContact.name,
+                    email: newContact.email,
+                    phone: newContact.phone,
+                    company: newContact.company || undefined,
+                    position: newContact.position || undefined,
+                    status: newContact.status,
+                    tags: [],
+                  }
+                  setContacts([...contacts, contact])
+                  setShowContactModal(false)
+                  setNewContact({ name: '', email: '', phone: '', company: '', position: '', status: 'lead' })
+                }
+              }}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

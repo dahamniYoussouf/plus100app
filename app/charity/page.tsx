@@ -59,6 +59,11 @@ export default function CharityPage() {
   const [showDonModal, setShowDonModal] = useState(false)
   const [showBeneficiaireModal, setShowBeneficiaireModal] = useState(false)
   const [showProjetModal, setShowProjetModal] = useState(false)
+  const [showVolunteerModal, setShowVolunteerModal] = useState(false)
+  const [newDonation, setNewDonation] = useState({ donorName: '', amount: 0, type: 'money' as 'money' | 'goods' | 'service', category: 'zakat' as 'zakat' | 'sadaqa' | 'other', description: '', date: '' })
+  const [newBeneficiary, setNewBeneficiary] = useState({ name: '', familySize: 1, needs: '', notes: '' })
+  const [newProject, setNewProject] = useState({ name: '', description: '', budget: 0, startDate: '' })
+  const [newVolunteer, setNewVolunteer] = useState({ name: '', email: '', phone: '', skills: '', availability: '' })
 
   useEffect(() => {
     const savedDonations = localStorage.getItem('charity-donations')
@@ -417,7 +422,10 @@ export default function CharityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Volontaires</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <button 
+                onClick={() => setShowVolunteerModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
                 Nouveau Volontaire
               </button>
             </div>
@@ -467,13 +475,104 @@ export default function CharityPage() {
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau don.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du donateur</label>
+            <input
+              type="text"
+              value={newDonation.donorName}
+              onChange={(e) => setNewDonation({ ...newDonation, donorName: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newDonation.type}
+                onChange={(e) => setNewDonation({ ...newDonation, type: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="money">Argent</option>
+                <option value="goods">Biens</option>
+                <option value="service">Service</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newDonation.category}
+                onChange={(e) => setNewDonation({ ...newDonation, category: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="zakat">Zakat</option>
+                <option value="sadaqa">Sadaqa</option>
+                <option value="other">Autre</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Montant (DZD)</label>
+              <input
+                type="number"
+                value={newDonation.amount}
+                onChange={(e) => setNewDonation({ ...newDonation, amount: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newDonation.date}
+                onChange={(e) => setNewDonation({ ...newDonation, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newDonation.description}
+              onChange={(e) => setNewDonation({ ...newDonation, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du don"
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowDonModal(false)}
+              onClick={() => {
+                setShowDonModal(false)
+                setNewDonation({ donorName: '', amount: 0, type: 'money', category: 'zakat', description: '', date: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newDonation.donorName && newDonation.amount > 0 && newDonation.date) {
+                  const donation: Donation = {
+                    id: Date.now().toString(),
+                    donorName: newDonation.donorName,
+                    amount: newDonation.amount,
+                    type: newDonation.type,
+                    category: newDonation.category,
+                    date: new Date(newDonation.date),
+                    description: newDonation.description,
+                    status: 'received',
+                  }
+                  setDonations([...donations, donation])
+                  setShowDonModal(false)
+                  setNewDonation({ donorName: '', amount: 0, type: 'money', category: 'zakat', description: '', date: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -486,13 +585,77 @@ export default function CharityPage() {
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau bénéficiaire.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newBeneficiary.name}
+              onChange={(e) => setNewBeneficiary({ ...newBeneficiary, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Famille Benali"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Taille de la famille</label>
+            <input
+              type="number"
+              value={newBeneficiary.familySize}
+              onChange={(e) => setNewBeneficiary({ ...newBeneficiary, familySize: parseInt(e.target.value) || 1 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              min="1"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Besoins (séparés par des virgules)</label>
+            <input
+              type="text"
+              value={newBeneficiary.needs}
+              onChange={(e) => setNewBeneficiary({ ...newBeneficiary, needs: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Nourriture, Vêtements, Médicaments"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+            <textarea
+              value={newBeneficiary.notes}
+              onChange={(e) => setNewBeneficiary({ ...newBeneficiary, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              rows={3}
+              placeholder="Notes sur le bénéficiaire"
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowBeneficiaireModal(false)}
+              onClick={() => {
+                setShowBeneficiaireModal(false)
+                setNewBeneficiary({ name: '', familySize: 1, needs: '', notes: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newBeneficiary.name) {
+                  const beneficiary: Beneficiary = {
+                    id: Date.now().toString(),
+                    name: newBeneficiary.name,
+                    familySize: newBeneficiary.familySize,
+                    needs: newBeneficiary.needs.split(',').map(n => n.trim()).filter(n => n),
+                    status: 'active',
+                    assistanceReceived: 0,
+                    lastAssistance: new Date(),
+                    notes: newBeneficiary.notes,
+                  }
+                  setBeneficiaries([...beneficiaries, beneficiary])
+                  setShowBeneficiaireModal(false)
+                  setNewBeneficiary({ name: '', familySize: 1, needs: '', notes: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -505,13 +668,175 @@ export default function CharityPage() {
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra de créer un nouveau projet.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du projet</label>
+            <input
+              type="text"
+              value={newProject.name}
+              onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Aide aux orphelins"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newProject.description}
+              onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du projet"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Budget (DZD)</label>
+              <input
+                type="number"
+                value={newProject.budget}
+                onChange={(e) => setNewProject({ ...newProject, budget: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+              <input
+                type="date"
+                value={newProject.startDate}
+                onChange={(e) => setNewProject({ ...newProject, startDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowProjetModal(false)}
+              onClick={() => {
+                setShowProjetModal(false)
+                setNewProject({ name: '', description: '', budget: 0, startDate: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newProject.name && newProject.description && newProject.startDate) {
+                  const project: Project = {
+                    id: Date.now().toString(),
+                    name: newProject.name,
+                    description: newProject.description,
+                    budget: newProject.budget,
+                    collected: 0,
+                    status: 'planning',
+                    startDate: new Date(newProject.startDate),
+                    beneficiaries: [],
+                  }
+                  setProjects([...projects, project])
+                  setShowProjetModal(false)
+                  setNewProject({ name: '', description: '', budget: 0, startDate: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showVolunteerModal}
+        onClose={() => {
+          setShowVolunteerModal(false)
+          setNewVolunteer({ name: '', email: '', phone: '', skills: '', availability: '' })
+        }}
+        title="Nouveau Volontaire"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newVolunteer.name}
+              onChange={(e) => setNewVolunteer({ ...newVolunteer, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newVolunteer.email}
+                onChange={(e) => setNewVolunteer({ ...newVolunteer, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newVolunteer.phone}
+                onChange={(e) => setNewVolunteer({ ...newVolunteer, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Compétences (séparées par des virgules)</label>
+            <input
+              type="text"
+              value={newVolunteer.skills}
+              onChange={(e) => setNewVolunteer({ ...newVolunteer, skills: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Enseignement, Traduction, Organisation"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Disponibilité (séparées par des virgules)</label>
+            <input
+              type="text"
+              value={newVolunteer.availability}
+              onChange={(e) => setNewVolunteer({ ...newVolunteer, availability: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: Lundi, Mercredi, Vendredi"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowVolunteerModal(false)
+                setNewVolunteer({ name: '', email: '', phone: '', skills: '', availability: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newVolunteer.name && newVolunteer.email && newVolunteer.phone) {
+                  const volunteer: Volunteer = {
+                    id: Date.now().toString(),
+                    name: newVolunteer.name,
+                    email: newVolunteer.email,
+                    phone: newVolunteer.phone,
+                    skills: newVolunteer.skills.split(',').map(s => s.trim()).filter(s => s),
+                    availability: newVolunteer.availability.split(',').map(a => a.trim()).filter(a => a),
+                    hoursVolunteered: 0,
+                  }
+                  setVolunteers([...volunteers, volunteer])
+                  setShowVolunteerModal(false)
+                  setNewVolunteer({ name: '', email: '', phone: '', skills: '', availability: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>

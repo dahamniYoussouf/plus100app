@@ -759,7 +759,10 @@ export default function ClinicPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Dossiers Médicaux</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+              <button 
+                onClick={() => setShowDossierModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
                 Nouveau Dossier
               </button>
             </div>
@@ -923,6 +926,368 @@ export default function ClinicPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showPatientModal}
+        onClose={() => {
+          setShowPatientModal(false)
+          setNewPatient({ name: '', email: '', phone: '', dateOfBirth: '', gender: 'male', address: '', city: '' })
+        }}
+        title="Nouveau Patient"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+            <input
+              type="text"
+              value={newPatient.name}
+              onChange={(e) => setNewPatient({ ...newPatient, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newPatient.email}
+                onChange={(e) => setNewPatient({ ...newPatient, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newPatient.phone}
+                onChange={(e) => setNewPatient({ ...newPatient, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
+              <input
+                type="date"
+                value={newPatient.dateOfBirth}
+                onChange={(e) => setNewPatient({ ...newPatient, dateOfBirth: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+              <select
+                value={newPatient.gender}
+                onChange={(e) => setNewPatient({ ...newPatient, gender: e.target.value as 'male' | 'female' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              >
+                <option value="male">Homme</option>
+                <option value="female">Femme</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+            <input
+              type="text"
+              value={newPatient.address}
+              onChange={(e) => setNewPatient({ ...newPatient, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: 123 Rue Didouche Mourad"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+            <input
+              type="text"
+              value={newPatient.city}
+              onChange={(e) => setNewPatient({ ...newPatient, city: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Alger"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowPatientModal(false)
+                setNewPatient({ name: '', email: '', phone: '', dateOfBirth: '', gender: 'male', address: '', city: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newPatient.name && newPatient.email && newPatient.phone && newPatient.dateOfBirth && newPatient.address && newPatient.city) {
+                  const patient: Patient = {
+                    id: Date.now().toString(),
+                    name: newPatient.name,
+                    email: newPatient.email,
+                    phone: newPatient.phone,
+                    dateOfBirth: new Date(newPatient.dateOfBirth),
+                    gender: newPatient.gender,
+                    address: newPatient.address,
+                    city: newPatient.city,
+                    firstVisit: new Date(),
+                    totalVisits: 0,
+                  }
+                  setPatients([...patients, patient])
+                  setShowPatientModal(false)
+                  setNewPatient({ name: '', email: '', phone: '', dateOfBirth: '', gender: 'male', address: '', city: '' })
+                }
+              }}
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showRdvModal}
+        onClose={() => {
+          setShowRdvModal(false)
+          setNewRdv({ patientId: '', date: '', time: '', reason: '', type: 'consultation', doctor: '' })
+        }}
+        title="Nouveau RDV"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {patients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Patient</label>
+              <select
+                value={newRdv.patientId}
+                onChange={(e) => setNewRdv({ ...newRdv, patientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un patient</option>
+                {patients.map(patient => (
+                  <option key={patient.id} value={patient.id}>{patient.name} - {patient.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newRdv.date}
+                onChange={(e) => setNewRdv({ ...newRdv, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newRdv.time}
+                onChange={(e) => setNewRdv({ ...newRdv, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newRdv.type}
+                onChange={(e) => setNewRdv({ ...newRdv, type: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              >
+                <option value="consultation">Consultation</option>
+                <option value="followup">Suivi</option>
+                <option value="emergency">Urgence</option>
+                <option value="vaccination">Vaccination</option>
+                <option value="checkup">Bilan de santé</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Médecin</label>
+              <input
+                type="text"
+                value={newRdv.doctor}
+                onChange={(e) => setNewRdv({ ...newRdv, doctor: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                placeholder="Ex: Dr. Benali"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Raison</label>
+            <textarea
+              value={newRdv.reason}
+              onChange={(e) => setNewRdv({ ...newRdv, reason: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              rows={3}
+              placeholder="Raison de la consultation"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowRdvModal(false)
+                setNewRdv({ patientId: '', date: '', time: '', reason: '', type: 'consultation', doctor: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newRdv.patientId && newRdv.date && newRdv.time && newRdv.reason && newRdv.doctor) {
+                  const patient = patients.find(p => p.id === newRdv.patientId)
+                  if (patient) {
+                    const appointment: Appointment = {
+                      id: Date.now().toString(),
+                      patientId: newRdv.patientId,
+                      patientName: patient.name,
+                      patientPhone: patient.phone,
+                      date: new Date(newRdv.date),
+                      time: newRdv.time,
+                      duration: 30,
+                      reason: newRdv.reason,
+                      type: newRdv.type,
+                      doctor: newRdv.doctor,
+                      status: 'scheduled',
+                      createdAt: new Date(),
+                    }
+                    setAppointments([...appointments, appointment])
+                    setShowRdvModal(false)
+                    setNewRdv({ patientId: '', date: '', time: '', reason: '', type: 'consultation', doctor: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showDossierModal}
+        onClose={() => {
+          setShowDossierModal(false)
+          setNewDossier({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '' })
+        }}
+        title="Nouveau Dossier"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {patients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Patient</label>
+              <select
+                value={newDossier.patientId}
+                onChange={(e) => setNewDossier({ ...newDossier, patientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un patient</option>
+                {patients.map(patient => (
+                  <option key={patient.id} value={patient.id}>{patient.name} - {patient.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+            <input
+              type="date"
+              value={newDossier.date}
+              onChange={(e) => setNewDossier({ ...newDossier, date: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Motif de consultation</label>
+            <input
+              type="text"
+              value={newDossier.chiefComplaint}
+              onChange={(e) => setNewDossier({ ...newDossier, chiefComplaint: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Douleur abdominale"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Symptômes (séparés par des virgules)</label>
+            <input
+              type="text"
+              value={newDossier.symptoms}
+              onChange={(e) => setNewDossier({ ...newDossier, symptoms: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Fièvre, Nausée, Fatigue"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Diagnostic (séparés par des virgules)</label>
+            <input
+              type="text"
+              value={newDossier.diagnosis}
+              onChange={(e) => setNewDossier({ ...newDossier, diagnosis: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Infection urinaire"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Traitement (séparés par des virgules)</label>
+            <input
+              type="text"
+              value={newDossier.treatment}
+              onChange={(e) => setNewDossier({ ...newDossier, treatment: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Ex: Antibiotiques, Repos"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowDossierModal(false)
+                setNewDossier({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newDossier.patientId && newDossier.date && newDossier.chiefComplaint) {
+                  const patient = patients.find(p => p.id === newDossier.patientId)
+                  if (patient) {
+                    const record: MedicalRecord = {
+                      id: Date.now().toString(),
+                      patientId: newDossier.patientId,
+                      patientName: patient.name,
+                      date: new Date(newDossier.date),
+                      visitType: 'consultation',
+                      chiefComplaint: newDossier.chiefComplaint,
+                      symptoms: newDossier.symptoms.split(',').map(s => s.trim()).filter(s => s),
+                      diagnosis: newDossier.diagnosis.split(',').map(d => d.trim()).filter(d => d),
+                      treatment: newDossier.treatment.split(',').map(t => t.trim()).filter(t => t),
+                      medications: [],
+                    }
+                    setRecords([...records, record])
+                    setShowDossierModal(false)
+                    setNewDossier({ patientId: '', date: '', chiefComplaint: '', symptoms: '', diagnosis: '', treatment: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

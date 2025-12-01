@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Dumbbell, Users, Calendar, CreditCard, BarChart3, TrendingUp, Package, Clock, Award } from 'lucide-react'
 
 type TabType = 'dashboard' | 'members' | 'subscriptions' | 'classes' | 'equipment'
@@ -75,6 +76,12 @@ export default function GymPage() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [classes, setClasses] = useState<Class[]>([])
   const [equipment, setEquipment] = useState<Equipment[]>([])
+  const [showMemberModal, setShowMemberModal] = useState(false)
+  const [showClassModal, setShowClassModal] = useState(false)
+  const [showEquipmentModal, setShowEquipmentModal] = useState(false)
+  const [newMember, setNewMember] = useState({ name: '', email: '', phone: '', subscriptionType: 'monthly' as 'monthly' | 'quarterly' | 'yearly', startDate: '' })
+  const [newClass, setNewClass] = useState({ name: '', instructor: '', schedule: '', capacity: 20, duration: 60, category: 'cardio' as 'cardio' | 'strength' | 'flexibility' | 'martial_arts' | 'dance', level: 'beginner' as 'beginner' | 'intermediate' | 'advanced', description: '', price: 0, room: '', dayOfWeek: '' })
+  const [newEquipment, setNewEquipment] = useState({ name: '', category: '', location: '', brand: '', model: '', purchaseDate: '' })
 
   useEffect(() => {
     const savedMembers = localStorage.getItem('gym-members')
@@ -550,7 +557,10 @@ export default function GymPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Membres</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowMemberModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Nouveau Membre
               </button>
             </div>
@@ -674,7 +684,10 @@ export default function GymPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Cours</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowClassModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Nouveau Cours
               </button>
             </div>
@@ -747,7 +760,10 @@ export default function GymPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Équipements</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowEquipmentModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Ajouter Équipement
               </button>
             </div>
@@ -805,6 +821,408 @@ export default function GymPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showMemberModal}
+        onClose={() => {
+          setShowMemberModal(false)
+          setNewMember({ name: '', email: '', phone: '', subscriptionType: 'monthly', startDate: '' })
+        }}
+        title="Nouveau Membre"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newMember.name}
+              onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newMember.email}
+                onChange={(e) => setNewMember({ ...newMember, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newMember.phone}
+                onChange={(e) => setNewMember({ ...newMember, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type d'abonnement</label>
+              <select
+                value={newMember.subscriptionType}
+                onChange={(e) => setNewMember({ ...newMember, subscriptionType: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="monthly">Mensuel</option>
+                <option value="quarterly">Trimestriel</option>
+                <option value="yearly">Annuel</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+              <input
+                type="date"
+                value={newMember.startDate}
+                onChange={(e) => setNewMember({ ...newMember, startDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMemberModal(false)
+                setNewMember({ name: '', email: '', phone: '', subscriptionType: 'monthly', startDate: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMember.name && newMember.email && newMember.phone && newMember.startDate) {
+                  const startDate = new Date(newMember.startDate)
+                  const endDate = new Date(startDate)
+                  if (newMember.subscriptionType === 'monthly') {
+                    endDate.setMonth(endDate.getMonth() + 1)
+                  } else if (newMember.subscriptionType === 'quarterly') {
+                    endDate.setMonth(endDate.getMonth() + 3)
+                  } else {
+                    endDate.setFullYear(endDate.getFullYear() + 1)
+                  }
+                  const member: Member = {
+                    id: Date.now().toString(),
+                    name: newMember.name,
+                    email: newMember.email,
+                    phone: newMember.phone,
+                    subscriptionType: newMember.subscriptionType,
+                    startDate,
+                    endDate,
+                    status: 'active',
+                    joinDate: new Date(),
+                    visitsCount: 0,
+                  }
+                  setMembers([...members, member])
+                  setShowMemberModal(false)
+                  setNewMember({ name: '', email: '', phone: '', subscriptionType: 'monthly', startDate: '' })
+                }
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showClassModal}
+        onClose={() => {
+          setShowClassModal(false)
+          setNewClass({ name: '', instructor: '', schedule: '', capacity: 20, duration: 60, category: 'cardio', level: 'beginner', description: '', price: 0, room: '', dayOfWeek: '' })
+        }}
+        title="Nouveau Cours"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du cours</label>
+            <input
+              type="text"
+              value={newClass.name}
+              onChange={(e) => setNewClass({ ...newClass, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Ex: Yoga Matin"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Instructeur</label>
+              <input
+                type="text"
+                value={newClass.instructor}
+                onChange={(e) => setNewClass({ ...newClass, instructor: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Karim Benali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Salle</label>
+              <input
+                type="text"
+                value={newClass.room}
+                onChange={(e) => setNewClass({ ...newClass, room: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Salle A"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newClass.category}
+                onChange={(e) => setNewClass({ ...newClass, category: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="cardio">Cardio</option>
+                <option value="strength">Force</option>
+                <option value="flexibility">Flexibilité</option>
+                <option value="martial_arts">Arts martiaux</option>
+                <option value="dance">Danse</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Niveau</label>
+              <select
+                value={newClass.level}
+                onChange={(e) => setNewClass({ ...newClass, level: e.target.value as any })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="beginner">Débutant</option>
+                <option value="intermediate">Intermédiaire</option>
+                <option value="advanced">Avancé</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Jour de la semaine</label>
+              <select
+                value={newClass.dayOfWeek}
+                onChange={(e) => setNewClass({ ...newClass, dayOfWeek: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner</option>
+                <option value="Lundi">Lundi</option>
+                <option value="Mardi">Mardi</option>
+                <option value="Mercredi">Mercredi</option>
+                <option value="Jeudi">Jeudi</option>
+                <option value="Vendredi">Vendredi</option>
+                <option value="Samedi">Samedi</option>
+                <option value="Dimanche">Dimanche</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Horaire</label>
+              <input
+                type="time"
+                value={newClass.schedule}
+                onChange={(e) => setNewClass({ ...newClass, schedule: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (min)</label>
+              <input
+                type="number"
+                value={newClass.duration}
+                onChange={(e) => setNewClass({ ...newClass, duration: parseInt(e.target.value) || 60 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Capacité</label>
+              <input
+                type="number"
+                value={newClass.capacity}
+                onChange={(e) => setNewClass({ ...newClass, capacity: parseInt(e.target.value) || 20 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+            <input
+              type="number"
+              value={newClass.price}
+              onChange={(e) => setNewClass({ ...newClass, price: parseFloat(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newClass.description}
+              onChange={(e) => setNewClass({ ...newClass, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du cours"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowClassModal(false)
+                setNewClass({ name: '', instructor: '', schedule: '', capacity: 20, duration: 60, category: 'cardio', level: 'beginner', description: '', price: 0, room: '', dayOfWeek: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newClass.name && newClass.instructor && newClass.schedule && newClass.room && newClass.dayOfWeek) {
+                  const classItem: Class = {
+                    id: Date.now().toString(),
+                    name: newClass.name,
+                    instructor: newClass.instructor,
+                    schedule: newClass.schedule,
+                    capacity: newClass.capacity,
+                    enrolled: 0,
+                    duration: newClass.duration,
+                    category: newClass.category,
+                    level: newClass.level,
+                    description: newClass.description,
+                    price: newClass.price,
+                    room: newClass.room,
+                    dayOfWeek: newClass.dayOfWeek,
+                  }
+                  setClasses([...classes, classItem])
+                  setShowClassModal(false)
+                  setNewClass({ name: '', instructor: '', schedule: '', capacity: 20, duration: 60, category: 'cardio', level: 'beginner', description: '', price: 0, room: '', dayOfWeek: '' })
+                }
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showEquipmentModal}
+        onClose={() => {
+          setShowEquipmentModal(false)
+          setNewEquipment({ name: '', category: '', location: '', brand: '', model: '', purchaseDate: '' })
+        }}
+        title="Ajouter Équipement"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newEquipment.name}
+              onChange={(e) => setNewEquipment({ ...newEquipment, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Ex: Tapis de course"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newEquipment.category}
+                onChange={(e) => setNewEquipment({ ...newEquipment, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Cardio"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Localisation</label>
+              <input
+                type="text"
+                value={newEquipment.location}
+                onChange={(e) => setNewEquipment({ ...newEquipment, location: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Zone A"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Marque</label>
+              <input
+                type="text"
+                value={newEquipment.brand}
+                onChange={(e) => setNewEquipment({ ...newEquipment, brand: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Technogym"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Modèle</label>
+              <input
+                type="text"
+                value={newEquipment.model}
+                onChange={(e) => setNewEquipment({ ...newEquipment, model: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Run 500"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date d'achat</label>
+            <input
+              type="date"
+              value={newEquipment.purchaseDate}
+              onChange={(e) => setNewEquipment({ ...newEquipment, purchaseDate: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowEquipmentModal(false)
+                setNewEquipment({ name: '', category: '', location: '', brand: '', model: '', purchaseDate: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newEquipment.name && newEquipment.category && newEquipment.location && newEquipment.brand && newEquipment.model && newEquipment.purchaseDate) {
+                  const equipmentItem: Equipment = {
+                    id: Date.now().toString(),
+                    name: newEquipment.name,
+                    category: newEquipment.category,
+                    status: 'available',
+                    location: newEquipment.location,
+                    brand: newEquipment.brand,
+                    model: newEquipment.model,
+                    purchaseDate: new Date(newEquipment.purchaseDate),
+                    usageHours: 0,
+                  }
+                  setEquipment([...equipment, equipmentItem])
+                  setShowEquipmentModal(false)
+                  setNewEquipment({ name: '', category: '', location: '', brand: '', model: '', purchaseDate: '' })
+                }
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

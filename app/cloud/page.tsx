@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Modal from '@/components/Modal'
 import { Cloud, Folder, FileText, Users, BarChart3, Upload, Download, Trash2, Share2, Search } from 'lucide-react'
 
 type TabType = 'dashboard' | 'files' | 'folders' | 'shared' | 'storage'
@@ -43,6 +44,8 @@ export default function CloudPage() {
   const [folders, setFolders] = useState<Folder[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [showDossierModal, setShowDossierModal] = useState(false)
+  const [newDossier, setNewDossier] = useState({ name: '' })
 
   useEffect(() => {
     const savedFiles = localStorage.getItem('cloud-files')
@@ -398,7 +401,10 @@ export default function CloudPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Dossiers</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+              <button 
+                onClick={() => setShowDossierModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
                 <Folder className="w-4 h-4" />
                 Nouveau Dossier
               </button>
@@ -529,9 +535,64 @@ export default function CloudPage() {
                 })}
               </div>
             </div>
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showDossierModal}
+        onClose={() => {
+          setShowDossierModal(false)
+          setNewDossier({ name: '' })
+        }}
+        title="Nouveau Dossier"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du dossier</label>
+            <input
+              type="text"
+              value={newDossier.name}
+              onChange={(e) => setNewDossier({ name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Documents Projets"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowDossierModal(false)
+                setNewDossier({ name: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newDossier.name) {
+                  const folder: Folder = {
+                    id: Date.now().toString(),
+                    name: newDossier.name,
+                    createdBy: 'Utilisateur',
+                    createdDate: new Date(),
+                    files: 0,
+                    subfolders: 0,
+                  }
+                  setFolders([...folders, folder])
+                  setShowDossierModal(false)
+                  setNewDossier({ name: '' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
