@@ -197,12 +197,12 @@ export default function ApplicationsShowcase() {
         >
           <div className="relative inline-block mb-6">
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-2" dir={isRTL ? 'rtl' : 'ltr'}>
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-gradient">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-green-600 animate-gradient">
                 {t('app.title')}
               </span>
             </h2>
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-sm opacity-50"></div>
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-blue-500 to-green-500 rounded-full"></div>
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-blue-500 to-green-500 rounded-full blur-sm opacity-50"></div>
           </div>
           <p className="text-gray-700 text-xl md:text-2xl max-w-3xl mx-auto mb-8 font-medium" dir={isRTL ? 'rtl' : 'ltr'}>
             {t('app.description', { count: applications.length })}
