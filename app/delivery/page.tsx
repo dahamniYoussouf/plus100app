@@ -70,16 +70,24 @@ export default function DeliveryPage() {
   const [newDriver, setNewDriver] = useState({ name: '', phone: '', email: '', vehicleType: 'bike' as 'bike' | 'motorcycle' | 'car' | 'van', vehiclePlate: '', licenseNumber: '' })
 
   useEffect(() => {
+    let isMounted = true
+    
     const savedDeliveries = localStorage.getItem('delivery-deliveries')
     const savedDrivers = localStorage.getItem('delivery-drivers')
     const savedOrders = localStorage.getItem('delivery-orders')
 
     if (savedDrivers) {
-      const parsed = JSON.parse(savedDrivers)
-      setDrivers(parsed.map((d: any) => ({
-        ...d,
-        joinDate: new Date(d.joinDate),
-      })))
+      try {
+        const parsed = JSON.parse(savedDrivers)
+        if (isMounted && Array.isArray(parsed)) {
+          setDrivers(parsed.map((d: any) => ({
+            ...d,
+            joinDate: new Date(d.joinDate),
+          })))
+        }
+      } catch (e) {
+        console.error('Error parsing drivers:', e)
+      }
     } else {
       const sample: Driver[] = [
         {
@@ -128,18 +136,26 @@ export default function DeliveryPage() {
           totalEarnings: 11200,
         },
       ]
-      setDrivers(sample)
-      localStorage.setItem('delivery-drivers', JSON.stringify(sample))
+      if (isMounted) {
+        setDrivers(sample)
+        localStorage.setItem('delivery-drivers', JSON.stringify(sample))
+      }
     }
 
     if (savedDeliveries) {
-      const parsed = JSON.parse(savedDeliveries)
-      setDeliveries(parsed.map((d: any) => ({
-        ...d,
-        createdAt: new Date(d.createdAt),
-        pickupTime: d.pickupTime ? new Date(d.pickupTime) : undefined,
-        deliveryTime: d.deliveryTime ? new Date(d.deliveryTime) : undefined,
-      })))
+      try {
+        const parsed = JSON.parse(savedDeliveries)
+        if (isMounted && Array.isArray(parsed)) {
+          setDeliveries(parsed.map((d: any) => ({
+            ...d,
+            createdAt: new Date(d.createdAt),
+            pickupTime: d.pickupTime ? new Date(d.pickupTime) : undefined,
+            deliveryTime: d.deliveryTime ? new Date(d.deliveryTime) : undefined,
+          })))
+        }
+      } catch (e) {
+        console.error('Error parsing deliveries:', e)
+      }
     } else {
       const today = new Date()
       const sample: Delivery[] = [
@@ -183,30 +199,69 @@ export default function DeliveryPage() {
           createdAt: new Date(today.getTime() - 90 * 60 * 1000),
         },
       ]
-      setDeliveries(sample)
-      localStorage.setItem('delivery-deliveries', JSON.stringify(sample))
+      if (isMounted) {
+        setDeliveries(sample)
+        localStorage.setItem('delivery-deliveries', JSON.stringify(sample))
+      }
     }
 
     if (savedOrders) {
-      const parsed = JSON.parse(savedOrders)
-      setOrders(parsed.map((o: any) => ({
-        ...o,
-        createdAt: new Date(o.createdAt),
-        estimatedDeliveryTime: o.estimatedDeliveryTime ? new Date(o.estimatedDeliveryTime) : undefined,
-      })))
+      try {
+        const parsed = JSON.parse(savedOrders)
+        if (isMounted && Array.isArray(parsed)) {
+          setOrders(parsed.map((o: any) => ({
+            ...o,
+            createdAt: new Date(o.createdAt),
+            estimatedDeliveryTime: o.estimatedDeliveryTime ? new Date(o.estimatedDeliveryTime) : undefined,
+          })))
+        }
+      } catch (e) {
+        console.error('Error parsing orders:', e)
+      }
+    }
+    
+    return () => {
+      isMounted = false
     }
   }, [])
 
   useEffect(() => {
-    if (deliveries.length > 0) localStorage.setItem('delivery-deliveries', JSON.stringify(deliveries))
+    if (deliveries.length > 0) {
+      const uniqueDeliveries = deliveries.filter((delivery, index, self) => 
+        index === self.findIndex((d) => d.id === delivery.id)
+      )
+      if (uniqueDeliveries.length !== deliveries.length) {
+        setDeliveries(uniqueDeliveries)
+        return
+      }
+      localStorage.setItem('delivery-deliveries', JSON.stringify(deliveries))
+    }
   }, [deliveries])
 
   useEffect(() => {
-    if (drivers.length > 0) localStorage.setItem('delivery-drivers', JSON.stringify(drivers))
+    if (drivers.length > 0) {
+      const uniqueDrivers = drivers.filter((driver, index, self) => 
+        index === self.findIndex((d) => d.id === driver.id)
+      )
+      if (uniqueDrivers.length !== drivers.length) {
+        setDrivers(uniqueDrivers)
+        return
+      }
+      localStorage.setItem('delivery-drivers', JSON.stringify(drivers))
+    }
   }, [drivers])
 
   useEffect(() => {
-    if (orders.length > 0) localStorage.setItem('delivery-orders', JSON.stringify(orders))
+    if (orders.length > 0) {
+      const uniqueOrders = orders.filter((order, index, self) => 
+        index === self.findIndex((o) => o.id === order.id)
+      )
+      if (uniqueOrders.length !== orders.length) {
+        setOrders(uniqueOrders)
+        return
+      }
+      localStorage.setItem('delivery-orders', JSON.stringify(orders))
+    }
   }, [orders])
 
   const tabs = [
@@ -230,7 +285,7 @@ export default function DeliveryPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="px-4 sm:px-6">
           <div className="flex overflow-x-auto scrollbar-hide space-x-1">
             {tabs.map((tab) => {
@@ -239,7 +294,7 @@ export default function DeliveryPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
                     activeTab === tab.id
                       ? 'text-green-600 border-b-2 border-green-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -371,7 +426,7 @@ export default function DeliveryPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 className="font-semibold text-gray-900 text-lg">{delivery.orderNumber}</h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                             delivery.status === 'delivered' ? 'bg-green-100 text-green-800' :
                             delivery.status === 'in_transit' ? 'bg-blue-100 text-blue-800' :
                             delivery.status === 'picked_up' ? 'bg-yellow-100 text-yellow-800' :
@@ -468,7 +523,7 @@ export default function DeliveryPage() {
                   <div key={driver.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-lg">{driver.name}</h3>
-                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
                         driver.status === 'available' ? 'bg-green-100 text-green-800' :
                         driver.status === 'busy' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-gray-100 text-gray-800'
@@ -551,7 +606,7 @@ export default function DeliveryPage() {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <span className="text-lg font-bold text-gray-900">DZD{order.total.toFixed(2)}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                           order.status === 'ready' ? 'bg-yellow-100 text-yellow-800' :
                           order.status === 'preparing' ? 'bg-blue-100 text-blue-800' :
@@ -711,7 +766,7 @@ export default function DeliveryPage() {
                     const delivery: Delivery = {
                       id: Date.now().toString(),
                       orderId: newDelivery.orderId || Date.now().toString(),
-                      orderNumber: order?.orderNumber || `ORD- DZD{Date.now()}`,
+                      orderNumber: order?.orderNumber || `ORD-${Date.now()}`,
                       driverId: newDelivery.driverId,
                       driverName: driver.name,
                       customerName: newDelivery.customerName,
@@ -719,7 +774,7 @@ export default function DeliveryPage() {
                       customerAddress: newDelivery.customerAddress,
                       restaurantName: newDelivery.restaurantName,
                       restaurantAddress: newDelivery.restaurantAddress,
-                      items: order?.items.map(i => ` DZD{i.name} x DZD{i.quantity}`) || [],
+                      items: order?.items.map(i => `${i.name} x ${i.quantity}`) || [],
                       total: order?.total || 0,
                       distance: newDelivery.distance,
                       estimatedTime,
