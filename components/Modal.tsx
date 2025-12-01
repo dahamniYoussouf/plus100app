@@ -49,7 +49,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' }:
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className={`bg-white rounded-xl shadow-2xl w-full ${sizeClasses[size]} max-h-[90vh] overflow-hidden flex flex-col`}
+              className={`bg-white rounded-xl shadow-2xl w-full  DZD{sizeClasses[size]} max-h-[90vh] overflow-hidden flex flex-col`}
             >
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">

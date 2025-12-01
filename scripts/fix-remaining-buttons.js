@@ -72,7 +72,7 @@ function generateModalName(buttonText) {
     .slice(0, 3) // Prendre les 3 premiers mots max
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join('');
-  return `show${cleaned}Modal`;
+  return `show DZD{cleaned}Modal`;
 }
 
 function addModalImportIfNeeded(content) {
@@ -86,7 +86,7 @@ function addModalImportIfNeeded(content) {
     return content.slice(0, nextLineIndex) + modalImport + '\n' + content.slice(nextLineIndex);
   }
   
-  const firstImport = content.match(/^import\s+.*$/m);
+  const firstImport = content.match(/^import\s+.* DZD/m);
   if (firstImport) {
     return content.slice(0, firstImport.index) + modalImport + '\n' + content.slice(firstImport.index);
   }
@@ -99,8 +99,8 @@ function addModalStates(content, modalNames) {
   if (uniqueModals.length === 0) return content;
   
   const statesCode = uniqueModals.map(name => {
-    const setterName = `set${name.charAt(0).toUpperCase() + name.slice(1)}`;
-    return `  const [${name}, ${setterName}] = useState(false)`;
+    const setterName = `set DZD{name.charAt(0).toUpperCase() + name.slice(1)}`;
+    return `  const [ DZD{name},  DZD{setterName}] = useState(false)`;
   }).join('\n') + '\n';
   
   // Trouver où insérer (après les déclarations de state existantes ou après export default)
@@ -115,8 +115,8 @@ function addModalStates(content, modalNames) {
 }
 
 function addOnClickToButton(content, button, modalName) {
-  const setterName = `set${modalName.charAt(0).toUpperCase() + modalName.slice(1)}`;
-  const onClickAttr = `onClick={() => ${setterName}(true)}`;
+  const setterName = `set DZD{modalName.charAt(0).toUpperCase() + modalName.slice(1)}`;
+  const onClickAttr = `onClick={() =>  DZD{setterName}(true)}`;
   
   // Insérer onClick dans les attributs du bouton
   const buttonStart = button.index;
@@ -131,7 +131,7 @@ function addOnClickToButton(content, button, modalName) {
     }
   }
   
-  return content.slice(0, insertPos) + ` ${onClickAttr} ` + content.slice(insertPos);
+  return content.slice(0, insertPos) + `  DZD{onClickAttr} ` + content.slice(insertPos);
 }
 
 function addModalsToEnd(content, modalNames) {
@@ -161,19 +161,19 @@ function addModalsToEnd(content, modalNames) {
 
 function generateModalsCode(modalNames) {
   return '\n      {/* Modals */}\n' + modalNames.map(name => {
-    const setterName = `set${name.charAt(0).toUpperCase() + name.slice(1)}`;
-    const title = name.replace(/show|Modal/g, '').replace(/([A-Z])/g, ' $1').trim() || 'Nouvel élément';
+    const setterName = `set DZD{name.charAt(0).toUpperCase() + name.slice(1)}`;
+    const title = name.replace(/show|Modal/g, '').replace(/([A-Z])/g, '  DZD1').trim() || 'Nouvel élément';
     return `      <Modal
-        isOpen={${name}}
-        onClose={() => ${setterName}(false)}
-        title="${title}"
+        isOpen={ DZD{name}}
+        onClose={() =>  DZD{setterName}(false)}
+        title=" DZD{title}"
         size="lg"
       >
         <div className="space-y-4">
           <p className="text-gray-600">Fonctionnalité en cours de développement.</p>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => ${setterName}(false)}
+              onClick={() =>  DZD{setterName}(false)}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
               Fermer
@@ -222,7 +222,7 @@ function processFile(filePath) {
       modalsAdded: [...new Set(modalNames)].length
     };
   } catch (error) {
-    return { updated: false, reason: `Erreur: ${error.message}` };
+    return { updated: false, reason: `Erreur:  DZD{error.message}` };
   }
 }
 
@@ -241,14 +241,14 @@ pageFiles.forEach((file) => {
     updatedCount++;
     totalButtons += result.buttonsCount;
     totalModals += result.modalsAdded;
-    console.log(`✅ ${relativePath}: ${result.buttonsCount} bouton(s), ${result.modalsAdded} modal(s)`);
+    console.log(`✅  DZD{relativePath}:  DZD{result.buttonsCount} bouton(s),  DZD{result.modalsAdded} modal(s)`);
   }
 });
 
 console.log(`\n📊 Résumé:`);
-console.log(`   - Pages mises à jour: ${updatedCount}`);
-console.log(`   - Total boutons corrigés: ${totalButtons}`);
-console.log(`   - Total modaux ajoutés: ${totalModals}`);
+console.log(`   - Pages mises à jour:  DZD{updatedCount}`);
+console.log(`   - Total boutons corrigés:  DZD{totalButtons}`);
+console.log(`   - Total modaux ajoutés:  DZD{totalModals}`);
 console.log(`\n✨ Correction terminée!`);
 
 

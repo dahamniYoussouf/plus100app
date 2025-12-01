@@ -175,7 +175,7 @@ export default function CRMPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-indigo-600 border-b-2 border-indigo-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -321,7 +321,7 @@ export default function CRMPage() {
                       <p className="text-sm text-gray-600">{contact.phone}</p>
                     </div>
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         contact.status === 'customer' ? 'bg-green-100 text-green-800' :
                         contact.status === 'partner' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -377,7 +377,7 @@ export default function CRMPage() {
                       <div className="flex flex-col items-end gap-2">
                         <span className="text-lg font-bold text-gray-900">DZD{opp.value.toLocaleString()}</span>
                         <div className="flex items-center gap-2">
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                             opp.stage === 'closed_won' ? 'bg-green-100 text-green-800' :
                             opp.stage === 'closed_lost' ? 'bg-red-100 text-red-800' :
                             opp.stage === 'negotiation' ? 'bg-blue-100 text-blue-800' :
@@ -431,7 +431,7 @@ export default function CRMPage() {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <span className="text-lg font-bold text-gray-900">DZD{sale.amount.toLocaleString()}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           sale.status === 'completed' ? 'bg-green-100 text-green-800' :
                           'bg-yellow-100 text-yellow-800'
                         }`}>

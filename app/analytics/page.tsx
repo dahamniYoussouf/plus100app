@@ -119,7 +119,7 @@ export default function AnalyticsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-indigo-600 border-b-2 border-indigo-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -143,7 +143,7 @@ export default function AnalyticsPage() {
                 <div key={metric.id} className="bg-white rounded-xl shadow-lg border border-indigo-100 p-4 sm:p-6">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-xs sm:text-sm text-gray-600">{metric.name}</p>
-                    <TrendingUp className={`w-4 h-4 ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'} ${metric.trend === 'down' ? 'rotate-180' : ''}`} />
+                    <TrendingUp className={`w-4 h-4  DZD{metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}  DZD{metric.trend === 'down' ? 'rotate-180' : ''}`} />
                   </div>
                   <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                     {metric.name.includes('Taux') || metric.name.includes('Durée') ? (
@@ -155,7 +155,7 @@ export default function AnalyticsPage() {
                       metric.value.toLocaleString('fr-FR')
                     )}
                   </p>
-                  <p className={`text-xs sm:text-sm mt-2 ${metric.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                  <p className={`text-xs sm:text-sm mt-2  DZD{metric.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
                     {metric.trend === 'up' ? '↑' : '↓'} {Math.abs(metric.change)}% vs {metric.period}
                   </p>
                 </div>
@@ -208,7 +208,7 @@ export default function AnalyticsPage() {
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
                           className="bg-indigo-600 h-2 rounded-full"
-                          style={{ width: `${segment.percentage}%` }}
+                          style={{ width: ` DZD{segment.percentage}%` }}
                         />
                       </div>
                       <p className="text-xs text-gray-500 mt-1">{segment.percentage}% du total</p>

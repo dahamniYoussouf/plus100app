@@ -197,7 +197,7 @@ export default function TheaterPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-purple-600 border-b-2 border-purple-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -319,7 +319,7 @@ export default function TheaterPage() {
                       <h3 className="font-semibold text-gray-900 text-base sm:text-lg mb-1">{show.title}</h3>
                       <p className="text-sm text-gray-600 mb-2 line-clamp-2">{show.description}</p>
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           show.status === 'ongoing' ? 'bg-green-100 text-green-800' :
                           show.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
                           'bg-gray-100 text-gray-800'
@@ -436,7 +436,7 @@ export default function TheaterPage() {
                       <p className="text-sm text-gray-500 mt-1 capitalize">Paiement: {ticket.paymentMethod === 'cash' ? 'Espèces' : ticket.paymentMethod === 'card' ? 'Carte' : 'En ligne'}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         ticket.status === 'valid' ? 'bg-green-100 text-green-800' :
                         ticket.status === 'used' ? 'bg-blue-100 text-blue-800' :
                         'bg-red-100 text-red-800'
@@ -545,7 +545,7 @@ export default function TheaterPage() {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         performance.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
                         performance.status === 'ongoing' ? 'bg-green-100 text-green-800' :
                         performance.status === 'completed' ? 'bg-gray-100 text-gray-800' :

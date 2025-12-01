@@ -99,7 +99,7 @@ export default function InventoryPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-cyan-600 border-b-2 border-cyan-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -228,7 +228,7 @@ export default function InventoryPage() {
                   <div key={product.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-base sm:text-lg">{product.name}</h3>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         isOut ? 'bg-red-100 text-red-800' :
                         isLow ? 'bg-yellow-100 text-yellow-800' :
                         'bg-green-100 text-green-800'
@@ -292,7 +292,7 @@ export default function InventoryPage() {
                         ) : (
                           <TrendingDown className="w-5 h-5 text-red-500" />
                         )}
-                        <span className={`text-lg font-bold ${
+                        <span className={`text-lg font-bold  DZD{
                           movement.type === 'in' ? 'text-green-600' : 'text-red-600'
                         }`}>
                           {movement.type === 'in' ? '+' : '-'}{movement.quantity}

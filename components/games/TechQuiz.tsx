@@ -111,7 +111,7 @@ export default function TechQuiz() {
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div
             className="bg-blue-500 h-2 rounded-full transition-all"
-            style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+            style={{ width: ` DZD{((currentQuestion + 1) / questions.length) * 100}%` }}
           />
         </div>
       </div>
@@ -130,7 +130,7 @@ export default function TechQuiz() {
                 key={index}
                 onClick={() => handleAnswer(index)}
                 disabled={showResult}
-                className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all ${
+                className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all  DZD{
                   showCorrect
                     ? 'bg-green-100 border-green-500'
                     : showWrong

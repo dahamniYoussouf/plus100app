@@ -78,7 +78,7 @@ export default function ReactionTest() {
 
       <div className="mb-6">
         <div
-          className={`h-64 rounded-lg flex items-center justify-center text-4xl font-bold transition-all ${
+          className={`h-64 rounded-lg flex items-center justify-center text-4xl font-bold transition-all  DZD{
             ready
               ? 'bg-yellow-100 text-yellow-600'
               : waiting
@@ -93,7 +93,7 @@ export default function ReactionTest() {
           {ready && 'Préparez-vous...'}
           {waiting && 'ATTENDEZ...'}
           {clickable && 'CLIQUEZ MAINTENANT !'}
-          {reactionTime !== null && !clickable && `${reactionTime}ms`}
+          {reactionTime !== null && !clickable && ` DZD{reactionTime}ms`}
         </div>
       </div>
 

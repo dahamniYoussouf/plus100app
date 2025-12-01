@@ -160,7 +160,7 @@ export default function EcommercePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-yellow-600 border-b-2 border-yellow-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -280,7 +280,7 @@ export default function EcommercePage() {
                 <div key={product.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900 text-base sm:text-lg">{product.name}</h3>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                       product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                     }`}>
                       {product.status === 'active' ? 'Actif' : 'Inactif'}
@@ -330,7 +330,7 @@ export default function EcommercePage() {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <span className="text-lg font-bold text-gray-900">DZD{order.total.toFixed(2)}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                           order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                           order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :

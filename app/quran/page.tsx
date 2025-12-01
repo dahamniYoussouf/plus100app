@@ -232,7 +232,7 @@ export default function QuranPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-emerald-600 border-b-2 border-emerald-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -341,7 +341,7 @@ export default function QuranPage() {
                   <div key={student.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-lg">{student.name}</h3>
-                      <span className={`px-2 py-1 rounded text-xs capitalize ${
+                      <span className={`px-2 py-1 rounded text-xs capitalize  DZD{
                         student.level === 'beginner' ? 'bg-green-100 text-green-800' :
                         student.level === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
@@ -362,7 +362,7 @@ export default function QuranPage() {
                           </span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-emerald-600 h-2 rounded-full" style={{ width: `${(student.hifzProgress.verses / student.hifzProgress.totalVerses) * 100}%` }}></div>
+                          <div className="bg-emerald-600 h-2 rounded-full" style={{ width: ` DZD{(student.hifzProgress.verses / student.hifzProgress.totalVerses) * 100}%` }}></div>
                         </div>
                       </div>
                     )}
@@ -406,7 +406,7 @@ export default function QuranPage() {
                         <p className="text-sm text-gray-600 mt-1">Sourate: {record.surah}</p>
                         <p className="text-sm text-gray-500 mt-1">Versets: {record.verses}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         record.status === 'completed' ? 'bg-green-100 text-green-800' :
                         record.status === 'review' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -421,7 +421,7 @@ export default function QuranPage() {
                         <span className="font-medium text-emerald-600">{record.progress}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-emerald-600 h-2 rounded-full" style={{ width: `${record.progress}%` }}></div>
+                        <div className="bg-emerald-600 h-2 rounded-full" style={{ width: ` DZD{record.progress}%` }}></div>
                       </div>
                     </div>
                     {record.lastReview && (
@@ -447,7 +447,7 @@ export default function QuranPage() {
                 <div key={course.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900">{course.name}</h3>
-                    <span className={`px-2 py-1 rounded text-xs capitalize ${
+                    <span className={`px-2 py-1 rounded text-xs capitalize  DZD{
                       course.type === 'quran' ? 'bg-green-100 text-green-800' :
                       course.type === 'tajwid' ? 'bg-blue-100 text-blue-800' :
                       course.type === 'tafsir' ? 'bg-purple-100 text-purple-800' :
@@ -526,7 +526,7 @@ export default function QuranPage() {
                   <div key={event.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900">{event.name}</h3>
-                      <span className={`px-2 py-1 rounded text-xs capitalize ${
+                      <span className={`px-2 py-1 rounded text-xs capitalize  DZD{
                         event.type === 'religious' ? 'bg-green-100 text-green-800' :
                         event.type === 'educational' ? 'bg-blue-100 text-blue-800' :
                         'bg-purple-100 text-purple-800'
@@ -542,7 +542,7 @@ export default function QuranPage() {
                         <p className="text-xs text-gray-500">Participants</p>
                         <p className="font-bold text-gray-900">{event.participants}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         event.status === 'completed' ? 'bg-green-100 text-green-800' :
                         event.status === 'ongoing' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'

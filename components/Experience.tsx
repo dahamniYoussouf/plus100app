@@ -124,7 +124,7 @@ export default function Experience() {
                         {(exp as any).logo ? (
                           <img
                             src={(exp as any).logo}
-                            alt={`${exp.company} logo`}
+                            alt={` DZD{exp.company} logo`}
                             className="w-full h-full object-contain p-2"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement
@@ -132,7 +132,7 @@ export default function Experience() {
                             }}
                           />
                         ) : (
-                          <div className={`w-full h-full bg-gradient-to-r ${exp.color} flex items-center justify-center`}>
+                          <div className={`w-full h-full bg-gradient-to-r  DZD{exp.color} flex items-center justify-center`}>
                             <Briefcase className="text-white" size={32} />
                           </div>
                         )}
@@ -177,7 +177,7 @@ export default function Experience() {
                     <div className="relative w-full h-64 bg-gradient-to-br from-gray-50 to-gray-100">
                       <img
                         src={(exp as any).screenshot || (exp as any).image}
-                        alt={`${exp.company} project`}
+                        alt={` DZD{exp.company} project`}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement
@@ -213,7 +213,7 @@ export default function Experience() {
                 <ul className="space-y-3 mb-6">
                   {exp.description.map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-700">
-                      <span className={`text-transparent bg-clip-text bg-gradient-to-r ${exp.color} font-bold mt-1`}>
+                      <span className={`text-transparent bg-clip-text bg-gradient-to-r  DZD{exp.color} font-bold mt-1`}>
                         ▸
                       </span>
                       <span>{item}</span>
@@ -225,7 +225,7 @@ export default function Experience() {
                   {exp.technologies.map((tech, i) => (
                     <span
                       key={i}
-                      className={`px-3 py-1 rounded-full text-sm bg-gradient-to-r ${exp.color} text-white font-medium`}
+                      className={`px-3 py-1 rounded-full text-sm bg-gradient-to-r  DZD{exp.color} text-white font-medium`}
                     >
                       {tech}
                     </span>

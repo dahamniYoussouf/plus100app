@@ -181,7 +181,7 @@ export default function ChatPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-green-600 border-b-2 border-green-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -316,7 +316,7 @@ export default function ChatPage() {
                   <div
                     key={conv.id}
                     onClick={() => setSelectedConversation(conv.id)}
-                    className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                    className={`p-3 rounded-lg cursor-pointer transition-colors  DZD{
                       selectedConversation === conv.id ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 hover:bg-gray-100'
                     }`}
                   >
@@ -376,14 +376,14 @@ export default function ChatPage() {
                     {currentMessages.map((message) => (
                       <div
                         key={message.id}
-                        className={`flex ${message.senderId === 'me' ? 'justify-end' : 'justify-start'}`}
+                        className={`flex  DZD{message.senderId === 'me' ? 'justify-end' : 'justify-start'}`}
                       >
-                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg  DZD{
                           message.senderId === 'me' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-900'
                         }`}>
                           <p className="text-sm">{message.content}</p>
                           <div className="flex items-center justify-end gap-1 mt-1">
-                            <span className={`text-xs ${message.senderId === 'me' ? 'text-green-100' : 'text-gray-500'}`}>
+                            <span className={`text-xs  DZD{message.senderId === 'me' ? 'text-green-100' : 'text-gray-500'}`}>
                               {new Date(message.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                             </span>
                             {message.senderId === 'me' && (
@@ -455,7 +455,7 @@ export default function ChatPage() {
                       <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
                         <Users className="w-6 h-6 text-green-600" />
                       </div>
-                      <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                      <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white  DZD{
                         contact.status === 'online' ? 'bg-green-500' :
                         contact.status === 'away' ? 'bg-yellow-500' :
                         'bg-gray-400'
@@ -467,7 +467,7 @@ export default function ChatPage() {
                     </div>
                   </div>
                   <div className="pt-3 border-t border-gray-200">
-                    <span className={`text-xs px-2 py-1 rounded ${
+                    <span className={`text-xs px-2 py-1 rounded  DZD{
                       contact.status === 'online' ? 'bg-green-100 text-green-800' :
                       contact.status === 'away' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-gray-100 text-gray-800'

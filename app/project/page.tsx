@@ -267,7 +267,7 @@ export default function ProjectPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-rose-600 border-b-2 border-rose-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -417,7 +417,7 @@ export default function ProjectPage() {
                           )}
                         </div>
                         <div className="flex flex-col items-end gap-2">
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                             project.status === 'completed' ? 'bg-green-100 text-green-800' :
                             project.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                             project.status === 'on_hold' ? 'bg-yellow-100 text-yellow-800' :
@@ -429,7 +429,7 @@ export default function ProjectPage() {
                              project.status === 'on_hold' ? 'En pause' :
                              project.status === 'cancelled' ? 'Annulé' : 'Planification'}
                           </span>
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                             project.priority === 'urgent' ? 'bg-red-100 text-red-800' :
                             project.priority === 'high' ? 'bg-orange-100 text-orange-800' :
                             project.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
@@ -450,13 +450,13 @@ export default function ProjectPage() {
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div 
-                              className={`h-2 rounded-full ${
+                              className={`h-2 rounded-full  DZD{
                                 project.progress >= 80 ? 'bg-green-500' :
                                 project.progress >= 50 ? 'bg-blue-500' :
                                 project.progress >= 25 ? 'bg-yellow-500' :
                                 'bg-red-500'
                               }`}
-                              style={{ width: `${project.progress}%` }}
+                              style={{ width: ` DZD{project.progress}%` }}
                             />
                           </div>
                         </div>
@@ -472,8 +472,8 @@ export default function ProjectPage() {
                           </div>
                           <div>
                             <p className="text-xs text-gray-500">Jours restants</p>
-                            <p className={`text-sm font-medium ${daysRemaining < 0 ? 'text-red-600' : daysRemaining < 7 ? 'text-yellow-600' : 'text-gray-900'}`}>
-                              {daysRemaining < 0 ? `+${Math.abs(daysRemaining)}` : daysRemaining}
+                            <p className={`text-sm font-medium  DZD{daysRemaining < 0 ? 'text-red-600' : daysRemaining < 7 ? 'text-yellow-600' : 'text-gray-900'}`}>
+                              {daysRemaining < 0 ? `+ DZD{Math.abs(daysRemaining)}` : daysRemaining}
                             </p>
                           </div>
                           <div>
@@ -485,7 +485,7 @@ export default function ProjectPage() {
                         <div>
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-xs text-gray-500">Budget utilisé</span>
-                            <span className={`text-xs font-medium ${
+                            <span className={`text-xs font-medium  DZD{
                               budgetUsage > 90 ? 'text-red-600' :
                               budgetUsage > 75 ? 'text-yellow-600' : 'text-gray-700'
                             }`}>
@@ -494,11 +494,11 @@ export default function ProjectPage() {
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div 
-                              className={`h-2 rounded-full ${
+                              className={`h-2 rounded-full  DZD{
                                 budgetUsage > 90 ? 'bg-red-500' :
                                 budgetUsage > 75 ? 'bg-yellow-500' : 'bg-green-500'
                               }`}
-                              style={{ width: `${Math.min(budgetUsage, 100)}%` }}
+                              style={{ width: ` DZD{Math.min(budgetUsage, 100)}%` }}
                             />
                           </div>
                         </div>
@@ -553,7 +553,7 @@ export default function ProjectPage() {
                         )}
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           task.status === 'done' ? 'bg-green-100 text-green-800' :
                           task.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                           task.status === 'review' ? 'bg-yellow-100 text-yellow-800' :
@@ -563,7 +563,7 @@ export default function ProjectPage() {
                            task.status === 'in_progress' ? 'En cours' :
                            task.status === 'review' ? 'En révision' : 'À faire'}
                         </span>
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           task.priority === 'urgent' ? 'bg-red-100 text-red-800' :
                           task.priority === 'high' ? 'bg-orange-100 text-orange-800' :
                           task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :

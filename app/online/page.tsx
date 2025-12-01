@@ -244,7 +244,7 @@ export default function OnlinePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-indigo-600 border-b-2 border-indigo-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -350,7 +350,7 @@ export default function OnlinePage() {
                   <div key={course.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-lg flex-1">{course.title}</h3>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         course.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                       }`}>
                         {course.status === 'published' ? 'Publié' : 'Brouillon'}
@@ -371,7 +371,7 @@ export default function OnlinePage() {
                       </div>
                       <div className="flex items-center gap-4 text-sm text-gray-600">
                         <span>👥 {course.enrolled} inscrits</span>
-                        <span className={`px-2 py-0.5 rounded text-xs ${
+                        <span className={`px-2 py-0.5 rounded text-xs  DZD{
                           course.level === 'beginner' ? 'bg-green-100 text-green-800' :
                           course.level === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-red-100 text-red-800'
@@ -390,7 +390,7 @@ export default function OnlinePage() {
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
                             className="bg-indigo-500 h-2 rounded-full"
-                            style={{ width: `${progress}%` }}
+                            style={{ width: ` DZD{progress}%` }}
                           />
                         </div>
                       </div>
@@ -447,7 +447,7 @@ export default function OnlinePage() {
                                 <div className="w-full bg-gray-200 rounded-full h-1.5">
                                   <div
                                     className="bg-indigo-500 h-1.5 rounded-full"
-                                    style={{ width: `${progress}%` }}
+                                    style={{ width: ` DZD{progress}%` }}
                                   />
                                 </div>
                               </div>

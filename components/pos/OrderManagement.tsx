@@ -88,7 +88,7 @@ export default function OrderManagement({
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setStatusFilter('all')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors  DZD{
               statusFilter === 'all'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -102,7 +102,7 @@ export default function OrderManagement({
               <button
                 key={status.value}
                 onClick={() => setStatusFilter(status.value)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg font-medium transition-colors  DZD{
                   statusFilter === status.value
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -132,7 +132,7 @@ export default function OrderManagement({
                         Table {getTableNumber(order.tableId)}
                       </h3>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        className={`px-2 py-1 rounded-full text-xs font-medium  DZD{
                           statusOption?.color || 'bg-gray-100 text-gray-800'
                         }`}
                       >
@@ -145,7 +145,7 @@ export default function OrderManagement({
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold text-gray-900">
-                      ${order.total.toFixed(2)}
+                       DZD{order.total.toFixed(2)}
                     </p>
                     <p className="text-xs text-gray-500">
                       {order.items.reduce((sum, item) => sum + item.quantity, 0)} items
@@ -171,7 +171,7 @@ export default function OrderManagement({
                           )}
                         </div>
                         <span className="text-gray-900 font-medium">
-                          ${(item.price * item.quantity).toFixed(2)}
+                           DZD{(item.price * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     ))}
@@ -183,7 +183,7 @@ export default function OrderManagement({
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-600">Payment:</span>
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      className={`px-2 py-1 rounded-full text-xs font-medium  DZD{
                         order.paymentStatus === 'paid'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-yellow-100 text-yellow-800'

@@ -47,7 +47,7 @@ export default function AutomationAgent({
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString()
-    setActivityLog((prev) => [`[${timestamp}] ${message}`, ...prev].slice(0, 20))
+    setActivityLog((prev) => [`[ DZD{timestamp}]  DZD{message}`, ...prev].slice(0, 20))
   }
 
   const simulateActivity = () => {
@@ -74,7 +74,7 @@ export default function AutomationAgent({
             existingOrderItem.quantity += 1
           } else {
             selectedItems.push({
-              id: `item-${Date.now()}-${Math.random()}`,
+              id: `item- DZD{Date.now()}- DZD{Math.random()}`,
               menuItemId: randomItem.id,
               name: randomItem.name,
               price: randomItem.price,
@@ -85,7 +85,7 @@ export default function AutomationAgent({
 
         const total = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
         const newOrder: Order = {
-          id: `order-${Date.now()}`,
+          id: `order- DZD{Date.now()}`,
           tableId: randomTable.id,
           items: selectedItems,
           status: 'pending',
@@ -102,7 +102,7 @@ export default function AutomationAgent({
               : t
           )
         )
-        addLog(`🆕 Nouvelle commande créée - Table ${randomTable.number} (${itemCount} items, $${total.toFixed(2)})`)
+        addLog(`🆕 Nouvelle commande créée - Table  DZD{randomTable.number} ( DZD{itemCount} items,  DZD DZD{total.toFixed(2)})`)
       }
     }
 
@@ -116,7 +116,7 @@ export default function AutomationAgent({
         )
       )
       const tableNum = tables.find((t) => t.id === orderToUpdate.tableId)?.number || 0
-      addLog(`👨‍🍳 Commande Table ${tableNum} en préparation`)
+      addLog(`👨‍🍳 Commande Table  DZD{tableNum} en préparation`)
     }
 
     // Preparing → Ready
@@ -128,7 +128,7 @@ export default function AutomationAgent({
         )
       )
       const tableNum = tables.find((t) => t.id === orderToUpdate.tableId)?.number || 0
-      addLog(`✅ Commande Table ${tableNum} prête à servir`)
+      addLog(`✅ Commande Table  DZD{tableNum} prête à servir`)
     }
 
     // Ready → Served
@@ -140,7 +140,7 @@ export default function AutomationAgent({
         )
       )
       const tableNum = tables.find((t) => t.id === orderToUpdate.tableId)?.number || 0
-      addLog(`🍽️ Commande Table ${tableNum} servie`)
+      addLog(`🍽️ Commande Table  DZD{tableNum} servie`)
     }
 
     // 3. Paiement automatique et libération de table
@@ -166,7 +166,7 @@ export default function AutomationAgent({
         )
       )
       const tableNum = tables.find((t) => t.id === orderToCheckout.tableId)?.number || 0
-      addLog(`💳 Table ${tableNum} payée (${randomPaymentMethod}) - $${orderToCheckout.total.toFixed(2)} - Table libérée`)
+      addLog(`💳 Table  DZD{tableNum} payée ( DZD{randomPaymentMethod}) -  DZD DZD{orderToCheckout.total.toFixed(2)} - Table libérée`)
     }
   }
 
@@ -194,7 +194,7 @@ export default function AutomationAgent({
           </div>
           <div className="flex items-center gap-2">
             <div
-              className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-300 animate-pulse' : 'bg-gray-300'}`}
+              className={`w-2 h-2 rounded-full  DZD{isActive ? 'bg-green-300 animate-pulse' : 'bg-gray-300'}`}
             />
           </div>
         </div>
@@ -204,7 +204,7 @@ export default function AutomationAgent({
           <div className="flex items-center justify-between">
             <button
               onClick={toggleAutomation}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors  DZD{
                 isActive
                   ? 'bg-red-600 text-white hover:bg-red-700'
                   : 'bg-green-600 text-white hover:bg-green-700'

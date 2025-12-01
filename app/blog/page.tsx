@@ -168,7 +168,7 @@ export default function BlogPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-purple-600 border-b-2 border-purple-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -250,7 +250,7 @@ export default function BlogPage() {
                           </span>
                         </div>
                       </div>
-                      <span className={`ml-4 px-2 py-1 rounded text-xs ${
+                      <span className={`ml-4 px-2 py-1 rounded text-xs  DZD{
                         post.status === 'published' ? 'bg-green-100 text-green-800' :
                         post.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-gray-100 text-gray-800'
@@ -341,7 +341,7 @@ export default function BlogPage() {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         post.status === 'published' ? 'bg-green-100 text-green-800' :
                         post.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-gray-100 text-gray-800'
@@ -381,8 +381,8 @@ export default function BlogPage() {
                 return (
                   <div key={category.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className={`w-12 h-12 rounded-lg ${colorClass.split(' ')[0]} flex items-center justify-center`}>
-                        <Tag className={`w-6 h-6 ${colorClass.split(' ')[1]}`} />
+                      <div className={`w-12 h-12 rounded-lg  DZD{colorClass.split(' ')[0]} flex items-center justify-center`}>
+                        <Tag className={`w-6 h-6  DZD{colorClass.split(' ')[1]}`} />
                       </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900">{category.name}</h3>
@@ -420,7 +420,7 @@ export default function BlogPage() {
                       <p className="text-xs text-gray-400">Sur: {comment.postTitle}</p>
                       <p className="text-xs text-gray-400 mt-1">{new Date(comment.date).toLocaleDateString('fr-FR')}</p>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                       comment.status === 'approved' ? 'bg-green-100 text-green-800' :
                       comment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-red-100 text-red-800'

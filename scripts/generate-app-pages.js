@@ -13,22 +13,22 @@ const appConfigs = [
 ]
 
 function generatePage(app) {
-  const iconImport = `import { ${app.icon}, Package, ShoppingCart, BarChart3, TrendingUp, Calendar, Users } from 'lucide-react'`
+  const iconImport = `import {  DZD{app.icon}, Package, ShoppingCart, BarChart3, TrendingUp, Calendar, Users } from 'lucide-react'`
   
   const pageContent = `'use client'
 
 import { useState, useEffect } from 'react'
-${iconImport}
+ DZD{iconImport}
 
 type TabType = 'dashboard' | 'items' | 'orders' | 'stock'
 
-export default function ${app.id.charAt(0).toUpperCase() + app.id.slice(1)}Page() {
+export default function  DZD{app.id.charAt(0).toUpperCase() + app.id.slice(1)}Page() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [items, setItems] = useState<any[]>([])
   const [orders, setOrders] = useState<any[]>([])
 
   useEffect(() => {
-    const saved = localStorage.getItem('${app.id}-items')
+    const saved = localStorage.getItem(' DZD{app.id}-items')
     if (saved) {
       setItems(JSON.parse(saved))
     }
@@ -36,7 +36,7 @@ export default function ${app.id.charAt(0).toUpperCase() + app.id.slice(1)}Page(
 
   const tabs = [
     { id: 'dashboard' as TabType, label: 'Tableau de bord', icon: BarChart3 },
-    { id: 'items' as TabType, label: 'Éléments', icon: ${app.icon} },
+    { id: 'items' as TabType, label: 'Éléments', icon:  DZD{app.icon} },
     { id: 'orders' as TabType, label: 'Commandes', icon: ShoppingCart },
     { id: 'stock' as TabType, label: 'Stock', icon: Package },
   ]
@@ -44,16 +44,16 @@ export default function ${app.id.charAt(0).toUpperCase() + app.id.slice(1)}Page(
   const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-${app.color}-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from- DZD{app.color}-50 to-white">
       <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20">
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex items-center gap-2 flex-wrap">
-                <${app.icon} className="w-6 h-6 sm:w-7 sm:h-7 text-${app.color}-600" />
-                ${app.title}
+                < DZD{app.icon} className="w-6 h-6 sm:w-7 sm:h-7 text- DZD{app.color}-600" />
+                 DZD{app.title}
               </h1>
-              <p className="text-sm text-gray-500 mt-1">${app.description}</p>
+              <p className="text-sm text-gray-500 mt-1"> DZD{app.description}</p>
             </div>
           </div>
         </div>
@@ -68,9 +68,9 @@ export default function ${app.id.charAt(0).toUpperCase() + app.id.slice(1)}Page(
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={\`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={\`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
-                      ? 'text-${app.color}-600 border-b-2 border-${app.color}-600'
+                      ? 'text- DZD{app.color}-600 border-b-2 border- DZD{app.color}-600'
                       : 'text-gray-600 hover:text-gray-900'
                   }\`}
                 >
@@ -88,25 +88,25 @@ export default function ${app.id.charAt(0).toUpperCase() + app.id.slice(1)}Page(
         {activeTab === 'dashboard' && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              <div className="bg-white rounded-xl shadow-lg border border-${app.color}-100 p-4 sm:p-6">
+              <div className="bg-white rounded-xl shadow-lg border border- DZD{app.color}-100 p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Éléments</p>
                     <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{items.length}</p>
                   </div>
-                  <${app.icon} className="w-8 h-8 sm:w-10 sm:h-10 text-${app.color}-500" />
+                  < DZD{app.icon} className="w-8 h-8 sm:w-10 sm:h-10 text- DZD{app.color}-500" />
                 </div>
               </div>
-              <div className="bg-white rounded-xl shadow-lg border border-${app.color}-100 p-4 sm:p-6">
+              <div className="bg-white rounded-xl shadow-lg border border- DZD{app.color}-100 p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">${totalRevenue.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2"> DZD{totalRevenue.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
               </div>
-              <div className="bg-white rounded-xl shadow-lg border border-${app.color}-100 p-4 sm:p-6">
+              <div className="bg-white rounded-xl shadow-lg border border- DZD{app.color}-100 p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Commandes</p>
@@ -115,7 +115,7 @@ export default function ${app.id.charAt(0).toUpperCase() + app.id.slice(1)}Page(
                   <ShoppingCart className="w-8 h-8 sm:w-10 sm:h-10 text-orange-500" />
                 </div>
               </div>
-              <div className="bg-white rounded-xl shadow-lg border border-${app.color}-100 p-4 sm:p-6">
+              <div className="bg-white rounded-xl shadow-lg border border- DZD{app.color}-100 p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Clients</p>
@@ -187,7 +187,7 @@ appConfigs.forEach(app => {
   
   // Écrire le fichier
   fs.writeFileSync(filePath, generatePage(app))
-  console.log(`✓ Généré: ${filePath}`)
+  console.log(`✓ Généré:  DZD{filePath}`)
 })
 
 console.log('Toutes les pages ont été générées!')

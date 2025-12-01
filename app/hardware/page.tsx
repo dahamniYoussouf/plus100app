@@ -117,7 +117,7 @@ export default function HardwarePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -151,7 +151,7 @@ export default function HardwarePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">${totalRevenue.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2"> DZD{totalRevenue.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -252,12 +252,12 @@ export default function HardwarePage() {
                     </div>
                     <div className="flex justify-between">
                       <span>Coût:</span>
-                      <span className="font-medium">${product.cost}</span>
+                      <span className="font-medium"> DZD{product.cost}</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <span className="text-lg sm:text-xl font-bold text-gray-900">${product.price}</span>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className="text-lg sm:text-xl font-bold text-gray-900"> DZD{product.price}</span>
+                    <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                       product.stock <= product.minStock ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                     }`}>
                       Stock: {product.stock}

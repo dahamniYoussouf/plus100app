@@ -209,7 +209,7 @@ export default function CarpenterPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-amber-600 border-b-2 border-amber-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -321,7 +321,7 @@ export default function CarpenterPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{order.clientName}</h3>
                         <p className="text-sm text-gray-600 mt-1">{order.description}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         order.status === 'completed' || order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                         order.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                         order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
@@ -423,7 +423,7 @@ export default function CarpenterPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{project.clientName}</h3>
                         <p className="text-sm text-gray-600 mt-1">{project.description}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         project.status === 'completed' ? 'bg-green-100 text-green-800' :
                         project.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -436,7 +436,7 @@ export default function CarpenterPage() {
                       <p className="text-gray-600">👤 Artisan: {project.craftsman}</p>
                       <p className="text-gray-600">
                         📅 Début: {new Date(project.startDate).toLocaleDateString('fr-FR')}
-                        {project.endDate && ` - Fin: ${new Date(project.endDate).toLocaleDateString('fr-FR')}`}
+                        {project.endDate && ` - Fin:  DZD{new Date(project.endDate).toLocaleDateString('fr-FR')}`}
                       </p>
                       <div className="mt-2">
                         <p className="text-xs text-gray-500 mb-1">Matériaux:</p>
@@ -466,7 +466,7 @@ export default function CarpenterPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {inventory.map((item) => (
-                <div key={item.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6 ${
+                <div key={item.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6  DZD{
                   item.quantity <= item.minStock ? 'border-orange-300 bg-orange-50' : 'border-gray-200'
                 }`}>
                   <h3 className="font-semibold text-gray-900 text-lg mb-2">{item.name}</h3>
@@ -477,7 +477,7 @@ export default function CarpenterPage() {
                   <div className="pt-4 border-t border-gray-200 space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-gray-500">Stock:</span>
-                      <span className={`font-medium ${
+                      <span className={`font-medium  DZD{
                         item.quantity <= item.minStock ? 'text-orange-600' : 'text-gray-900'
                       }`}>
                         {item.quantity} {item.unit}

@@ -40,7 +40,7 @@ export default function NumberPuzzle() {
       setLevel(level + 1)
       generatePuzzle()
     } else {
-      alert(`Incorrect ! La somme est ${sum}, mais la cible est ${target}`)
+      alert(`Incorrect ! La somme est  DZD{sum}, mais la cible est  DZD{target}`)
     }
   }
 
@@ -70,7 +70,7 @@ export default function NumberPuzzle() {
             <motion.button
               key={index}
               onClick={() => toggleNumber(num, index)}
-              className={`p-6 rounded-lg text-2xl font-bold border-4 transition-all ${
+              className={`p-6 rounded-lg text-2xl font-bold border-4 transition-all  DZD{
                 selectedNumbers.includes(index)
                   ? 'bg-blue-500 text-white border-blue-600'
                   : 'bg-white text-gray-800 border-gray-300 hover:border-blue-400'

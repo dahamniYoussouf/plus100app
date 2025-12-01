@@ -152,7 +152,7 @@ export default function KidsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-pink-600 border-b-2 border-pink-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -337,7 +337,7 @@ export default function KidsPage() {
                     <div className="w-24 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-pink-600 h-2 rounded-full"
-                        style={{ width: `${(activity.enrolled / activity.capacity) * 100}%` }}
+                        style={{ width: ` DZD{(activity.enrolled / activity.capacity) * 100}%` }}
                       ></div>
                     </div>
                   </div>

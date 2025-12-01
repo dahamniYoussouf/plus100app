@@ -120,7 +120,7 @@ export default function Solutions() {
                 onClick={() => setSelectedSolution(isSelected ? null : index)}
                 whileHover={{ scale: 1.02 }}
               >
-                <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${solution.color} flex items-center justify-center mb-4`}>
+                <div className={`w-16 h-16 rounded-xl bg-gradient-to-r  DZD{solution.color} flex items-center justify-center mb-4`}>
                   <Icon className="text-white" size={32} />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">{solution.title}</h3>
@@ -138,7 +138,7 @@ export default function Solutions() {
                       <div className="mb-6 rounded-xl overflow-hidden">
                         <img
                           src={(solution as any).screenshot}
-                          alt={`${solution.title} screenshot`}
+                          alt={` DZD{solution.title} screenshot`}
                           className="w-full h-48 object-cover"
                         />
                       </div>
@@ -151,7 +151,7 @@ export default function Solutions() {
                         {/* Center Node */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                           <motion.div
-                            className={`w-16 h-16 rounded-full bg-gradient-to-r ${solution.color} flex items-center justify-center shadow-lg`}
+                            className={`w-16 h-16 rounded-full bg-gradient-to-r  DZD{solution.color} flex items-center justify-center shadow-lg`}
                             animate={{ scale: [1, 1.1, 1] }}
                             transition={{ duration: 2, repeat: Infinity }}
                           >
@@ -162,7 +162,7 @@ export default function Solutions() {
                         {/* Architecture Nodes */}
                         {solution.architecture.map((node, nodeIndex) => {
                           const NodeIcon = node.icon
-                          const isHovered = hoveredNode === `${index}-${nodeIndex}`
+                          const isHovered = hoveredNode === ` DZD{index}- DZD{nodeIndex}`
                           const positions: Record<string, { top: string; left: string }> = {
                             top: { top: '10%', left: '50%' },
                             right: { top: '50%', left: '90%' },
@@ -178,11 +178,11 @@ export default function Solutions() {
                               initial={{ opacity: 0, scale: 0 }}
                               animate={{ opacity: 1, scale: 1 }}
                               transition={{ duration: 0.5, delay: nodeIndex * 0.1 }}
-                              onMouseEnter={() => setHoveredNode(`${index}-${nodeIndex}`)}
+                              onMouseEnter={() => setHoveredNode(` DZD{index}- DZD{nodeIndex}`)}
                               onMouseLeave={() => setHoveredNode(null)}
                             >
                               <motion.div
-                                className={`w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center cursor-pointer ${
+                                className={`w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center cursor-pointer  DZD{
                                   isHovered ? 'bg-gradient-to-r ' + solution.color : ''
                                 } transition-all`}
                                 whileHover={{ scale: 1.2 }}
@@ -235,7 +235,7 @@ export default function Solutions() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.3, delay: stepIndex * 0.1 }}
                           >
-                            <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${solution.color} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
+                            <div className={`w-8 h-8 rounded-full bg-gradient-to-r  DZD{solution.color} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
                               {stepIndex + 1}
                             </div>
                             <span className="text-gray-300">{step}</span>

@@ -86,7 +86,7 @@ export default function Dashboard({ menuItems, orders, tables }: DashboardProps)
             <div>
               <p className="text-sm font-medium text-gray-600">Today's Revenue</p>
               <p className="text-2xl font-bold text-gray-900 mt-2">
-                ${stats.todayRevenue.toFixed(2)}
+                 DZD{stats.todayRevenue.toFixed(2)}
               </p>
             </div>
             <div className="p-3 bg-green-100 rounded-full">
@@ -155,7 +155,7 @@ export default function Dashboard({ menuItems, orders, tables }: DashboardProps)
                       <p className="text-sm text-gray-500">{item.count} sold</p>
                     </div>
                   </div>
-                  <p className="font-semibold text-gray-900">${item.revenue.toFixed(2)}</p>
+                  <p className="font-semibold text-gray-900"> DZD{item.revenue.toFixed(2)}</p>
                 </div>
               ))
             ) : (
@@ -178,12 +178,12 @@ export default function Dashboard({ menuItems, orders, tables }: DashboardProps)
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-gray-900">Table {order.tableId.replace('table-', '')}</span>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[order.status]}`}
+                        className={`px-2 py-1 rounded-full text-xs font-medium  DZD{statusColors[order.status]}`}
                       >
                         {order.status}
                       </span>
                     </div>
-                    <span className="font-semibold text-gray-900">${order.total.toFixed(2)}</span>
+                    <span className="font-semibold text-gray-900"> DZD{order.total.toFixed(2)}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm text-gray-500">
                     <span>{order.items.length} item(s)</span>

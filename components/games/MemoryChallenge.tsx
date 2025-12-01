@@ -108,7 +108,7 @@ export default function MemoryChallenge() {
           <motion.div
             key={card.id}
             onClick={() => handleCardClick(index)}
-            className={`aspect-square rounded-xl cursor-pointer relative overflow-hidden ${
+            className={`aspect-square rounded-xl cursor-pointer relative overflow-hidden  DZD{
               card.matched ? 'opacity-50' : ''
             }`}
             whileHover={{ scale: card.flipped || card.matched ? 1 : 1.05 }}

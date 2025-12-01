@@ -225,7 +225,7 @@ export default function SupplierPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-green-600 border-b-2 border-green-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -314,7 +314,7 @@ export default function SupplierPage() {
                         <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">
                           {supplier.rating} ⭐
                         </span>
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           supplier.status === 'active' ? 'bg-green-100 text-green-800' :
                           supplier.status === 'suspended' ? 'bg-red-100 text-red-800' :
                           'bg-gray-100 text-gray-800'
@@ -375,7 +375,7 @@ export default function SupplierPage() {
                           📅 {new Date(order.orderDate).toLocaleDateString('fr-FR')}
                         </p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                         order.status === 'in_transit' ? 'bg-blue-100 text-blue-800' :
                         order.status === 'confirmed' ? 'bg-yellow-100 text-yellow-800' :
@@ -437,7 +437,7 @@ export default function SupplierPage() {
                         <p className="text-sm text-gray-500">{product.category}</p>
                         <p className="text-sm text-gray-600 mt-1">Fournisseur: {product.supplierName}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         product.status === 'available' ? 'bg-green-100 text-green-800' :
                         product.status === 'out_of_stock' ? 'bg-red-100 text-red-800' :
                         'bg-gray-100 text-gray-800'
@@ -486,7 +486,7 @@ export default function SupplierPage() {
                            contract.type === 'service' ? 'Service' : 'Maintenance'}
                         </p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         contract.status === 'active' ? 'bg-green-100 text-green-800' :
                         contract.status === 'expired' ? 'bg-red-100 text-red-800' :
                         'bg-gray-100 text-gray-800'
@@ -760,7 +760,7 @@ export default function SupplierPage() {
                       id: Date.now().toString(),
                       supplierId: newOrder.supplierId,
                       supplierName: supplier.name,
-                      orderNumber: `ORD-${Date.now()}`,
+                      orderNumber: `ORD- DZD{Date.now()}`,
                       items: newOrder.items,
                       total,
                       orderDate: new Date(),

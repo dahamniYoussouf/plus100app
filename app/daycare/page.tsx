@@ -60,6 +60,10 @@ export default function DaycarePage() {
   const [planning, setPlanning] = useState<Planning[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
   const [parents, setParents] = useState<Parent[]>([])
+  const [showChildForm, setShowChildForm] = useState(false)
+  const [showPlanningForm, setShowPlanningForm] = useState(false)
+  const [showActivityForm, setShowActivityForm] = useState(false)
+  const [showParentForm, setShowParentForm] = useState(false)
 
   useEffect(() => {
     const savedChildren = localStorage.getItem('daycare-children')
@@ -227,6 +231,94 @@ export default function DaycarePage() {
     return p.date.toDateString() === today.toDateString()
   })
 
+  const handleAddChild = () => setShowChildForm(true)
+  const handleAddPlanning = () => setShowPlanningForm(true)
+  const handleAddActivity = () => setShowActivityForm(true)
+  const handleAddParent = () => setShowParentForm(true)
+
+  const handleSubmitChild = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const newChild: Child = {
+      id: Date.now().toString(),
+      firstName: formData.get('firstName') as string,
+      lastName: formData.get('lastName') as string,
+      dateOfBirth: new Date(formData.get('dateOfBirth') as string),
+      gender: formData.get('gender') as 'male' | 'female',
+      parentIds: [],
+      group: formData.get('group') as Child['group'],
+      allergies: (formData.get('allergies') as string)?.split(',').map(a => a.trim()).filter(a => a) || [],
+      medicalNotes: formData.get('medicalNotes') as string || undefined,
+      emergencyContact: formData.get('emergencyContact') as string,
+      emergencyPhone: formData.get('emergencyPhone') as string,
+      enrollmentDate: new Date(),
+      schedule: formData.get('schedule') as Child['schedule'],
+      attendanceRate: 100,
+    }
+    setChildren([...children, newChild])
+    setShowChildForm(false)
+    e.currentTarget.reset()
+  }
+
+  const handleSubmitPlanning = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const childId = formData.get('childId') as string
+    const child = children.find(c => c.id === childId)
+    if (!child) {
+      alert('Enfant introuvable')
+      return
+    }
+    const newPlanning: Planning = {
+      id: Date.now().toString(),
+      childId,
+      childName: `${child.firstName} ${child.lastName}`,
+      date: new Date(formData.get('date') as string),
+      activities: (formData.get('activities') as string)?.split(',').map(a => a.trim()).filter(a => a) || [],
+      meals: (formData.get('meals') as string)?.split(',').map(m => m.trim()).filter(m => m) || [],
+      naps: [],
+      notes: formData.get('notes') as string || undefined,
+    }
+    setPlanning([...planning, newPlanning])
+    setShowPlanningForm(false)
+    e.currentTarget.reset()
+  }
+
+  const handleSubmitActivity = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const newActivity: Activity = {
+      id: Date.now().toString(),
+      name: formData.get('name') as string,
+      description: formData.get('description') as string,
+      type: formData.get('type') as Activity['type'],
+      duration: parseInt(formData.get('duration') as string),
+      group: formData.get('group') as Activity['group'],
+      schedule: formData.get('schedule') as string,
+    }
+    setActivities([...activities, newActivity])
+    setShowActivityForm(false)
+    e.currentTarget.reset()
+  }
+
+  const handleSubmitParent = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const newParent: Parent = {
+      id: Date.now().toString(),
+      firstName: formData.get('firstName') as string,
+      lastName: formData.get('lastName') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      relationship: formData.get('relationship') as Parent['relationship'],
+      childIds: [],
+      address: formData.get('address') as string || undefined,
+    }
+    setParents([...parents, newParent])
+    setShowParentForm(false)
+    e.currentTarget.reset()
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-cyan-50 to-white">
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
@@ -332,7 +424,10 @@ export default function DaycarePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Enfants</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+              <button 
+                onClick={handleAddChild}
+                className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
                 Nouvel Enfant
               </button>
             </div>
@@ -392,7 +487,10 @@ export default function DaycarePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Planning Quotidien</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+              <button 
+                onClick={handleAddPlanning}
+                className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
                 Nouveau Planning
               </button>
             </div>
@@ -469,7 +567,10 @@ export default function DaycarePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Activités</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+              <button 
+                onClick={handleAddActivity}
+                className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
                 Nouvelle Activité
               </button>
             </div>
@@ -514,7 +615,10 @@ export default function DaycarePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Parents</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+              <button 
+                onClick={handleAddParent}
+                className="w-full sm:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
                 Nouveau Parent
               </button>
             </div>
@@ -543,7 +647,231 @@ export default function DaycarePage() {
                 ))}
               </div>
             )}
-      </div>
+          </div>
+        )}
+
+        {/* Modal Nouvel Enfant */}
+        {showChildForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">Nouvel Enfant</h3>
+                  <button onClick={() => setShowChildForm(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+                </div>
+                <form onSubmit={handleSubmitChild} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                      <input type="text" name="firstName" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                      <input type="text" name="lastName" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
+                    <input type="date" name="dateOfBirth" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+                    <select name="gender" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="male">Garçon</option>
+                      <option value="female">Fille</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Groupe</label>
+                    <select name="group" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="infants">Bébés</option>
+                      <option value="toddlers">Tout-petits</option>
+                      <option value="preschool">Préscolaire</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Horaire</label>
+                    <select name="schedule" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="full_time">Temps plein</option>
+                      <option value="part_time">Temps partiel</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Contact d'urgence</label>
+                    <input type="text" name="emergencyContact" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone d'urgence</label>
+                    <input type="tel" name="emergencyPhone" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Allergies (séparées par des virgules)</label>
+                    <input type="text" name="allergies" className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Notes médicales</label>
+                    <textarea name="medicalNotes" className="w-full px-3 py-2 border border-gray-300 rounded-lg" rows={3}></textarea>
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button type="button" onClick={() => setShowChildForm(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Annuler</button>
+                    <button type="submit" className="flex-1 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700">Ajouter</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Nouveau Planning */}
+        {showPlanningForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">Nouveau Planning</h3>
+                  <button onClick={() => setShowPlanningForm(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+                </div>
+                <form onSubmit={handleSubmitPlanning} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Enfant</label>
+                    <select name="childId" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="">Sélectionner un enfant</option>
+                      {children.map(c => (
+                        <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                    <input type="date" name="date" required defaultValue={new Date().toISOString().split('T')[0]} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Activités (séparées par des virgules)</label>
+                    <input type="text" name="activities" placeholder="Jeux libres, Chansons, ..." className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Repas (séparés par des virgules)</label>
+                    <input type="text" name="meals" placeholder="Petit-déjeuner, Déjeuner, ..." className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                    <textarea name="notes" className="w-full px-3 py-2 border border-gray-300 rounded-lg" rows={3}></textarea>
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button type="button" onClick={() => setShowPlanningForm(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Annuler</button>
+                    <button type="submit" className="flex-1 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700">Créer</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Nouvelle Activité */}
+        {showActivityForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">Nouvelle Activité</h3>
+                  <button onClick={() => setShowActivityForm(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+                </div>
+                <form onSubmit={handleSubmitActivity} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                    <input type="text" name="name" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea name="description" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" rows={3}></textarea>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                    <select name="type" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="play">Jeu</option>
+                      <option value="learning">Apprentissage</option>
+                      <option value="outdoor">Extérieur</option>
+                      <option value="nap">Sieste</option>
+                      <option value="meal">Repas</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Groupe</label>
+                    <select name="group" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="infants">Bébés</option>
+                      <option value="toddlers">Tout-petits</option>
+                      <option value="preschool">Préscolaire</option>
+                      <option value="all">Tous</option>
+                    </select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Durée (min)</label>
+                      <input type="number" name="duration" required min="1" className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Horaire</label>
+                      <input type="time" name="schedule" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                    </div>
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button type="button" onClick={() => setShowActivityForm(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Annuler</button>
+                    <button type="submit" className="flex-1 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700">Ajouter</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Nouveau Parent */}
+        {showParentForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">Nouveau Parent</h3>
+                  <button onClick={() => setShowParentForm(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+                </div>
+                <form onSubmit={handleSubmitParent} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                      <input type="text" name="firstName" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                      <input type="text" name="lastName" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" name="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                    <input type="tel" name="phone" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Relation</label>
+                    <select name="relationship" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="mother">Mère</option>
+                      <option value="father">Père</option>
+                      <option value="guardian">Tuteur</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Adresse (optionnel)</label>
+                    <input type="text" name="address" className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button type="button" onClick={() => setShowParentForm(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Annuler</button>
+                    <button type="submit" className="flex-1 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700">Ajouter</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>

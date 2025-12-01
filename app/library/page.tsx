@@ -194,7 +194,7 @@ export default function LibraryPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-teal-600 border-b-2 border-teal-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -384,7 +384,7 @@ export default function LibraryPage() {
                 {loans.map((loan) => {
                   const isOverdue = loan.status === 'active' && new Date(loan.dueDate) < new Date()
                   return (
-                    <div key={loan.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6 ${isOverdue ? 'border-red-200 bg-red-50' : 'border-gray-200'}`}>
+                    <div key={loan.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6  DZD{isOverdue ? 'border-red-200 bg-red-50' : 'border-gray-200'}`}>
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                           <h3 className="font-semibold text-gray-900">{loan.bookTitle}</h3>
@@ -392,11 +392,11 @@ export default function LibraryPage() {
                           <p className="text-sm text-gray-500 mt-1">
                             Emprunté le {new Date(loan.borrowDate).toLocaleDateString('fr-FR')}
                           </p>
-                          <p className={`text-sm mt-1 ${isOverdue ? 'text-red-700 font-semibold' : 'text-gray-500'}`}>
+                          <p className={`text-sm mt-1  DZD{isOverdue ? 'text-red-700 font-semibold' : 'text-gray-500'}`}>
                             Date limite: {new Date(loan.dueDate).toLocaleDateString('fr-FR')}
                           </p>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           loan.status === 'returned' ? 'bg-green-100 text-green-800' :
                           isOverdue ? 'bg-red-100 text-red-800' :
                           'bg-blue-100 text-blue-800'

@@ -34,7 +34,7 @@ export default function LanguageSwitcher() {
             onClick={() => setIsOpen(false)}
           />
           <div
-            className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-20 min-w-[160px]`}
+            className={`absolute  DZD{isRTL ? 'left-0' : 'right-0'} top-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-20 min-w-[160px]`}
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             {languages.map((lang) => (
@@ -44,7 +44,7 @@ export default function LanguageSwitcher() {
                   setLanguage(lang.code)
                   setIsOpen(false)
                 }}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors flex items-center gap-2 ${
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors flex items-center gap-2  DZD{
                   language === lang.code ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700'
                 }`}
               >

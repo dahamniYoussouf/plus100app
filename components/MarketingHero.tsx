@@ -263,7 +263,7 @@ export default function MarketingHero() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex gap-3  DZD{message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {message.type === 'agent' && (
                       <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
@@ -271,7 +271,7 @@ export default function MarketingHero() {
                       </div>
                     )}
                     <div
-                      className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                      className={`max-w-[80%] rounded-2xl px-4 py-2  DZD{
                         message.type === 'user'
                           ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
                           : 'bg-gray-100 text-gray-800'
@@ -303,7 +303,7 @@ export default function MarketingHero() {
             <div className="flex gap-4">
               <motion.button
                 onClick={isListening ? stopListening : startListening}
-                className={`flex-1 px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-3 transition-all ${
+                className={`flex-1 px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-3 transition-all  DZD{
                   isListening
                     ? 'bg-red-500 hover:bg-red-600 text-white'
                     : 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white hover:shadow-lg'

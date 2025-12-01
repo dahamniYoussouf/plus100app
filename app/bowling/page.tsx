@@ -211,7 +211,7 @@ export default function BowlingPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -276,14 +276,14 @@ export default function BowlingPage() {
                   {lanes.map((lane) => (
                     <div
                       key={lane.id}
-                      className={`p-4 rounded-lg text-center ${
+                      className={`p-4 rounded-lg text-center  DZD{
                         lane.status === 'available' ? 'bg-green-50 border-2 border-green-200' :
                         lane.status === 'occupied' ? 'bg-blue-50 border-2 border-blue-200' :
                         'bg-red-50 border-2 border-red-200'
                       }`}
                     >
                       <p className="text-2xl font-bold text-gray-900">{lane.number}</p>
-                      <p className={`text-xs mt-1 font-medium ${
+                      <p className={`text-xs mt-1 font-medium  DZD{
                         lane.status === 'available' ? 'text-green-700' :
                         lane.status === 'occupied' ? 'text-blue-700' :
                         'text-red-700'
@@ -328,14 +328,14 @@ export default function BowlingPage() {
               {lanes.map((lane) => (
                 <div
                   key={lane.id}
-                  className={`bg-white rounded-xl shadow-lg border-2 p-4 sm:p-6 text-center ${
+                  className={`bg-white rounded-xl shadow-lg border-2 p-4 sm:p-6 text-center  DZD{
                     lane.status === 'available' ? 'border-green-200 bg-green-50' :
                     lane.status === 'occupied' ? 'border-blue-200 bg-blue-50' :
                     'border-red-200 bg-red-50'
                   }`}
                 >
                   <p className="text-4xl font-bold text-gray-900 mb-2">Piste {lane.number}</p>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                     lane.status === 'available' ? 'bg-green-100 text-green-800' :
                     lane.status === 'occupied' ? 'bg-blue-100 text-blue-800' :
                     'bg-red-100 text-red-800'
@@ -383,7 +383,7 @@ export default function BowlingPage() {
                       <p className="text-sm text-gray-500 mt-1">{booking.players} joueurs</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         booking.status === 'completed' ? 'bg-green-100 text-green-800' :
                         booking.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
                         'bg-red-100 text-red-800'
@@ -415,7 +415,7 @@ export default function BowlingPage() {
                 <div key={tournament.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900 text-lg">{tournament.name}</h3>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                       tournament.status === 'completed' ? 'bg-green-100 text-green-800' :
                       tournament.status === 'ongoing' ? 'bg-blue-100 text-blue-800' :
                       'bg-yellow-100 text-yellow-800'
@@ -469,7 +469,7 @@ export default function BowlingPage() {
                   <div className="space-y-2 pt-4 border-t border-gray-200">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Type:</span>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         member.membershipType === 'vip' ? 'bg-purple-100 text-purple-800' :
                         member.membershipType === 'premium' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'

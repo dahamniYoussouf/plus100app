@@ -1,6 +1,6 @@
 /**
  * Script pour corriger toutes les erreurs de syntaxe:
- * - DZD{ remplacé par ${
+ * - DZD{ remplacé par  DZD{
  * - onClick mal placés dans className
  * - text-wh onClick corrigé
  */
@@ -31,14 +31,14 @@ function findPageFiles(dir) {
 function fixSyntaxErrors(content) {
   let fixed = content;
   
-  // Corriger DZD{ en ${
-  fixed = fixed.replace(/DZD\{/g, '${');
+  // Corriger DZD{ en  DZD{
+  fixed = fixed.replace(/DZD\{/g, ' DZD{');
   
   // Corriger onClick mal placés dans className
   fixed = fixed.replace(
     /className="([^"]*)\s+onClick=\{\(\) => [^}]+\}/g,
     (match, classNameContent) => {
-      return `className="${classNameContent}"`;
+      return `className=" DZD{classNameContent}"`;
     }
   );
   
@@ -59,14 +59,14 @@ function fixSyntaxErrors(content) {
     /<(\w+)\s+([^>]*)\s+onClick=\{\(\) => [^}]+\}([^>]*)>/g,
     (match, tag, before, after) => {
       if (tag === 'button') return match; // Garder onClick dans les boutons
-      return `<${tag} ${before}${after}>`;
+      return `< DZD{tag}  DZD{before} DZD{after}>`;
     }
   );
   
   // Corriger onClick mal placés avant les balises
   fixed = fixed.replace(
     /\s+onClick=\{\(\) => [^}]+\}\s+<(\w+)/g,
-    ' <$1'
+    ' < DZD1'
   );
   
   // Corriger className= onClick
@@ -78,7 +78,7 @@ function fixSyntaxErrors(content) {
   // Corriger les attributs mal formés avec onClick
   fixed = fixed.replace(
     /(\w+)\s+onClick=\{\(\) => [^}]+\}\s+(\w+)=/g,
-    '$1 $2='
+    ' DZD1  DZD2='
   );
   
   // Corriger les onClick dans les balises de fermeture
@@ -106,14 +106,14 @@ pageFiles.forEach(file => {
       fs.writeFileSync(file, content, 'utf8');
       fixedCount++;
       const relativePath = path.relative(path.join(__dirname, '..'), file);
-      console.log(`✅ Corrigé: ${relativePath}`);
+      console.log(`✅ Corrigé:  DZD{relativePath}`);
     }
   } catch (error) {
     const relativePath = path.relative(path.join(__dirname, '..'), file);
-    console.log(`❌ Erreur dans ${relativePath}: ${error.message}`);
+    console.log(`❌ Erreur dans  DZD{relativePath}:  DZD{error.message}`);
   }
 });
 
-console.log(`\n📊 ${fixedCount} fichier(s) corrigé(s)`);
+console.log(`\n📊  DZD{fixedCount} fichier(s) corrigé(s)`);
 
 

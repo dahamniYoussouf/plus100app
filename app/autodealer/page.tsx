@@ -248,7 +248,7 @@ export default function AutodealerPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-red-600 border-b-2 border-red-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -363,7 +363,7 @@ export default function AutodealerPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{vehicle.make} {vehicle.model}</h3>
                         <p className="text-sm text-gray-600">{vehicle.year} • {vehicle.mileage.toLocaleString()} km</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         vehicle.status === 'available' ? 'bg-green-100 text-green-800' :
                         vehicle.status === 'sold' ? 'bg-gray-100 text-gray-800' :
                         vehicle.status === 'reserved' ? 'bg-yellow-100 text-yellow-800' :
@@ -471,7 +471,7 @@ export default function AutodealerPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{sale.clientName}</h3>
                         <p className="text-sm text-gray-600 mt-1">{sale.vehicleInfo}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         sale.status === 'completed' ? 'bg-green-100 text-green-800' :
                         sale.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -532,7 +532,7 @@ export default function AutodealerPage() {
                           <p className="text-sm text-gray-500 mt-1">Véhicule: {apt.vehicleInfo}</p>
                         )}
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         apt.status === 'completed' ? 'bg-green-100 text-green-800' :
                         apt.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-blue-100 text-blue-800'
@@ -940,7 +940,7 @@ export default function AutodealerPage() {
                       clientId: newRdv.clientId,
                       clientName: client.name,
                       vehicleId: newRdv.vehicleId || undefined,
-                      vehicleInfo: vehicle ? `${vehicle.make} ${vehicle.model}` : undefined,
+                      vehicleInfo: vehicle ? ` DZD{vehicle.make}  DZD{vehicle.model}` : undefined,
                       type: newRdv.type,
                       date: new Date(newRdv.date),
                       time: newRdv.time,
@@ -1066,7 +1066,7 @@ export default function AutodealerPage() {
                     const sale: Sale = {
                       id: Date.now().toString(),
                       vehicleId: newSale.vehicleId,
-                      vehicleInfo: `${vehicle.make} ${vehicle.model} (${vehicle.year})`,
+                      vehicleInfo: ` DZD{vehicle.make}  DZD{vehicle.model} ( DZD{vehicle.year})`,
                       clientId: newSale.clientId,
                       clientName: client.name,
                       salePrice: newSale.salePrice,

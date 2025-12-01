@@ -137,7 +137,7 @@ export default function EstimationService() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    alert(`Merci ${formData.name} ! Votre demande de devis a été envoyée. Je vous contacterai bientôt.`)
+    alert(`Merci  DZD{formData.name} ! Votre demande de devis a été envoyée. Je vous contacterai bientôt.`)
     setFormData({ name: '', email: '', company: '', message: '' })
   }
 
@@ -190,7 +190,7 @@ export default function EstimationService() {
                   <motion.button
                     key={service.id}
                     onClick={() => setSelectedService(service.id)}
-                    className={`p-4 rounded-lg border-2 transition-all text-left ${
+                    className={`p-4 rounded-lg border-2 transition-all text-left  DZD{
                       selectedService === service.id
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 hover:border-blue-300'
@@ -199,10 +199,10 @@ export default function EstimationService() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                      <div className={`${selectedService === service.id ? 'text-blue-600' : 'text-gray-400'}`}>
+                      <div className={` DZD{selectedService === service.id ? 'text-blue-600' : 'text-gray-400'}`}>
                         {service.icon}
                       </div>
-                      <span className={`font-bold ${selectedService === service.id ? 'text-blue-600' : 'text-gray-700'}`}>
+                      <span className={`font-bold  DZD{selectedService === service.id ? 'text-blue-600' : 'text-gray-700'}`}>
                         {service.name}
                       </span>
                     </div>
@@ -221,7 +221,7 @@ export default function EstimationService() {
                   <motion.button
                     key={feature.name}
                     onClick={() => toggleFeature(feature.name)}
-                    className={`w-full p-3 rounded-lg border-2 transition-all text-left flex items-center justify-between ${
+                    className={`w-full p-3 rounded-lg border-2 transition-all text-left flex items-center justify-between  DZD{
                       selectedFeatures.includes(feature.name)
                         ? 'border-green-500 bg-green-50'
                         : 'border-gray-200 hover:border-gray-300'
@@ -235,7 +235,7 @@ export default function EstimationService() {
                       ) : (
                         <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
                       )}
-                      <span className={`${selectedFeatures.includes(feature.name) ? 'text-green-700 font-semibold' : 'text-gray-700'}`}>
+                      <span className={` DZD{selectedFeatures.includes(feature.name) ? 'text-green-700 font-semibold' : 'text-gray-700'}`}>
                         {feature.name}
                       </span>
                     </div>
@@ -287,7 +287,7 @@ export default function EstimationService() {
                 className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all"
               >
                 <div className="flex items-start gap-4">
-                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${strategy.color} flex items-center justify-center text-white flex-shrink-0`}>
+                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-r  DZD{strategy.color} flex items-center justify-center text-white flex-shrink-0`}>
                     {strategy.icon}
                   </div>
                   <div className="flex-1">
@@ -355,7 +355,7 @@ export default function EstimationService() {
               <label className="block text-gray-700 font-medium mb-2">Estimation calculée</label>
               <input
                 type="text"
-                value={`${calculatePrice().toLocaleString('fr-DZ')} د.ج`}
+                value={` DZD{calculatePrice().toLocaleString('fr-DZ')} د.ج`}
                 readOnly
                 className="w-full px-4 py-3 bg-blue-50 border border-blue-300 rounded-lg text-blue-700 font-bold"
               />

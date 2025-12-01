@@ -720,6 +720,5 @@ export default function PainterPage() {
       
       {/* All Modals will be added here */}
     </div>
-    </div>
   )
 }

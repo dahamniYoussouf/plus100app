@@ -22,8 +22,8 @@ export default function HotelPage() {
       setRooms(JSON.parse(savedRooms))
     } else {
       const sample: Room[] = Array.from({ length: 20 }, (_, i) => ({
-        id: `room-${i + 1}`,
-        number: `${Math.floor(i / 5) + 1}${String((i % 5) + 1).padStart(2, '0')}`,
+        id: `room- DZD{i + 1}`,
+        number: ` DZD{Math.floor(i / 5) + 1} DZD{String((i % 5) + 1).padStart(2, '0')}`,
         type: i < 8 ? 'single' : i < 16 ? 'double' : i < 19 ? 'suite' : 'deluxe',
         floor: Math.floor(i / 5) + 1,
         price: i < 8 ? 80 : i < 16 ? 120 : i < 19 ? 200 : 300,
@@ -75,7 +75,7 @@ export default function HotelPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors relative ${
+                  className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors relative  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'

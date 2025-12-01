@@ -83,7 +83,7 @@ export default function ReservationManagement({
                   <p className="text-sm text-gray-500">{reservation.clientEmail}</p>
                   <p className="text-sm text-gray-500">{reservation.clientPhone}</p>
                 </div>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[reservation.status]}`}>
+                <span className={`px-2 py-1 rounded-full text-xs font-medium  DZD{statusColors[reservation.status]}`}>
                   {reservation.status}
                 </span>
               </div>
@@ -99,7 +99,7 @@ export default function ReservationManagement({
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <DollarSign className="w-4 h-4" />
-                  <span className="font-semibold text-gray-900">${reservation.totalPrice.toFixed(2)}</span>
+                  <span className="font-semibold text-gray-900"> DZD{reservation.totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Calendar className="w-4 h-4" />

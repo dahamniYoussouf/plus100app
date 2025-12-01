@@ -50,6 +50,9 @@ export default function RentalPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [rentals, setRentals] = useState<Rental[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
+  const [showVehicleForm, setShowVehicleForm] = useState(false)
+  const [showRentalForm, setShowRentalForm] = useState(false)
+  const [showCustomerForm, setShowCustomerForm] = useState(false)
 
   useEffect(() => {
     const savedVehicles = localStorage.getItem('rental-vehicles')
@@ -162,6 +165,96 @@ export default function RentalPage() {
   const activeRentals = rentals.filter(r => r.status === 'active').length
   const totalRevenue = rentals.filter(r => r.status === 'completed').reduce((sum, r) => sum + r.totalAmount, 0)
 
+  const handleAddVehicle = () => {
+    setShowVehicleForm(true)
+  }
+
+  const handleAddRental = () => {
+    setShowRentalForm(true)
+  }
+
+  const handleAddCustomer = () => {
+    setShowCustomerForm(true)
+  }
+
+  const handleSubmitVehicle = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const newVehicle: Vehicle = {
+      id: Date.now().toString(),
+      make: formData.get('make') as string,
+      model: formData.get('model') as string,
+      year: parseInt(formData.get('year') as string),
+      licensePlate: formData.get('licensePlate') as string,
+      type: formData.get('type') as Vehicle['type'],
+      dailyRate: parseInt(formData.get('dailyRate') as string),
+      status: 'available',
+      mileage: parseInt(formData.get('mileage') as string) || 0,
+      fuelType: formData.get('fuelType') as Vehicle['fuelType'],
+      features: (formData.get('features') as string)?.split(',').map(f => f.trim()).filter(f => f) || [],
+    }
+    setVehicles([...vehicles, newVehicle])
+    setShowVehicleForm(false)
+    e.currentTarget.reset()
+  }
+
+  const handleSubmitRental = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const vehicleId = formData.get('vehicleId') as string
+    const customerId = formData.get('customerId') as string
+    const vehicle = vehicles.find(v => v.id === vehicleId)
+    const customer = customers.find(c => c.id === customerId)
+    
+    if (!vehicle || !customer) {
+      alert('Véhicule ou client introuvable')
+      return
+    }
+
+    const startDate = new Date(formData.get('startDate') as string)
+    const endDate = new Date(formData.get('endDate') as string)
+    const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+    const totalAmount = days * vehicle.dailyRate
+    const deposit = Math.round(totalAmount * 0.3)
+
+    const newRental: Rental = {
+      id: Date.now().toString(),
+      vehicleId,
+      vehicleInfo: `${vehicle.make} ${vehicle.model} ${vehicle.year}`,
+      customerId,
+      customerName: customer.name,
+      startDate,
+      endDate,
+      dailyRate: vehicle.dailyRate,
+      totalAmount,
+      deposit,
+      status: 'active',
+      pickupLocation: formData.get('pickupLocation') as string,
+    }
+    setRentals([...rentals, newRental])
+    setVehicles(vehicles.map(v => v.id === vehicleId ? { ...v, status: 'rented' } : v))
+    setCustomers(customers.map(c => c.id === customerId ? { ...c, rentals: [...c.rentals, newRental.id] } : c))
+    setShowRentalForm(false)
+    e.currentTarget.reset()
+  }
+
+  const handleSubmitCustomer = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const newCustomer: Customer = {
+      id: Date.now().toString(),
+      name: formData.get('name') as string,
+      phone: formData.get('phone') as string,
+      email: formData.get('email') as string || undefined,
+      licenseNumber: formData.get('licenseNumber') as string,
+      idNumber: formData.get('idNumber') as string,
+      rentals: [],
+    }
+    setCustomers([...customers, newCustomer])
+    setShowCustomerForm(false)
+    e.currentTarget.reset()
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
@@ -173,7 +266,7 @@ export default function RentalPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -237,7 +330,10 @@ export default function RentalPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Véhicules</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={handleAddVehicle}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Ajouter Véhicule
               </button>
             </div>
@@ -255,7 +351,7 @@ export default function RentalPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{vehicle.make} {vehicle.model}</h3>
                         <p className="text-sm text-gray-500">{vehicle.year} • {vehicle.licensePlate}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         vehicle.status === 'available' ? 'bg-green-100 text-green-800' :
                         vehicle.status === 'rented' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -297,7 +393,10 @@ export default function RentalPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Locations</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={handleAddRental}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Location
               </button>
             </div>
@@ -315,7 +414,7 @@ export default function RentalPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{rental.customerName}</h3>
                         <p className="text-sm text-gray-600 mt-1">{rental.vehicleInfo}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         rental.status === 'completed' ? 'bg-green-100 text-green-800' :
                         rental.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-blue-100 text-blue-800'
@@ -348,7 +447,10 @@ export default function RentalPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Clients</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={handleAddCustomer}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Client
               </button>
             </div>
@@ -383,6 +485,212 @@ export default function RentalPage() {
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Maintenance</h2>
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
               <p className="text-gray-600">Gestion de la maintenance des véhicules</p>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Ajouter Véhicule */}
+        {showVehicleForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">Ajouter un Véhicule</h3>
+                  <button
+                    onClick={() => setShowVehicleForm(false)}
+                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                  >
+                    ×
+                  </button>
+                </div>
+                <form onSubmit={handleSubmitVehicle} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Marque</label>
+                    <input type="text" name="make" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Modèle</label>
+                    <input type="text" name="model" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Année</label>
+                    <input type="number" name="year" required min="2000" max="2025" className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Plaque d'immatriculation</label>
+                    <input type="text" name="licensePlate" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                    <select name="type" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="economy">Économique</option>
+                      <option value="standard">Standard</option>
+                      <option value="luxury">Luxe</option>
+                      <option value="suv">SUV</option>
+                      <option value="van">Utilitaire</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Tarif journalier (DZD)</label>
+                    <input type="number" name="dailyRate" required min="0" className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Kilométrage</label>
+                    <input type="number" name="mileage" min="0" className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Type de carburant</label>
+                    <select name="fuelType" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="gasoline">Essence</option>
+                      <option value="diesel">Diesel</option>
+                      <option value="electric">Électrique</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Équipements (séparés par des virgules)</label>
+                    <input type="text" name="features" placeholder="Climatisation, GPS, ..." className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowVehicleForm(false)}
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Ajouter
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Nouvelle Location */}
+        {showRentalForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">Nouvelle Location</h3>
+                  <button
+                    onClick={() => setShowRentalForm(false)}
+                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                  >
+                    ×
+                  </button>
+                </div>
+                <form onSubmit={handleSubmitRental} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Véhicule</label>
+                    <select name="vehicleId" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="">Sélectionner un véhicule</option>
+                      {vehicles.filter(v => v.status === 'available').map(v => (
+                        <option key={v.id} value={v.id}>
+                          {v.make} {v.model} {v.year} - {v.licensePlate} (DZD{v.dailyRate.toLocaleString()}/jour)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+                    <select name="customerId" required className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="">Sélectionner un client</option>
+                      {customers.map(c => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+                    <input type="date" name="startDate" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
+                    <input type="date" name="endDate" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Lieu de prise</label>
+                    <input type="text" name="pickupLocation" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowRentalForm(false)}
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Créer Location
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Nouveau Client */}
+        {showCustomerForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">Nouveau Client</h3>
+                  <button
+                    onClick={() => setShowCustomerForm(false)}
+                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                  >
+                    ×
+                  </button>
+                </div>
+                <form onSubmit={handleSubmitCustomer} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+                    <input type="text" name="name" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                    <input type="tel" name="phone" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email (optionnel)</label>
+                    <input type="email" name="email" className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de permis</label>
+                    <input type="text" name="licenseNumber" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Numéro d'identité</label>
+                    <input type="text" name="idNumber" required className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowCustomerForm(false)}
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Ajouter
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         )}

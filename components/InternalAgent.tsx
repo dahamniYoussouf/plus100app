@@ -71,7 +71,7 @@ export default function InternalAgent() {
       if (location) params.append('location', location)
       params.append('source', 'all') // Recherche multi-sources
 
-      const response = await fetch(`/api/jobs?${params.toString()}`)
+      const response = await fetch(`/api/jobs? DZD{params.toString()}`)
       
       if (!response.ok) {
         throw new Error('Erreur lors de la recherche')
@@ -281,7 +281,7 @@ export default function InternalAgent() {
         setRobotState('displaying')
         
         return {
-          text: `J'ai trouvé ${jobs.length} offres d'emploi pertinentes !`,
+          text: `J'ai trouvé  DZD{jobs.length} offres d'emploi pertinentes !`,
           result: {
             type: 'jobs',
             data: jobs,
@@ -314,7 +314,7 @@ export default function InternalAgent() {
         setRobotState('displaying')
         
         return {
-          text: `Candidatures envoyées à ${appliedJobs.length} offres !`,
+          text: `Candidatures envoyées à  DZD{appliedJobs.length} offres !`,
           result: {
             type: 'applications',
             data: appliedJobs,
@@ -324,7 +324,7 @@ export default function InternalAgent() {
       }, jobOffers.length * 1000)
       
       return {
-        text: `Envoi de candidatures à ${jobOffers.length} offres en cours...`,
+        text: `Envoi de candidatures à  DZD{jobOffers.length} offres en cours...`,
         result: undefined,
       }
     }
@@ -332,7 +332,7 @@ export default function InternalAgent() {
     // Voir les candidatures
     if (lowerInput.includes('candidature') || lowerInput.includes('application') || lowerInput.includes('suivi')) {
       return {
-        text: `Vous avez ${applications.length} candidatures en cours.`,
+        text: `Vous avez  DZD{applications.length} candidatures en cours.`,
         result: {
           type: 'applications',
           data: applications,
@@ -448,7 +448,7 @@ export default function InternalAgent() {
         
         const agentMessage: Message = {
           id: Date.now() + 1,
-          text: `🔍 J'ai trouvé ${jobs.length} offres d'emploi pertinentes !${jobs.length > 0 && jobs[0].id.toString().startsWith('fallback') ? '\n\n⚠️ Mode démonstration : Configurez une clé API pour rechercher de vraies offres. Voir RECHERCHE_EMPLOI_API.md' : ''}`,
+          text: `🔍 J'ai trouvé  DZD{jobs.length} offres d'emploi pertinentes ! DZD{jobs.length > 0 && jobs[0].id.toString().startsWith('fallback') ? '\n\n⚠️ Mode démonstration : Configurez une clé API pour rechercher de vraies offres. Voir RECHERCHE_EMPLOI_API.md' : ''}`,
           sender: 'agent',
           timestamp: new Date(),
           result: {
@@ -488,7 +488,7 @@ export default function InternalAgent() {
         
         const agentMessage: Message = {
           id: Date.now() + 1,
-          text: `✅ Candidatures envoyées à ${appliedJobs.length} offres !`,
+          text: `✅ Candidatures envoyées à  DZD{appliedJobs.length} offres !`,
           sender: 'agent',
           timestamp: new Date(),
           result: {
@@ -554,7 +554,7 @@ export default function InternalAgent() {
       initial={{ opacity: 0, y: 20, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 20, scale: 0.9 }}
-      className={`fixed bottom-6 right-6 z-50 ${
+      className={`fixed bottom-6 right-6 z-50  DZD{
         isMinimized ? 'w-96' : 'w-[900px]'
       } bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden`}
       style={{ height: isMinimized ? 'auto' : '700px', maxHeight: '90vh' }}
@@ -632,7 +632,7 @@ export default function InternalAgent() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className={`flex gap-3 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex gap-3  DZD{message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {message.sender === 'agent' && (
                       <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
@@ -640,7 +640,7 @@ export default function InternalAgent() {
                       </div>
                     )}
                     <div
-                      className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                      className={`max-w-[80%] rounded-2xl px-4 py-2  DZD{
                         message.sender === 'user'
                           ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
                           : 'bg-white text-gray-800 border border-gray-200'
@@ -689,7 +689,7 @@ export default function InternalAgent() {
                       }
                       const agentMsg: Message = {
                         id: Date.now() + 1,
-                        text: `🔍 J'ai trouvé ${jobs.length} offres d'emploi pertinentes !${jobs.length > 0 && jobs[0].id.toString().startsWith('fallback') ? '\n\n⚠️ Mode démonstration : Configurez une clé API pour rechercher de vraies offres. Voir RECHERCHE_EMPLOI_API.md' : ''}`,
+                        text: `🔍 J'ai trouvé  DZD{jobs.length} offres d'emploi pertinentes ! DZD{jobs.length > 0 && jobs[0].id.toString().startsWith('fallback') ? '\n\n⚠️ Mode démonstration : Configurez une clé API pour rechercher de vraies offres. Voir RECHERCHE_EMPLOI_API.md' : ''}`,
                         sender: 'agent',
                         timestamp: new Date(),
                         result: {
@@ -740,7 +740,7 @@ export default function InternalAgent() {
                       }
                       const agentMsg: Message = {
                         id: Date.now() + 1,
-                        text: `✅ Candidatures envoyées à ${appliedJobs.length} offres !`,
+                        text: `✅ Candidatures envoyées à  DZD{appliedJobs.length} offres !`,
                         sender: 'agent',
                         timestamp: new Date(),
                         result: {
@@ -880,8 +880,8 @@ export default function InternalAgent() {
                                 <div className="flex items-center gap-2">
                                   <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
                                     <div
-                                      className={`h-full ${item.color || 'bg-blue-500'}`}
-                                      style={{ width: `${item.level}%` }}
+                                      className={`h-full  DZD{item.color || 'bg-blue-500'}`}
+                                      style={{ width: ` DZD{item.level}%` }}
                                     />
                                   </div>
                                   <span className="text-sm text-gray-600">{item.level}%</span>
@@ -908,7 +908,7 @@ export default function InternalAgent() {
                               <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
                                 <motion.div
                                   initial={{ width: 0 }}
-                                  animate={{ width: `${currentResult.data.values[index]}%` }}
+                                  animate={{ width: ` DZD{currentResult.data.values[index]}%` }}
                                   transition={{ duration: 1, delay: index * 0.1 }}
                                   className="h-full rounded-full"
                                   style={{ backgroundColor: currentResult.data.colors[index] }}

@@ -151,7 +151,7 @@ export default function RenovationPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-amber-600 border-b-2 border-amber-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -239,7 +239,7 @@ export default function RenovationPage() {
                         </p>
                         <p className="text-sm text-gray-500 mt-1">📍 {project.address}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         project.status === 'completed' ? 'bg-green-100 text-green-800' :
                         project.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                         project.status === 'approved' ? 'bg-purple-100 text-purple-800' :
@@ -260,7 +260,7 @@ export default function RenovationPage() {
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
                             className="bg-amber-600 h-2 rounded-full"
-                            style={{ width: `${project.progress}%` }}
+                            style={{ width: ` DZD{project.progress}%` }}
                           />
                         </div>
                       </div>
@@ -333,7 +333,7 @@ export default function RenovationPage() {
                           Valide jusqu'au: {new Date(quote.validUntil).toLocaleDateString('fr-FR')}
                         </p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         quote.status === 'accepted' ? 'bg-green-100 text-green-800' :
                         quote.status === 'rejected' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'

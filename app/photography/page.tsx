@@ -174,7 +174,7 @@ export default function PhotographyPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-purple-600 border-b-2 border-purple-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -239,7 +239,7 @@ export default function PhotographyPage() {
                   {photos.slice(0, 6).map((photo, idx) => (
                     <div key={photo.id} className="aspect-square rounded-lg overflow-hidden relative group">
                       <Image
-                        src={photo.url || `https://images.unsplash.com/photo-${1500000000000 + idx}?w=400&h=400&fit=crop&q=80`}
+                        src={photo.url || `https://images.unsplash.com/photo- DZD{1500000000000 + idx}?w=400&h=400&fit=crop&q=80`}
                         alt={photo.title}
                         fill
                         className="object-cover"
@@ -294,7 +294,7 @@ export default function PhotographyPage() {
                 <div key={photo.id} className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden group">
                   <div className="aspect-square relative">
                     <Image
-                      src={photo.url || `https://images.unsplash.com/photo-${1500000000000 + idx}?w=400&h=400&fit=crop&q=80`}
+                      src={photo.url || `https://images.unsplash.com/photo- DZD{1500000000000 + idx}?w=400&h=400&fit=crop&q=80`}
                       alt={photo.title}
                       fill
                       className="object-cover"
@@ -345,7 +345,7 @@ export default function PhotographyPage() {
                     <div className="aspect-video relative">
                       {coverPhoto ? (
                         <Image
-                          src={coverPhoto.url || `https://images.unsplash.com/photo-${1500000000000 + idx}?w=600&h=400&fit=crop&q=80`}
+                          src={coverPhoto.url || `https://images.unsplash.com/photo- DZD{1500000000000 + idx}?w=600&h=400&fit=crop&q=80`}
                           alt={album.name}
                           fill
                           className="object-cover"
@@ -365,7 +365,7 @@ export default function PhotographyPage() {
                     )}
                     <div className="flex items-center justify-between text-sm pt-3 border-t border-gray-200">
                       <span className="text-gray-600">{album.photos.length} photos</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         album.status === 'public' ? 'bg-green-100 text-green-800' :
                         album.status === 'shared' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'
@@ -444,7 +444,7 @@ export default function PhotographyPage() {
                       <p className="text-sm text-gray-500 mt-2">{session.location} • {session.photos} photos</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         session.status === 'completed' ? 'bg-green-100 text-green-800' :
                         session.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
                         'bg-red-100 text-red-800'

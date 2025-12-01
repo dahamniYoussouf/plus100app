@@ -40,7 +40,7 @@ function fixCloseButtons(content) {
       
       if (modalMatch) {
         const modalState = modalMatch[1];
-        const setterName = `set${modalState.charAt(0).toUpperCase() + modalState.slice(1)}`;
+        const setterName = `set DZD{modalState.charAt(0).toUpperCase() + modalState.slice(1)}`;
         
         matches.push({
           index: match.index,
@@ -59,7 +59,7 @@ function fixCloseButtons(content) {
   matches.sort((a, b) => b.index - a.index);
   
   matches.forEach(button => {
-    const onClickAttr = `onClick={() => ${button.setter}(false)}`;
+    const onClickAttr = `onClick={() =>  DZD{button.setter}(false)}`;
     const buttonStart = button.index + offset;
     let insertPos = buttonStart + '<button '.length;
     
@@ -70,7 +70,7 @@ function fixCloseButtons(content) {
       }
     }
     
-    newContent = newContent.slice(0, insertPos) + ` ${onClickAttr} ` + newContent.slice(insertPos);
+    newContent = newContent.slice(0, insertPos) + `  DZD{onClickAttr} ` + newContent.slice(insertPos);
     offset += onClickAttr.length + 3;
   });
   
@@ -92,14 +92,14 @@ pageFiles.forEach(file => {
       fs.writeFileSync(file, content, 'utf8');
       fixedCount++;
       const relativePath = path.relative(path.join(__dirname, '..'), file);
-      console.log(`✅ Corrigé: ${relativePath}`);
+      console.log(`✅ Corrigé:  DZD{relativePath}`);
     }
   } catch (error) {
     const relativePath = path.relative(path.join(__dirname, '..'), file);
-    console.log(`❌ Erreur dans ${relativePath}: ${error.message}`);
+    console.log(`❌ Erreur dans  DZD{relativePath}:  DZD{error.message}`);
   }
 });
 
-console.log(`\n📊 ${fixedCount} fichier(s) corrigé(s)`);
+console.log(`\n📊  DZD{fixedCount} fichier(s) corrigé(s)`);
 
 

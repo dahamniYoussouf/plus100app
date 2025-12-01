@@ -73,7 +73,7 @@ export default function TravelDashboard({ destinations, circuits, reservations }
             <div>
               <p className="text-sm font-medium text-gray-600">Revenus Totaux</p>
               <p className="text-2xl font-bold text-gray-900 mt-2">
-                ${stats.totalRevenue.toFixed(2)}
+                 DZD{stats.totalRevenue.toFixed(2)}
               </p>
             </div>
             <div className="p-3 bg-green-100 rounded-full">
@@ -144,7 +144,7 @@ export default function TravelDashboard({ destinations, circuits, reservations }
                           : 'Date non définie'}
                       </span>
                       <span>{circuit.duration} jours</span>
-                      <span>${circuit.price}</span>
+                      <span> DZD{circuit.price}</span>
                     </div>
                   </div>
                   <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -176,7 +176,7 @@ export default function TravelDashboard({ destinations, circuits, reservations }
                         <p className="text-sm text-gray-500">{circuit?.name || 'Circuit supprimé'}</p>
                       </div>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[reservation.status]}`}
+                        className={`px-2 py-1 rounded-full text-xs font-medium  DZD{statusColors[reservation.status]}`}
                       >
                         {reservation.status}
                       </span>
@@ -184,7 +184,7 @@ export default function TravelDashboard({ destinations, circuits, reservations }
                     <div className="flex items-center justify-between text-sm text-gray-500">
                       <span>{reservation.participants} participant(s)</span>
                       <span className="font-semibold text-gray-900">
-                        ${reservation.totalPrice.toFixed(2)}
+                         DZD{reservation.totalPrice.toFixed(2)}
                       </span>
                     </div>
                   </div>

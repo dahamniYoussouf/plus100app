@@ -28,8 +28,8 @@ export default function OrderManagement({ orders }: Props) {
               <ShoppingCart className="w-5 h-5 text-blue-500" />
             </div>
             <p className="text-sm text-gray-500">{order.customerPhone}</p>
-            <p className="text-lg font-bold text-gray-900 mt-3">${order.total}</p>
-            <span className={`inline-block mt-2 px-2 py-1 rounded text-xs ${
+            <p className="text-lg font-bold text-gray-900 mt-3"> DZD{order.total}</p>
+            <span className={`inline-block mt-2 px-2 py-1 rounded text-xs  DZD{
               order.status === 'delivered' ? 'bg-green-100 text-green-800' :
               order.status === 'ready' ? 'bg-blue-100 text-blue-800' :
               order.status === 'preparing' ? 'bg-yellow-100 text-yellow-800' :

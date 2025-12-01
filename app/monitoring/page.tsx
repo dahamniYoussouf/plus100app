@@ -168,7 +168,7 @@ export default function MonitoringPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-red-600 border-b-2 border-red-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -297,7 +297,7 @@ export default function MonitoringPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{system.name}</h3>
                         <p className="text-sm text-gray-500 capitalize">{system.type}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         system.status === 'healthy' ? 'bg-green-100 text-green-800' :
                         system.status === 'warning' ? 'bg-yellow-100 text-yellow-800' :
                         system.status === 'critical' ? 'bg-red-100 text-red-800' :
@@ -316,12 +316,12 @@ export default function MonitoringPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-2 rounded-full ${
+                            className={`h-2 rounded-full  DZD{
                               system.cpu >= 90 ? 'bg-red-500' :
                               system.cpu >= 70 ? 'bg-yellow-500' :
                               'bg-green-500'
                             }`}
-                            style={{ width: `${system.cpu}%` }}
+                            style={{ width: ` DZD{system.cpu}%` }}
                           />
                         </div>
                       </div>
@@ -332,12 +332,12 @@ export default function MonitoringPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-2 rounded-full ${
+                            className={`h-2 rounded-full  DZD{
                               system.memory >= 90 ? 'bg-red-500' :
                               system.memory >= 70 ? 'bg-yellow-500' :
                               'bg-green-500'
                             }`}
-                            style={{ width: `${system.memory}%` }}
+                            style={{ width: ` DZD{system.memory}%` }}
                           />
                         </div>
                       </div>
@@ -348,12 +348,12 @@ export default function MonitoringPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-2 rounded-full ${
+                            className={`h-2 rounded-full  DZD{
                               system.disk >= 90 ? 'bg-red-500' :
                               system.disk >= 70 ? 'bg-yellow-500' :
                               'bg-green-500'
                             }`}
-                            style={{ width: `${system.disk}%` }}
+                            style={{ width: ` DZD{system.disk}%` }}
                           />
                         </div>
                       </div>
@@ -398,7 +398,7 @@ export default function MonitoringPage() {
                         <p className="text-sm text-gray-600 mt-1">{alert.message}</p>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           alert.severity === 'critical' ? 'bg-red-100 text-red-800' :
                           alert.severity === 'high' ? 'bg-orange-100 text-orange-800' :
                           alert.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
@@ -408,7 +408,7 @@ export default function MonitoringPage() {
                            alert.severity === 'high' ? 'Élevée' :
                            alert.severity === 'medium' ? 'Moyenne' : 'Basse'}
                         </span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           alert.status === 'resolved' ? 'bg-green-100 text-green-800' :
                           alert.status === 'acknowledged' ? 'bg-blue-100 text-blue-800' :
                           'bg-yellow-100 text-yellow-800'

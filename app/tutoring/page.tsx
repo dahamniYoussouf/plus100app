@@ -208,7 +208,7 @@ export default function TutoringPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-violet-600 border-b-2 border-violet-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -443,7 +443,7 @@ export default function TutoringPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="font-semibold text-gray-900 text-lg">{lesson.studentName} - {lesson.subject}</h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                             lesson.status === 'completed' ? 'bg-green-100 text-green-800' :
                             lesson.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                             'bg-blue-100 text-blue-800'

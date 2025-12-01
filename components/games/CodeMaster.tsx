@@ -130,7 +130,7 @@ export default function CodeMaster() {
               key={index}
               onClick={() => handleAnswer(index)}
               disabled={showResult}
-              className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all font-mono ${
+              className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all font-mono  DZD{
                 showCorrect
                   ? 'bg-green-100 border-green-500 text-green-800'
                   : showWrong

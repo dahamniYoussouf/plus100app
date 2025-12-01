@@ -64,6 +64,14 @@ export default function SecurityPage() {
   const [missions, setMissions] = useState<Mission[]>([])
   const [rounds, setRounds] = useState<Round[]>([])
   const [incidents, setIncidents] = useState<Incident[]>([])
+  const [showAgentModal, setShowAgentModal] = useState(false)
+  const [showMissionModal, setShowMissionModal] = useState(false)
+  const [showRoundModal, setShowRoundModal] = useState(false)
+  const [showIncidentModal, setShowIncidentModal] = useState(false)
+  const [newAgent, setNewAgent] = useState({ name: '', badgeNumber: '', phone: '', email: '', position: 'guard' as 'guard' | 'supervisor' | 'manager', shift: 'morning' as 'morning' | 'afternoon' | 'night' })
+  const [newMission, setNewMission] = useState({ title: '', description: '', location: '', assignedAgents: [] as string[], startDate: '', endDate: '', priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent', type: 'patrol' as 'patrol' | 'event' | 'surveillance' | 'access_control' | 'other', notes: '' })
+  const [newRound, setNewRound] = useState({ agentId: '', route: '', checkpoints: [] as Array<{ name: string; time: string }> })
+  const [newIncident, setNewIncident] = useState({ title: '', description: '', location: '', reportedBy: '', severity: 'medium' as 'low' | 'medium' | 'high' | 'critical', assignedAgent: '' })
 
   useEffect(() => {
     const savedAgents = localStorage.getItem('security-agents')
@@ -337,7 +345,10 @@ export default function SecurityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Agents de Sécurité</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => setShowAgentModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
                 Nouvel Agent
               </button>
             </div>
@@ -396,7 +407,10 @@ export default function SecurityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Missions</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => setShowMissionModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
                 Nouvelle Mission
               </button>
             </div>
@@ -470,7 +484,10 @@ export default function SecurityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Rondes de Sécurité</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => setShowRoundModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
                 Nouvelle Ronde
               </button>
             </div>
@@ -536,7 +553,10 @@ export default function SecurityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Incidents</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => setShowIncidentModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
                 Nouvel Incident
               </button>
             </div>
@@ -611,9 +631,297 @@ export default function SecurityPage() {
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
               <p className="text-gray-600">Gestion des horaires et équipes</p>
             </div>
-      </div>
+          </div>
         )}
       </main>
+
+      {/* Modals */}
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style={{ display: showAgentModal ? 'flex' : 'none' }}>
+        <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Nouvel Agent</h3>
+              <button onClick={() => setShowAgentModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                <input type="text" value={newAgent.name} onChange={(e) => setNewAgent({ ...newAgent, name: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Badge</label>
+                  <input type="text" value={newAgent.badgeNumber} onChange={(e) => setNewAgent({ ...newAgent, badgeNumber: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                  <input type="tel" value={newAgent.phone} onChange={(e) => setNewAgent({ ...newAgent, phone: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" value={newAgent.email} onChange={(e) => setNewAgent({ ...newAgent, email: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Poste</label>
+                  <select value={newAgent.position} onChange={(e) => setNewAgent({ ...newAgent, position: e.target.value as any })} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="guard">Garde</option>
+                    <option value="supervisor">Superviseur</option>
+                    <option value="manager">Manager</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Quart</label>
+                  <select value={newAgent.shift} onChange={(e) => setNewAgent({ ...newAgent, shift: e.target.value as any })} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="morning">Matin</option>
+                    <option value="afternoon">Après-midi</option>
+                    <option value="night">Nuit</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 pt-4">
+                <button onClick={() => setShowAgentModal(false)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Annuler</button>
+                <button onClick={() => {
+                  if (newAgent.name && newAgent.badgeNumber && newAgent.phone && newAgent.email) {
+                    const agent: Agent = {
+                      id: Date.now().toString(),
+                      name: newAgent.name,
+                      badgeNumber: newAgent.badgeNumber,
+                      phone: newAgent.phone,
+                      email: newAgent.email,
+                      position: newAgent.position,
+                      status: 'on_duty',
+                      shift: newAgent.shift,
+                      joinDate: new Date(),
+                      totalMissions: 0,
+                    }
+                    setAgents([...agents, agent])
+                    setShowAgentModal(false)
+                    setNewAgent({ name: '', badgeNumber: '', phone: '', email: '', position: 'guard', shift: 'morning' })
+                  }
+                }} className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Ajouter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style={{ display: showMissionModal ? 'flex' : 'none' }}>
+        <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Nouvelle Mission</h3>
+              <button onClick={() => setShowMissionModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                <input type="text" value={newMission.title} onChange={(e) => setNewMission({ ...newMission, title: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea value={newMission.description} onChange={(e) => setNewMission({ ...newMission, description: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" rows={3}></textarea>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Lieu</label>
+                <input type="text" value={newMission.location} onChange={(e) => setNewMission({ ...newMission, location: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
+                  <select value={newMission.priority} onChange={(e) => setNewMission({ ...newMission, priority: e.target.value as any })} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="low">Basse</option>
+                    <option value="medium">Moyenne</option>
+                    <option value="high">Élevée</option>
+                    <option value="urgent">Urgente</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                  <select value={newMission.type} onChange={(e) => setNewMission({ ...newMission, type: e.target.value as any })} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="patrol">Patrouille</option>
+                    <option value="event">Événement</option>
+                    <option value="surveillance">Surveillance</option>
+                    <option value="access_control">Contrôle d'accès</option>
+                    <option value="other">Autre</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date début</label>
+                  <input type="date" value={newMission.startDate} onChange={(e) => setNewMission({ ...newMission, startDate: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date fin (optionnel)</label>
+                  <input type="date" value={newMission.endDate} onChange={(e) => setNewMission({ ...newMission, endDate: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                </div>
+              </div>
+              {agents.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Agents assignés</label>
+                  <div className="space-y-2 max-h-32 overflow-y-auto border border-gray-300 rounded-lg p-2">
+                    {agents.map(agent => (
+                      <label key={agent.id} className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={newMission.assignedAgents.includes(agent.id)} onChange={(e) => {
+                          if (e.target.checked) {
+                            setNewMission({ ...newMission, assignedAgents: [...newMission.assignedAgents, agent.id] })
+                          } else {
+                            setNewMission({ ...newMission, assignedAgents: newMission.assignedAgents.filter(id => id !== agent.id) })
+                          }
+                        }} className="rounded" />
+                        <span className="text-sm text-gray-700">{agent.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="flex justify-end gap-2 pt-4">
+                <button onClick={() => setShowMissionModal(false)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Annuler</button>
+                <button onClick={() => {
+                  if (newMission.title && newMission.description && newMission.location && newMission.startDate) {
+                    const mission: Mission = {
+                      id: Date.now().toString(),
+                      title: newMission.title,
+                      description: newMission.description,
+                      location: newMission.location,
+                      assignedAgents: newMission.assignedAgents,
+                      startDate: new Date(newMission.startDate),
+                      endDate: newMission.endDate ? new Date(newMission.endDate) : undefined,
+                      priority: newMission.priority,
+                      status: 'scheduled',
+                      type: newMission.type,
+                      notes: newMission.notes || undefined,
+                    }
+                    setMissions([...missions, mission])
+                    setShowMissionModal(false)
+                    setNewMission({ title: '', description: '', location: '', assignedAgents: [], startDate: '', endDate: '', priority: 'medium', type: 'patrol', notes: '' })
+                  }
+                }} className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Ajouter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style={{ display: showRoundModal ? 'flex' : 'none' }}>
+        <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Nouvelle Ronde</h3>
+              <button onClick={() => setShowRoundModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+            </div>
+            <div className="space-y-4">
+              {agents.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Agent</label>
+                  <select value={newRound.agentId} onChange={(e) => setNewRound({ ...newRound, agentId: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="">Sélectionner un agent</option>
+                    {agents.map(agent => (
+                      <option key={agent.id} value={agent.id}>{agent.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Route</label>
+                <input type="text" value={newRound.route} onChange={(e) => setNewRound({ ...newRound, route: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div className="flex justify-end gap-2 pt-4">
+                <button onClick={() => setShowRoundModal(false)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Annuler</button>
+                <button onClick={() => {
+                  if (newRound.agentId && newRound.route) {
+                    const agent = agents.find(a => a.id === newRound.agentId)
+                    const round: Round = {
+                      id: Date.now().toString(),
+                      agentId: newRound.agentId,
+                      agentName: agent?.name || '',
+                      route: newRound.route,
+                      checkpoints: [],
+                      startTime: new Date(),
+                      status: 'in_progress',
+                    }
+                    setRounds([...rounds, round])
+                    setShowRoundModal(false)
+                    setNewRound({ agentId: '', route: '', checkpoints: [] })
+                  }
+                }} className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Ajouter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style={{ display: showIncidentModal ? 'flex' : 'none' }}>
+        <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Nouvel Incident</h3>
+              <button onClick={() => setShowIncidentModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                <input type="text" value={newIncident.title} onChange={(e) => setNewIncident({ ...newIncident, title: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea value={newIncident.description} onChange={(e) => setNewIncident({ ...newIncident, description: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" rows={3}></textarea>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Lieu</label>
+                <input type="text" value={newIncident.location} onChange={(e) => setNewIncident({ ...newIncident, location: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Signalé par</label>
+                <input type="text" value={newIncident.reportedBy} onChange={(e) => setNewIncident({ ...newIncident, reportedBy: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Sévérité</label>
+                <select value={newIncident.severity} onChange={(e) => setNewIncident({ ...newIncident, severity: e.target.value as any })} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                  <option value="low">Basse</option>
+                  <option value="medium">Moyenne</option>
+                  <option value="high">Élevée</option>
+                  <option value="critical">Critique</option>
+                </select>
+              </div>
+              {agents.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Agent assigné (optionnel)</label>
+                  <select value={newIncident.assignedAgent} onChange={(e) => setNewIncident({ ...newIncident, assignedAgent: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="">Aucun</option>
+                    {agents.map(agent => (
+                      <option key={agent.id} value={agent.id}>{agent.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <div className="flex justify-end gap-2 pt-4">
+                <button onClick={() => setShowIncidentModal(false)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Annuler</button>
+                <button onClick={() => {
+                  if (newIncident.title && newIncident.description && newIncident.location && newIncident.reportedBy) {
+                    const incident: Incident = {
+                      id: Date.now().toString(),
+                      title: newIncident.title,
+                      description: newIncident.description,
+                      location: newIncident.location,
+                      reportedBy: newIncident.reportedBy,
+                      reportedAt: new Date(),
+                      severity: newIncident.severity,
+                      status: 'reported',
+                      assignedAgent: newIncident.assignedAgent || undefined,
+                    }
+                    setIncidents([...incidents, incident])
+                    setShowIncidentModal(false)
+                    setNewIncident({ title: '', description: '', location: '', reportedBy: '', severity: 'medium', assignedAgent: '' })
+                  }
+                }} className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Ajouter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

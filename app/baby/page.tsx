@@ -242,7 +242,7 @@ export default function BabyPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -364,9 +364,9 @@ export default function BabyPage() {
                           </p>
                           {feeding.amount && (
                             <p className="text-gray-600">
-                              {feeding.type === 'breast' ? `Durée: ${feeding.amount} min` :
-                               feeding.type === 'bottle' ? `Quantité: ${feeding.amount} ml` :
-                               `Quantité: ${feeding.amount} g`}
+                              {feeding.type === 'breast' ? `Durée:  DZD{feeding.amount} min` :
+                               feeding.type === 'bottle' ? `Quantité:  DZD{feeding.amount} ml` :
+                               `Quantité:  DZD{feeding.amount} g`}
                             </p>
                           )}
                           {feeding.food && (
@@ -416,7 +416,7 @@ export default function BabyPage() {
                           </p>
                           <p className="text-gray-600">
                             ⏰ Début: {sleep.startTime}
-                            {sleep.endTime && ` - Fin: ${sleep.endTime}`}
+                            {sleep.endTime && ` - Fin:  DZD{sleep.endTime}`}
                           </p>
                           {sleep.duration && (
                             <p className="text-gray-600">⏱️ Durée: {sleep.duration} min ({Math.round(sleep.duration / 60 * 10) / 10}h)</p>
@@ -785,8 +785,8 @@ export default function BabyPage() {
             <button
               onClick={() => {
                 if (newSleep.date && newSleep.startTime) {
-                  const start = new Date(`${newSleep.date}T${newSleep.startTime}`)
-                  const end = newSleep.endTime ? new Date(`${newSleep.date}T${newSleep.endTime}`) : undefined
+                  const start = new Date(` DZD{newSleep.date}T DZD{newSleep.startTime}`)
+                  const end = newSleep.endTime ? new Date(` DZD{newSleep.date}T DZD{newSleep.endTime}`) : undefined
                   const duration = end ? Math.round((end.getTime() - start.getTime()) / 60000) : undefined
                   const sleep: Sleep = {
                     id: Date.now().toString(),

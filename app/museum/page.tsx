@@ -200,7 +200,7 @@ export default function MuseumPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-amber-600 border-b-2 border-amber-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -316,7 +316,7 @@ export default function MuseumPage() {
                       <h3 className="font-semibold text-gray-900 text-base sm:text-lg mb-1">{exhibition.title}</h3>
                       <p className="text-sm text-gray-600 mb-2 line-clamp-2">{exhibition.description}</p>
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           exhibition.status === 'ongoing' ? 'bg-green-100 text-green-800' :
                           exhibition.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
                           'bg-gray-100 text-gray-800'
@@ -422,7 +422,7 @@ export default function MuseumPage() {
                       <p className="text-sm text-gray-500 mt-1 capitalize">Paiement: {ticket.paymentMethod === 'cash' ? 'Espèces' : ticket.paymentMethod === 'card' ? 'Carte' : 'En ligne'}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         ticket.status === 'valid' ? 'bg-green-100 text-green-800' :
                         ticket.status === 'used' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'
@@ -477,7 +477,7 @@ export default function MuseumPage() {
                     </div>
                     <div className="flex justify-between pt-2 border-t border-gray-200">
                       <span className="text-gray-600">Statut:</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         collection.status === 'on_display' ? 'bg-green-100 text-green-800' :
                         collection.status === 'storage' ? 'bg-gray-100 text-gray-800' :
                         collection.status === 'loan' ? 'bg-blue-100 text-blue-800' :
@@ -533,7 +533,7 @@ export default function MuseumPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Statut:</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
                         event.status === 'ongoing' ? 'bg-green-100 text-green-800' :
                         'bg-gray-100 text-gray-800'

@@ -34,7 +34,7 @@ const relevantKeywords = [
 ]
 
 function calculateMatch(jobTitle: string, jobDescription: string, keywords: string = ''): number {
-  const searchText = `${jobTitle} ${jobDescription} ${keywords}`.toLowerCase()
+  const searchText = ` DZD{jobTitle}  DZD{jobDescription}  DZD{keywords}`.toLowerCase()
   const matches = relevantKeywords.filter(keyword => 
     searchText.includes(keyword.toLowerCase())
   ).length
@@ -54,9 +54,9 @@ function normalizeJob(job: any, source: string, keywords: string = ''): JobOffer
   if (job.salary) {
     salary = job.salary
   } else if (job.salary_min && job.salary_max) {
-    salary = `${job.salary_min} - ${job.salary_max} ${job.salary_currency || ''}`
+    salary = ` DZD{job.salary_min} -  DZD{job.salary_max}  DZD{job.salary_currency || ''}`
   } else if (job.salary_max) {
-    salary = `Jusqu'à ${job.salary_max} ${job.salary_currency || ''}`
+    salary = `Jusqu'à  DZD{job.salary_max}  DZD{job.salary_currency || ''}`
   }
   
   // Extraction du type
@@ -75,7 +75,7 @@ function normalizeJob(job: any, source: string, keywords: string = ''): JobOffer
   const match = calculateMatch(title, description, keywords)
   
   return {
-    id: job.id || job.job_id || `${source}-${Date.now()}-${Math.random()}`,
+    id: job.id || job.job_id || ` DZD{source}- DZD{Date.now()}- DZD{Math.random()}`,
     title,
     company,
     location,
@@ -95,10 +95,10 @@ async function searchJSearch(keywords: string, location: string = '') {
     if (!apiKey) return []
 
     const query = keywords || 'developer full stack react'
-    const locationParam = location ? `&location=${encodeURIComponent(location)}` : ''
+    const locationParam = location ? `&location= DZD{encodeURIComponent(location)}` : ''
     
     const response = await fetch(
-      `https://jsearch.p.rapidapi.com/search?query=${encodeURIComponent(query)}${locationParam}&page=1&num_pages=3&employment_types=FULLTIME&remote_jobs_only=false`,
+      `https://jsearch.p.rapidapi.com/search?query= DZD{encodeURIComponent(query)} DZD{locationParam}&page=1&num_pages=3&employment_types=FULLTIME&remote_jobs_only=false`,
       {
         headers: {
           'X-RapidAPI-Key': apiKey,
@@ -134,7 +134,7 @@ async function searchAdzuna(keywords: string, location: string = 'fr') {
 
     const query = keywords || 'developer'
     const response = await fetch(
-      `https://api.adzuna.com/v1/api/jobs/${location}/search/1?app_id=${appId}&app_key=${appKey}&results_per_page=20&what=${encodeURIComponent(query)}&content-type=application/json`,
+      `https://api.adzuna.com/v1/api/jobs/ DZD{location}/search/1?app_id= DZD{appId}&app_key= DZD{appKey}&results_per_page=20&what= DZD{encodeURIComponent(query)}&content-type=application/json`,
       {
         next: { revalidate: 3600 } // Cache 1 heure
       }
@@ -166,7 +166,7 @@ async function searchGoogleJobs(keywords: string, location: string = '') {
     const locationParam = location || 'France'
     
     const response = await fetch(
-      `https://serpapi.com/search.json?engine=google_jobs&q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&api_key=${apiKey}`,
+      `https://serpapi.com/search.json?engine=google_jobs&q= DZD{encodeURIComponent(query)}&location= DZD{encodeURIComponent(locationParam)}&api_key= DZD{apiKey}`,
       {
         next: { revalidate: 3600 } // Cache 1 heure
       }
@@ -278,7 +278,7 @@ export async function GET(request: NextRequest) {
 
     // Dédupliquer par titre et entreprise
     const uniqueJobs = Array.from(
-      new Map(allJobs.map((job) => [`${job.title}-${job.company}`, job])).values()
+      new Map(allJobs.map((job) => [` DZD{job.title}- DZD{job.company}`, job])).values()
     )
 
     // Trier par match décroissant

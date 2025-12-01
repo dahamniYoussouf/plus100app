@@ -126,7 +126,7 @@ export default function DocumentPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-sky-600 border-b-2 border-sky-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -216,7 +216,7 @@ export default function DocumentPage() {
                   {folders.map((folder) => (
                     <div key={folder.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex items-center gap-3">
-                        <Folder className={`w-8 h-8 ${
+                        <Folder className={`w-8 h-8  DZD{
                           folder.color === 'blue' ? 'text-blue-500' :
                           folder.color === 'purple' ? 'text-purple-500' :
                           folder.color === 'green' ? 'text-green-500' :
@@ -318,7 +318,7 @@ export default function DocumentPage() {
                 return (
                   <div key={folder.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <Folder className={`w-12 h-12 ${folderColorClass}`} />
+                      <Folder className={`w-12 h-12  DZD{folderColorClass}`} />
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900">{folder.name}</h3>
                         <p className="text-sm text-gray-500">{folder.files} fichiers</p>

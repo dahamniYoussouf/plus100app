@@ -96,7 +96,7 @@ export default function FastfoodPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-orange-600 border-b-2 border-orange-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -232,7 +232,7 @@ export default function FastfoodPage() {
                   <p className="text-sm text-gray-600 mb-3">{item.description}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                     <span className="text-lg sm:text-xl font-bold text-gray-900">DZD{item.price.toFixed(2)}</span>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                       item.stock < 20 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                     }`}>
                       Stock: {item.stock}
@@ -273,7 +273,7 @@ export default function FastfoodPage() {
                       </div>
                       <div className="flex items-center gap-4">
                         <span className="text-lg font-bold text-gray-900">DZD{order.total.toFixed(2)}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           order.status === 'completed' ? 'bg-green-100 text-green-800' :
                           order.status === 'preparing' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-gray-100 text-gray-800'
@@ -327,7 +327,7 @@ export default function FastfoodPage() {
                     <span className="font-medium text-gray-900">{item.name}</span>
                     <span className="text-sm text-gray-500 ml-2">({item.category})</span>
                   </div>
-                  <span className={`font-semibold ${
+                  <span className={`font-semibold  DZD{
                     item.stock < 20 ? 'text-red-700' : 'text-green-700'
                   }`}>
                     Stock: {item.stock}

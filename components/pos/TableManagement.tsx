@@ -31,7 +31,7 @@ export default function TableManagement({
   const handleTableClick = (table: Table) => {
     if (table.status === 'available') {
       // Make table occupied and create order
-      const newOrderId = `order-${Date.now()}`
+      const newOrderId = `order- DZD{Date.now()}`
       setTables(
         tables.map((t) =>
           t.id === table.id
@@ -129,7 +129,7 @@ export default function TableManagement({
             <button
               key={table.id}
               onClick={() => handleTableClick(table)}
-              className={`bg-white rounded-lg shadow p-6 border-2 transition-all hover:scale-105 ${
+              className={`bg-white rounded-lg shadow p-6 border-2 transition-all hover:scale-105  DZD{
                 table.status === 'occupied'
                   ? 'border-red-300'
                   : table.status === 'available'
@@ -139,14 +139,14 @@ export default function TableManagement({
             >
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <Users className={`w-6 h-6 ${table.status === 'occupied' ? 'text-red-600' : 'text-gray-400'}`} />
+                  <Users className={`w-6 h-6  DZD{table.status === 'occupied' ? 'text-red-600' : 'text-gray-400'}`} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-1">Table {table.number}</h3>
                 <p className="text-sm text-gray-500 mb-3">
                   Capacity: {table.capacity} guests
                 </p>
                 <span
-                  className={`inline-block px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+                  className={`inline-block px-3 py-1 rounded-full text-xs font-medium border  DZD{getStatusColor(
                     table.status
                   )}`}
                 >
@@ -156,7 +156,7 @@ export default function TableManagement({
                 {hasOrder && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <p className="text-sm font-medium text-gray-900">
-                      ${orderTotal.toFixed(2)}
+                       DZD{orderTotal.toFixed(2)}
                     </p>
                     <p className="text-xs text-gray-500">{itemCount} items</p>
                   </div>

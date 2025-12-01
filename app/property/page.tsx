@@ -218,7 +218,7 @@ export default function PropertyPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-indigo-600 border-b-2 border-indigo-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -304,7 +304,7 @@ export default function PropertyPage() {
                            property.type === 'commercial' ? 'Commercial' : 'Bureau'}
                         </p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         property.status === 'available' ? 'bg-green-100 text-green-800' :
                         property.status === 'rented' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -371,7 +371,7 @@ export default function PropertyPage() {
                           {new Date(tenant.leaseStart).toLocaleDateString('fr-FR')} - {new Date(tenant.leaseEnd).toLocaleDateString('fr-FR')}
                         </span>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         tenant.status === 'active' ? 'bg-green-100 text-green-800' :
                         tenant.status === 'expired' ? 'bg-red-100 text-red-800' :
                         'bg-gray-100 text-gray-800'
@@ -409,7 +409,7 @@ export default function PropertyPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{lease.tenantName}</h3>
                         <p className="text-sm text-gray-600 mt-1">{lease.propertyAddress}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         lease.status === 'active' ? 'bg-green-100 text-green-800' :
                         lease.status === 'expired' ? 'bg-red-100 text-red-800' :
                         'bg-gray-100 text-gray-800'
@@ -471,7 +471,7 @@ export default function PropertyPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-lg font-bold text-gray-900">DZD{payment.amount.toLocaleString()}</p>
-                        <span className={`px-2 py-1 rounded text-xs mt-1 inline-block ${
+                        <span className={`px-2 py-1 rounded text-xs mt-1 inline-block  DZD{
                           payment.status === 'paid' ? 'bg-green-100 text-green-800' :
                           payment.status === 'overdue' ? 'bg-red-100 text-red-800' :
                           'bg-yellow-100 text-yellow-800'

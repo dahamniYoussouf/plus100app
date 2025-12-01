@@ -135,7 +135,7 @@ export default function APIPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-teal-600 border-b-2 border-teal-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -201,7 +201,7 @@ export default function APIPage() {
                     <div key={endpoint.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className={`px-2 py-1 rounded text-xs font-mono ${
+                          <span className={`px-2 py-1 rounded text-xs font-mono  DZD{
                             endpoint.method === 'GET' ? 'bg-blue-100 text-blue-800' :
                             endpoint.method === 'POST' ? 'bg-green-100 text-green-800' :
                             endpoint.method === 'PUT' ? 'bg-yellow-100 text-yellow-800' :
@@ -214,7 +214,7 @@ export default function APIPage() {
                         </div>
                         <p className="text-xs text-gray-500">{endpoint.requests} requêtes • {endpoint.avgResponseTime}ms</p>
                       </div>
-                      <span className={`ml-4 px-2 py-1 rounded text-xs ${
+                      <span className={`ml-4 px-2 py-1 rounded text-xs  DZD{
                         endpoint.status === 'active' ? 'bg-green-100 text-green-800' :
                         endpoint.status === 'deprecated' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
@@ -236,7 +236,7 @@ export default function APIPage() {
                         <p className="text-xs text-gray-500 font-mono truncate">{key.key}</p>
                         <p className="text-xs text-gray-400 mt-1">{key.requestsUsed}/{key.rateLimit} requêtes</p>
                       </div>
-                      <span className={`ml-4 px-2 py-1 rounded text-xs ${
+                      <span className={`ml-4 px-2 py-1 rounded text-xs  DZD{
                         key.status === 'active' ? 'bg-green-100 text-green-800' :
                         key.status === 'revoked' ? 'bg-red-100 text-red-800' :
                         'bg-gray-100 text-gray-800'
@@ -265,7 +265,7 @@ export default function APIPage() {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded text-xs font-mono font-semibold ${
+                        <span className={`px-2 py-1 rounded text-xs font-mono font-semibold  DZD{
                           endpoint.method === 'GET' ? 'bg-blue-100 text-blue-800' :
                           endpoint.method === 'POST' ? 'bg-green-100 text-green-800' :
                           endpoint.method === 'PUT' ? 'bg-yellow-100 text-yellow-800' :
@@ -294,7 +294,7 @@ export default function APIPage() {
                         </span>
                       </div>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                       endpoint.status === 'active' ? 'bg-green-100 text-green-800' :
                       endpoint.status === 'deprecated' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-red-100 text-red-800'
@@ -339,11 +339,11 @@ export default function APIPage() {
                       </div>
                       <div className="mt-2">
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-teal-600 h-2 rounded-full" style={{ width: `${(key.requestsUsed / key.rateLimit) * 100}%` }}></div>
+                          <div className="bg-teal-600 h-2 rounded-full" style={{ width: ` DZD{(key.requestsUsed / key.rateLimit) * 100}%` }}></div>
                         </div>
                       </div>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                       key.status === 'active' ? 'bg-green-100 text-green-800' :
                       key.status === 'revoked' ? 'bg-red-100 text-red-800' :
                       'bg-gray-100 text-gray-800'
@@ -378,7 +378,7 @@ export default function APIPage() {
                       <tr key={log.id} className="hover:bg-gray-50">
                         <td className="px-4 py-3 text-sm font-medium text-gray-900">{log.endpointName}</td>
                         <td className="px-4 py-3">
-                          <span className={`px-2 py-1 rounded text-xs font-mono ${
+                          <span className={`px-2 py-1 rounded text-xs font-mono  DZD{
                             log.method === 'GET' ? 'bg-blue-100 text-blue-800' :
                             log.method === 'POST' ? 'bg-green-100 text-green-800' :
                             log.method === 'PUT' ? 'bg-yellow-100 text-yellow-800' :
@@ -389,7 +389,7 @@ export default function APIPage() {
                           </span>
                         </td>
                         <td className="px-4 py-3">
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                             log.statusCode >= 200 && log.statusCode < 300 ? 'bg-green-100 text-green-800' :
                             log.statusCode >= 300 && log.statusCode < 400 ? 'bg-yellow-100 text-yellow-800' :
                             log.statusCode >= 400 && log.statusCode < 500 ? 'bg-orange-100 text-orange-800' :
@@ -431,7 +431,7 @@ export default function APIPage() {
                   {endpoints.map((endpoint) => (
                     <div key={endpoint.id} className="border-l-4 border-teal-500 pl-4">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded text-xs font-mono ${
+                        <span className={`px-2 py-1 rounded text-xs font-mono  DZD{
                           endpoint.method === 'GET' ? 'bg-blue-100 text-blue-800' :
                           endpoint.method === 'POST' ? 'bg-green-100 text-green-800' :
                           endpoint.method === 'PUT' ? 'bg-yellow-100 text-yellow-800' :

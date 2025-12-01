@@ -240,7 +240,7 @@ export default function ConstructionPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-orange-600 border-b-2 border-orange-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -356,7 +356,7 @@ export default function ConstructionPage() {
                         <p className="text-sm text-gray-600 mt-1">Client: {project.client}</p>
                         <p className="text-sm text-gray-500 mt-1">📍 {project.location}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         project.status === 'completed' ? 'bg-green-100 text-green-800' :
                         project.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                         project.status === 'on_hold' ? 'bg-yellow-100 text-yellow-800' :
@@ -376,7 +376,7 @@ export default function ConstructionPage() {
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
                             className="bg-orange-600 h-2 rounded-full"
-                            style={{ width: `${project.progress}%` }}
+                            style={{ width: ` DZD{project.progress}%` }}
                           />
                         </div>
                       </div>
@@ -386,7 +386,7 @@ export default function ConstructionPage() {
                       </div>
                       <p className="text-xs text-gray-500">
                         📅 Début: {new Date(project.startDate).toLocaleDateString('fr-FR')}
-                        {project.endDate && ` • Fin: ${new Date(project.endDate).toLocaleDateString('fr-FR')}`}
+                        {project.endDate && ` • Fin:  DZD{new Date(project.endDate).toLocaleDateString('fr-FR')}`}
                       </p>
                     </div>
                   </div>
@@ -421,7 +421,7 @@ export default function ConstructionPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{worker.name}</h3>
                         <p className="text-sm text-gray-500 capitalize">{worker.role}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         worker.status === 'available' ? 'bg-green-100 text-green-800' :
                         worker.status === 'assigned' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'
@@ -510,7 +510,7 @@ export default function ConstructionPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{item.name}</h3>
                         <p className="text-sm text-gray-500">{item.type}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         item.status === 'available' ? 'bg-green-100 text-green-800' :
                         item.status === 'in_use' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'

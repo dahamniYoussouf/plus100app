@@ -249,7 +249,7 @@ export default function UniversityPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -381,7 +381,7 @@ export default function UniversityPage() {
                   <div key={student.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-lg">{student.firstName} {student.lastName}</h3>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         student.status === 'active' ? 'bg-green-100 text-green-800' :
                         student.status === 'graduated' ? 'bg-blue-100 text-blue-800' :
                         'bg-red-100 text-red-800'
@@ -454,12 +454,12 @@ export default function UniversityPage() {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full ${
+                          className={`h-2 rounded-full  DZD{
                             occupancyRate >= 90 ? 'bg-red-500' :
                             occupancyRate >= 70 ? 'bg-yellow-500' :
                             'bg-green-500'
                           }`}
-                          style={{ width: `${occupancyRate}%` }}
+                          style={{ width: ` DZD{occupancyRate}%` }}
                         />
                       </div>
                     </div>

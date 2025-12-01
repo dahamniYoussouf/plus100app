@@ -130,7 +130,7 @@ export default function DentistPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-sky-600 border-b-2 border-sky-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -299,7 +299,7 @@ export default function DentistPage() {
                         </p>
                         <p className="text-sm text-gray-500 mt-1">Traitement: {apt.treatment}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         apt.status === 'completed' ? 'bg-green-100 text-green-800' :
                         apt.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-blue-100 text-blue-800'

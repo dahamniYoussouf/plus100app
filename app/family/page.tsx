@@ -337,7 +337,7 @@ export default function FamilyPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-pink-600 border-b-2 border-pink-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -525,7 +525,7 @@ export default function FamilyPage() {
                           <select
                             value={task.status}
                             onChange={(e) => handleUpdateTaskStatus(task.id, e.target.value as Task['status'])}
-                            className={`px-3 py-1 rounded-full text-xs font-medium border-0 ${
+                            className={`px-3 py-1 rounded-full text-xs font-medium border-0  DZD{
                               task.status === 'completed' ? 'bg-green-100 text-green-800' :
                               task.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                               'bg-yellow-100 text-yellow-800'
@@ -538,7 +538,7 @@ export default function FamilyPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-4 text-sm mb-3">
-                        <span className={`px-2 py-0.5 rounded text-xs ${
+                        <span className={`px-2 py-0.5 rounded text-xs  DZD{
                           task.priority === 'high' ? 'bg-red-100 text-red-800' :
                           task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-gray-100 text-gray-800'
@@ -618,7 +618,7 @@ export default function FamilyPage() {
                       <div className="space-y-2 text-sm mb-3">
                         <p className="text-gray-600">
                           📅 {new Date(event.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                          {event.time && ` à ${event.time}`}
+                          {event.time && ` à  DZD{event.time}`}
                         </p>
                         <p className="text-gray-600">👥 {eventMembers.map(m => m.name).join(', ')}</p>
                         {event.recurring && (
@@ -675,7 +675,7 @@ export default function FamilyPage() {
                 {shopping.map((item) => {
                   const addedByMember = members.find(m => m.id === item.addedBy)
                   return (
-                    <div key={item.id} className={`bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 ${item.status === 'purchased' ? 'opacity-60' : ''}`}>
+                    <div key={item.id} className={`bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6  DZD{item.status === 'purchased' ? 'opacity-60' : ''}`}>
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3">
@@ -686,7 +686,7 @@ export default function FamilyPage() {
                               className="w-5 h-5 text-pink-600 rounded cursor-pointer"
                             />
                             <div>
-                              <h3 className={`font-semibold ${item.status === 'purchased' ? 'line-through text-gray-500' : 'text-gray-900'}`}>{item.name}</h3>
+                              <h3 className={`font-semibold  DZD{item.status === 'purchased' ? 'line-through text-gray-500' : 'text-gray-900'}`}>{item.name}</h3>
                               {item.quantity && (
                                 <p className="text-sm text-gray-500">Quantité: {item.quantity}</p>
                               )}
@@ -700,7 +700,7 @@ export default function FamilyPage() {
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-2">
-                          <span className={`px-2 py-1 rounded text-xs ${
+                          <span className={`px-2 py-1 rounded text-xs  DZD{
                             item.priority === 'high' ? 'bg-red-100 text-red-800' :
                             item.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-gray-100 text-gray-800'

@@ -40,7 +40,7 @@ export default function ReservationManagement({ reservations, setReservations, r
                 {new Date(res.checkIn).toLocaleDateString()} - {new Date(res.checkOut).toLocaleDateString()}
               </span>
             </div>
-            <p className="text-lg font-bold text-gray-900 mt-2">${res.totalPrice}</p>
+            <p className="text-lg font-bold text-gray-900 mt-2"> DZD{res.totalPrice}</p>
           </div>
         ))}
       </div>

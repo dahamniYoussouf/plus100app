@@ -199,7 +199,7 @@ export default function PlumberPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-cyan-600 border-b-2 border-cyan-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -314,7 +314,7 @@ export default function PlumberPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{intervention.clientName}</h3>
                         <p className="text-sm text-gray-600 mt-1">{intervention.description}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         intervention.status === 'completed' ? 'bg-green-100 text-green-800' :
                         intervention.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                         intervention.status === 'cancelled' ? 'bg-red-100 text-red-800' :
@@ -426,7 +426,7 @@ export default function PlumberPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{quote.clientName}</h3>
                         <p className="text-sm text-gray-600 mt-1">{quote.description}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         quote.status === 'accepted' ? 'bg-green-100 text-green-800' :
                         quote.status === 'rejected' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -475,7 +475,7 @@ export default function PlumberPage() {
                   <div key={tech.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-lg">{tech.name}</h3>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         tech.status === 'available' ? 'bg-green-100 text-green-800' :
                         tech.status === 'busy' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'

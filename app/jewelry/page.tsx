@@ -198,7 +198,7 @@ export default function JewelryPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-amber-600 border-b-2 border-amber-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -269,7 +269,7 @@ export default function JewelryPage() {
                       </div>
                       <div className="text-right ml-4">
                         <p className="font-bold text-gray-900">DZD{sale.total.toFixed(2)}</p>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
+                        <span className={`text-xs px-2 py-1 rounded-full  DZD{
                           sale.status === 'completed' ? 'bg-green-100 text-green-800' :
                           sale.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-red-100 text-red-800'
@@ -345,7 +345,7 @@ export default function JewelryPage() {
                     )}
                     <div className="flex justify-between">
                       <span className="text-gray-600">Stock:</span>
-                      <span className={`font-bold ${product.stock < 3 ? 'text-red-600' : 'text-gray-900'}`}>{product.stock}</span>
+                      <span className={`font-bold  DZD{product.stock < 3 ? 'text-red-600' : 'text-gray-900'}`}>{product.stock}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Vendus:</span>
@@ -394,7 +394,7 @@ export default function JewelryPage() {
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         sale.status === 'completed' ? 'bg-green-100 text-green-800' :
                         sale.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
@@ -427,7 +427,7 @@ export default function JewelryPage() {
                       <p className="text-sm text-gray-600 mt-1">{customer.email}</p>
                       <p className="text-sm text-gray-600">{customer.phone}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                       customer.membershipLevel === 'platinum' ? 'bg-purple-100 text-purple-800' :
                       customer.membershipLevel === 'gold' ? 'bg-amber-100 text-amber-800' :
                       customer.membershipLevel === 'silver' ? 'bg-gray-100 text-gray-800' :
@@ -484,7 +484,7 @@ export default function JewelryPage() {
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         appraisal.status === 'completed' ? 'bg-green-100 text-green-800' :
                         'bg-yellow-100 text-yellow-800'
                       }`}>

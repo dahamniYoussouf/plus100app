@@ -131,7 +131,7 @@ export default function HRPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -269,7 +269,7 @@ export default function HRPage() {
                         <p className="text-xs text-gray-500">Salaire</p>
                         <p className="font-bold text-gray-900">DZD{employee.salary.toLocaleString()}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         employee.status === 'active' ? 'bg-green-100 text-green-800' :
                         employee.status === 'on_leave' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
@@ -314,7 +314,7 @@ export default function HRPage() {
                           Candidature le {new Date(candidate.appliedDate).toLocaleDateString('fr-FR')}
                         </p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         candidate.status === 'accepted' ? 'bg-green-100 text-green-800' :
                         candidate.status === 'rejected' ? 'bg-red-100 text-red-800' :
                         candidate.status === 'interview' ? 'bg-blue-100 text-blue-800' :
@@ -366,7 +366,7 @@ export default function HRPage() {
                         </p>
                         <p className="text-sm text-gray-500 mt-1">{leave.reason}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         leave.status === 'approved' ? 'bg-green-100 text-green-800' :
                         leave.status === 'rejected' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'

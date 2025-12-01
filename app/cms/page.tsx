@@ -233,7 +233,7 @@ export default function CMSPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-indigo-600 border-b-2 border-indigo-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -345,7 +345,7 @@ export default function CMSPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="font-semibold text-gray-900 text-lg">{post.title}</h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                             post.status === 'published' ? 'bg-green-100 text-green-800' :
                             post.status === 'archived' ? 'bg-gray-100 text-gray-800' :
                             'bg-yellow-100 text-yellow-800'
@@ -407,7 +407,7 @@ export default function CMSPage() {
                 <div key={page.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900 text-lg">{page.title}</h3>
-                    <span className={`px-2 py-1 rounded text-xs ${
+                    <span className={`px-2 py-1 rounded text-xs  DZD{
                       page.status === 'published' ? 'bg-green-100 text-green-800' :
                       'bg-yellow-100 text-yellow-800'
                     }`}>
@@ -485,7 +485,7 @@ export default function CMSPage() {
                       <h3 className="font-semibold text-gray-900 text-lg">{user.name}</h3>
                       <p className="text-sm text-gray-600">{user.email}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs ${
+                    <span className={`px-2 py-1 rounded text-xs  DZD{
                       user.role === 'admin' ? 'bg-red-100 text-red-800' :
                       user.role === 'editor' ? 'bg-blue-100 text-blue-800' :
                       user.role === 'author' ? 'bg-green-100 text-green-800' :

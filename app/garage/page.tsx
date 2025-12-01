@@ -242,7 +242,7 @@ export default function GaragePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-green-600 border-b-2 border-green-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -441,7 +441,7 @@ export default function GaragePage() {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           apt.status === 'completed' ? 'bg-green-100 text-green-800' :
                           apt.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                           apt.status === 'in_progress' ? 'bg-yellow-100 text-yellow-800' :
@@ -473,7 +473,7 @@ export default function GaragePage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {inventory.map((item) => (
-                <div key={item.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6 ${
+                <div key={item.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6  DZD{
                   item.quantity <= item.minStock ? 'border-orange-300 bg-orange-50' : 'border-gray-200'
                 }`}>
                   <h3 className="font-semibold text-gray-900 text-lg mb-2">{item.name}</h3>
@@ -485,7 +485,7 @@ export default function GaragePage() {
                   <div className="pt-4 border-t border-gray-200 space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-gray-500">Stock:</span>
-                      <span className={`font-medium ${
+                      <span className={`font-medium  DZD{
                         item.quantity <= item.minStock ? 'text-orange-600' : 'text-gray-900'
                       }`}>
                         {item.quantity}

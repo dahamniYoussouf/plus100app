@@ -26,12 +26,12 @@ export default function TemplatePage({
   stats
 }: TemplateProps) {
   return (
-    <div className={`min-h-screen bg-gradient-to-b ${bgColor} to-white`}>
+    <div className={`min-h-screen bg-gradient-to-b  DZD{bgColor} to-white`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-xl shadow-lg border p-6 sm:p-8">
           <div className="text-center mb-8">
-            <div className={`inline-flex p-4 rounded-full ${bgColor} mb-4`}>
-              <Icon className={`w-12 h-12 sm:w-16 sm:h-16 ${iconColor}`} />
+            <div className={`inline-flex p-4 rounded-full  DZD{bgColor} mb-4`}>
+              <Icon className={`w-12 h-12 sm:w-16 sm:h-16  DZD{iconColor}`} />
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
               {title}
@@ -45,8 +45,8 @@ export default function TemplatePage({
             {stats.map((stat, i) => {
               const StatIcon = stat.icon
               return (
-                <div key={i} className={`${bgColor} rounded-lg p-4 sm:p-6 text-center`}>
-                  <StatIcon className={`w-8 h-8 sm:w-10 sm:h-10 ${iconColor} mx-auto mb-2`} />
+                <div key={i} className={` DZD{bgColor} rounded-lg p-4 sm:p-6 text-center`}>
+                  <StatIcon className={`w-8 h-8 sm:w-10 sm:h-10  DZD{iconColor} mx-auto mb-2`} />
                   <div className="text-2xl sm:text-3xl font-bold text-gray-900">{stat.value}</div>
                   <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
                 </div>

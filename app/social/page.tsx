@@ -649,7 +649,7 @@ export default function SocialPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -745,9 +745,9 @@ export default function SocialPage() {
                       <div className="flex items-center gap-6 pt-4 border-t border-gray-200">
                         <button
                           onClick={() => handleLikePost(post.id)}
-                          className={`flex items-center gap-2 ${isLiked ? 'text-red-600' : 'text-gray-600 hover:text-red-600'} transition-colors`}
+                          className={`flex items-center gap-2  DZD{isLiked ? 'text-red-600' : 'text-gray-600 hover:text-red-600'} transition-colors`}
                         >
-                          <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+                          <Heart className={`w-5 h-5  DZD{isLiked ? 'fill-current' : ''}`} />
                           <span>{post.likes.length}</span>
                         </button>
                         <button
@@ -828,7 +828,7 @@ export default function SocialPage() {
                         <button
                           key={conv.id}
                           onClick={() => setSelectedConversation(conv.id)}
-                          className={`w-full text-left p-4 hover:bg-gray-50 transition-colors ${
+                          className={`w-full text-left p-4 hover:bg-gray-50 transition-colors  DZD{
                             selectedConversation === conv.id ? 'bg-blue-50' : ''
                           }`}
                         >
@@ -879,11 +879,11 @@ export default function SocialPage() {
                       return (
                         <div
                           key={message.id}
-                          className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
+                          className={`flex  DZD{isOwn ? 'justify-end' : 'justify-start'}`}
                         >
-                          <div className={`max-w-[70%] ${isOwn ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'} rounded-lg p-3`}>
+                          <div className={`max-w-[70%]  DZD{isOwn ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'} rounded-lg p-3`}>
                             <p className="text-sm">{message.content}</p>
-                            <p className={`text-xs mt-1 ${isOwn ? 'text-blue-100' : 'text-gray-500'}`}>
+                            <p className={`text-xs mt-1  DZD{isOwn ? 'text-blue-100' : 'text-gray-500'}`}>
                               {new Date(message.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                             </p>
                           </div>
@@ -1026,7 +1026,7 @@ export default function SocialPage() {
                   <div
                     key={notif.id}
                     onClick={() => handleMarkNotificationRead(notif.id)}
-                    className={`bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 cursor-pointer hover:bg-gray-50 transition-colors ${
+                    className={`bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 cursor-pointer hover:bg-gray-50 transition-colors  DZD{
                       !notif.read ? 'border-l-4 border-l-blue-600' : ''
                     }`}
                   >

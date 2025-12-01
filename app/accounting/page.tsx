@@ -140,7 +140,7 @@ export default function AccountingPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -182,7 +182,7 @@ export default function AccountingPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Bénéfice</p>
-                    <p className={`text-xl sm:text-2xl lg:text-3xl font-bold mt-2 ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className={`text-xl sm:text-2xl lg:text-3xl font-bold mt-2  DZD{profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       DZD{profit.toFixed(0)}
                     </p>
                   </div>
@@ -211,7 +211,7 @@ export default function AccountingPage() {
                       <p className="text-sm text-gray-500">{new Date(transaction.date).toLocaleDateString('fr-FR')} • {transaction.category}</p>
                     </div>
                     <div className="text-right">
-                      <p className={`font-bold ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                      <p className={`font-bold  DZD{transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
                         {transaction.type === 'income' ? '+' : '-'}DZD{transaction.amount.toFixed(2)}
                       </p>
                       <p className="text-xs text-gray-500">{transaction.status}</p>
@@ -254,17 +254,17 @@ export default function AccountingPage() {
                         <td className="px-4 py-3 text-sm font-medium text-gray-900">{transaction.description}</td>
                         <td className="px-4 py-3 text-sm text-gray-600">{transaction.category}</td>
                         <td className="px-4 py-3 text-sm">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium  DZD{
                             transaction.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                           }`}>
                             {transaction.type === 'income' ? 'Revenu' : 'Dépense'}
                           </span>
                         </td>
-                        <td className={`px-4 py-3 text-sm font-bold text-right ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                        <td className={`px-4 py-3 text-sm font-bold text-right  DZD{transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
                           {transaction.type === 'income' ? '+' : '-'}DZD{transaction.amount.toFixed(2)}
                         </td>
                         <td className="px-4 py-3 text-sm">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium  DZD{
                             transaction.status === 'completed' ? 'bg-green-100 text-green-800' :
                             transaction.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-red-100 text-red-800'
@@ -300,7 +300,7 @@ export default function AccountingPage() {
                       <h3 className="font-semibold text-gray-900">Facture #{invoice.id}</h3>
                       <p className="text-sm text-gray-600 mt-1">{invoice.clientName}</p>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                       invoice.status === 'paid' ? 'bg-green-100 text-green-800' :
                       invoice.status === 'sent' ? 'bg-blue-100 text-blue-800' :
                       invoice.status === 'overdue' ? 'bg-red-100 text-red-800' :
@@ -346,7 +346,7 @@ export default function AccountingPage() {
                   </div>
                   <div className="flex justify-between pt-2 border-t border-gray-200">
                     <span className="font-semibold text-gray-900">Bénéfice net</span>
-                    <span className={`font-bold ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`font-bold  DZD{profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       DZD{profit.toFixed(2)}
                     </span>
                   </div>
@@ -402,7 +402,7 @@ export default function AccountingPage() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Solde:</span>
-                      <span className={`font-bold ${client.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      <span className={`font-bold  DZD{client.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
                         DZD{client.balance.toFixed(2)}
                       </span>
                     </div>
@@ -560,7 +560,7 @@ export default function AccountingPage() {
               >
                 <option value="">Sélectionner un client</option>
                 {clients.map(client => (
-                  <option key={client.id} value={client.id}>{client.name} {client.company ? `- ${client.company}` : ''}</option>
+                  <option key={client.id} value={client.id}>{client.name} {client.company ? `-  DZD{client.company}` : ''}</option>
                 ))}
               </select>
             </div>

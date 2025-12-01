@@ -40,7 +40,7 @@ export default function PatternMaster() {
       setTimeout(() => generatePattern(), 1000)
     } else {
       setStreak(0)
-      alert(`Incorrect ! La bonne réponse était ${currentPattern.answer}`)
+      alert(`Incorrect ! La bonne réponse était  DZD{currentPattern.answer}`)
       generatePattern()
     }
   }

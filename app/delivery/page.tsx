@@ -239,7 +239,7 @@ export default function DeliveryPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-green-600 border-b-2 border-green-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -371,7 +371,7 @@ export default function DeliveryPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 className="font-semibold text-gray-900 text-lg">{delivery.orderNumber}</h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                             delivery.status === 'delivered' ? 'bg-green-100 text-green-800' :
                             delivery.status === 'in_transit' ? 'bg-blue-100 text-blue-800' :
                             delivery.status === 'picked_up' ? 'bg-yellow-100 text-yellow-800' :
@@ -468,7 +468,7 @@ export default function DeliveryPage() {
                   <div key={driver.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-lg">{driver.name}</h3>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         driver.status === 'available' ? 'bg-green-100 text-green-800' :
                         driver.status === 'busy' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-gray-100 text-gray-800'
@@ -551,7 +551,7 @@ export default function DeliveryPage() {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <span className="text-lg font-bold text-gray-900">DZD{order.total.toFixed(2)}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                           order.status === 'ready' ? 'bg-yellow-100 text-yellow-800' :
                           order.status === 'preparing' ? 'bg-blue-100 text-blue-800' :
@@ -711,7 +711,7 @@ export default function DeliveryPage() {
                     const delivery: Delivery = {
                       id: Date.now().toString(),
                       orderId: newDelivery.orderId || Date.now().toString(),
-                      orderNumber: order?.orderNumber || `ORD-${Date.now()}`,
+                      orderNumber: order?.orderNumber || `ORD- DZD{Date.now()}`,
                       driverId: newDelivery.driverId,
                       driverName: driver.name,
                       customerName: newDelivery.customerName,
@@ -719,7 +719,7 @@ export default function DeliveryPage() {
                       customerAddress: newDelivery.customerAddress,
                       restaurantName: newDelivery.restaurantName,
                       restaurantAddress: newDelivery.restaurantAddress,
-                      items: order?.items.map(i => `${i.name} x${i.quantity}`) || [],
+                      items: order?.items.map(i => ` DZD{i.name} x DZD{i.quantity}`) || [],
                       total: order?.total || 0,
                       distance: newDelivery.distance,
                       estimatedTime,

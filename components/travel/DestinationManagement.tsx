@@ -199,7 +199,7 @@ export default function DestinationManagement({
               <p className="text-gray-600 text-sm mb-4 line-clamp-2">{dest.description}</p>
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-2xl font-bold text-blue-600">${dest.price}</span>
+                  <span className="text-2xl font-bold text-blue-600"> DZD{dest.price}</span>
                   <span className="text-sm text-gray-500 ml-1">/ {dest.duration} jours</span>
                 </div>
               </div>

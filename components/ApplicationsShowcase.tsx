@@ -209,7 +209,7 @@ export default function ApplicationsShowcase() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all  DZD{
                   selectedCategory === category
                     ? 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white shadow-lg scale-105'
                     : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -240,13 +240,13 @@ export default function ApplicationsShowcase() {
                 <Link href={app.link}>
                   <div className="bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl transition-all duration-300 overflow-hidden h-full flex flex-col">
                     {/* Header */}
-                    <div className={`${app.bgColor} p-5 relative overflow-hidden`}>
+                    <div className={` DZD{app.bgColor} p-5 relative overflow-hidden`}>
                       <div className="absolute inset-0 opacity-10">
                         <div className="absolute inset-0 bg-gradient-to-br from-white to-transparent"></div>
                       </div>
                       <div className="relative z-10">
                         <div className="inline-flex p-3 rounded-xl bg-white shadow-md mb-3">
-                          <Icon className={`w-6 h-6 ${app.iconColor}`} />
+                          <Icon className={`w-6 h-6  DZD{app.iconColor}`} />
                         </div>
                         <h3 className="text-lg font-bold text-gray-900 mb-1 line-clamp-1">{app.title}</h3>
                         <p className="text-sm text-gray-600 line-clamp-2">{app.description}</p>
@@ -280,7 +280,7 @@ export default function ApplicationsShowcase() {
                           const StatIcon = stat.icon
                           return (
                             <div key={i} className="text-center">
-                              <StatIcon className={`w-4 h-4 ${app.iconColor} mx-auto mb-1`} />
+                              <StatIcon className={`w-4 h-4  DZD{app.iconColor} mx-auto mb-1`} />
                               <div className="text-sm font-bold text-gray-900">{stat.value}</div>
                               <div className="text-xs text-gray-500">{stat.label}</div>
                             </div>
@@ -304,7 +304,7 @@ export default function ApplicationsShowcase() {
                     {/* Footer */}
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <div
-                        className={`flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r ${app.color} text-white rounded-lg hover:shadow-lg transition-all group/button text-sm font-medium`}
+                        className={`flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r  DZD{app.color} text-white rounded-lg hover:shadow-lg transition-all group/button text-sm font-medium`}
                       >
                         <span>{t('app.access')}</span>
                         <ArrowRight className="w-4 h-4 group-hover/button:translate-x-1 transition-transform" />

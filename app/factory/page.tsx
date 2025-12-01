@@ -214,7 +214,7 @@ export default function FactoryPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-gray-600 border-b-2 border-gray-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -296,7 +296,7 @@ export default function FactoryPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{product.name}</h3>
                         <p className="text-sm text-gray-500">{product.category}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         product.status === 'completed' ? 'bg-green-100 text-green-800' :
                         product.status === 'in_production' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -335,7 +335,7 @@ export default function FactoryPage() {
             ) : (
               <div className="space-y-4">
                 {inventory.map((item) => (
-                  <div key={item.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6 ${
+                  <div key={item.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6  DZD{
                     item.quantity <= item.minStock ? 'border-orange-300 bg-orange-50' : 'border-gray-200'
                   }`}>
                     <div className="flex items-start justify-between">
@@ -349,7 +349,7 @@ export default function FactoryPage() {
                         {item.supplier && <p className="text-sm text-gray-500 mt-1">Fournisseur: {item.supplier}</p>}
                       </div>
                       <div className="text-right">
-                        <p className={`text-lg font-bold ${
+                        <p className={`text-lg font-bold  DZD{
                           item.quantity <= item.minStock ? 'text-orange-600' : 'text-gray-900'
                         }`}>
                           {item.quantity} {item.unit}
@@ -386,7 +386,7 @@ export default function FactoryPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{worker.name}</h3>
                         <p className="text-sm text-gray-500 capitalize">{worker.role}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         worker.status === 'active' ? 'bg-green-100 text-green-800' :
                         worker.status === 'on_break' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-gray-100 text-gray-800'
@@ -431,7 +431,7 @@ export default function FactoryPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{machine.name}</h3>
                         <p className="text-sm text-gray-500">{machine.type}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         machine.status === 'operational' ? 'bg-green-100 text-green-800' :
                         machine.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-gray-100 text-gray-800'
@@ -449,12 +449,12 @@ export default function FactoryPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-2 rounded-full ${
+                            className={`h-2 rounded-full  DZD{
                               machine.efficiency >= 80 ? 'bg-green-500' :
                               machine.efficiency >= 60 ? 'bg-yellow-500' :
                               'bg-red-500'
                             }`}
-                            style={{ width: `${machine.efficiency}%` }}
+                            style={{ width: ` DZD{machine.efficiency}%` }}
                           />
                         </div>
                       </div>
@@ -489,7 +489,7 @@ export default function FactoryPage() {
                         <p className="text-sm text-gray-600 mt-1">{order.productName} - {order.quantity} pièces</p>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           order.priority === 'high' ? 'bg-red-100 text-red-800' :
                           order.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-blue-100 text-blue-800'
@@ -497,7 +497,7 @@ export default function FactoryPage() {
                           {order.priority === 'high' ? 'Haute' :
                            order.priority === 'medium' ? 'Moyenne' : 'Basse'}
                         </span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           order.status === 'completed' ? 'bg-green-100 text-green-800' :
                           order.status === 'delivered' ? 'bg-blue-100 text-blue-800' :
                           order.status === 'in_production' ? 'bg-yellow-100 text-yellow-800' :

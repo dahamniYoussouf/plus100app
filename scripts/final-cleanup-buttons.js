@@ -59,7 +59,7 @@ function cleanMisplacedOnClick(content) {
   // Nettoyer les onClick mal placés avant les balises
   content = content.replace(
     /\s+onClick=\{\(\) => [^}]+\}\s+<(\w+)/g,
-    '<$1'
+    '< DZD1'
   );
   
   // Nettoyer les onClick dans les attributs className mal formés
@@ -71,7 +71,7 @@ function cleanMisplacedOnClick(content) {
   // Nettoyer les onClick dans les attributs mal formés
   content = content.replace(
     /(\w+)\s+onClick=\{\(\) => [^}]+\}\s+(\w+)=/g,
-    '$1 $2='
+    ' DZD1  DZD2='
   );
   
   // Nettoyer les onClick mal placés dans les Download className
@@ -141,8 +141,8 @@ function fixRemainingButtons(content) {
   buttons.forEach(button => {
     const buttonText = extractButtonText(content, button);
     const modalName = generateModalName(buttonText);
-    const setterName = `set${modalName.charAt(0).toUpperCase() + modalName.slice(1)}`;
-    const onClickAttr = `onClick={() => ${setterName}(true)}`;
+    const setterName = `set DZD{modalName.charAt(0).toUpperCase() + modalName.slice(1)}`;
+    const onClickAttr = `onClick={() =>  DZD{setterName}(true)}`;
     
     const buttonStart = button.index + offset;
     let insertPos = buttonStart + '<button '.length;
@@ -154,7 +154,7 @@ function fixRemainingButtons(content) {
       }
     }
     
-    newContent = newContent.slice(0, insertPos) + ` ${onClickAttr} ` + newContent.slice(insertPos);
+    newContent = newContent.slice(0, insertPos) + `  DZD{onClickAttr} ` + newContent.slice(insertPos);
     offset += onClickAttr.length + 3;
   });
   
@@ -177,7 +177,7 @@ function generateModalName(buttonText) {
     .slice(0, 3)
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join('');
-  return `show${cleaned}Modal`;
+  return `show DZD{cleaned}Modal`;
 }
 
 console.log('🧹 Nettoyage final des onClick mal placés...\n');
@@ -198,10 +198,10 @@ pageFiles.forEach(file => {
     fs.writeFileSync(file, content, 'utf8');
     cleanedCount++;
     const relativePath = path.relative(path.join(__dirname, '..'), file);
-    console.log(`✅ Nettoyé: ${relativePath}`);
+    console.log(`✅ Nettoyé:  DZD{relativePath}`);
   }
 });
 
-console.log(`\n📊 ${cleanedCount} fichier(s) nettoyé(s)`);
+console.log(`\n📊  DZD{cleanedCount} fichier(s) nettoyé(s)`);
 
 

@@ -236,7 +236,7 @@ export default function MentalPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-purple-600 border-b-2 border-purple-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -378,7 +378,7 @@ export default function MentalPage() {
                     <div key={patient.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                       <div className="flex items-start justify-between mb-3">
                         <h3 className="font-semibold text-gray-900 text-lg">{patient.name}</h3>
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           patient.status === 'active' ? 'bg-green-100 text-green-800' :
                           patient.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                           'bg-yellow-100 text-yellow-800'
@@ -449,7 +449,7 @@ export default function MentalPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="font-semibold text-gray-900 text-lg">{session.patientName}</h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                             session.status === 'completed' ? 'bg-green-100 text-green-800' :
                             session.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                             'bg-blue-100 text-blue-800'
@@ -468,7 +468,7 @@ export default function MentalPage() {
                           </div>
                           <div className="flex items-center gap-4">
                             <span className="text-gray-600">👤 {session.therapist}</span>
-                            <span className={`px-2 py-0.5 rounded text-xs capitalize ${
+                            <span className={`px-2 py-0.5 rounded text-xs capitalize  DZD{
                               session.type === 'regular' ? 'bg-blue-100 text-blue-800' :
                               session.type === 'initial' ? 'bg-purple-100 text-purple-800' :
                               session.type === 'crisis' ? 'bg-red-100 text-red-800' :
@@ -546,7 +546,7 @@ export default function MentalPage() {
                         {note.confidential && (
                           <Lock className="w-4 h-4 text-purple-600" />
                         )}
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           note.type === 'session' ? 'bg-blue-100 text-blue-800' :
                           note.type === 'observation' ? 'bg-yellow-100 text-yellow-800' :
                           note.type === 'treatment' ? 'bg-green-100 text-green-800' :
@@ -592,10 +592,10 @@ export default function MentalPage() {
                         <p className="text-sm text-gray-600 mt-1">Patient: {treatment.patientName}</p>
                         <p className="text-sm text-gray-500 mt-1">
                           Début: {new Date(treatment.startDate).toLocaleDateString('fr-FR')}
-                          {treatment.endDate && ` - Fin: ${new Date(treatment.endDate).toLocaleDateString('fr-FR')}`}
+                          {treatment.endDate && ` - Fin:  DZD{new Date(treatment.endDate).toLocaleDateString('fr-FR')}`}
                         </p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         treatment.status === 'active' ? 'bg-green-100 text-green-800' :
                         treatment.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'

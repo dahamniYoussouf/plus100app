@@ -61,7 +61,7 @@ function generateModalName(buttonText) {
 console.log('🔍 Recherche des pages d\'applications...');
 const pageFiles = findPageFiles(appDir);
 
-console.log(`📄 ${pageFiles.length} pages trouvées\n`);
+console.log(`📄  DZD{pageFiles.length} pages trouvées\n`);
 
 let totalButtons = 0;
 let filesWithButtons = 0;
@@ -74,13 +74,13 @@ pageFiles.forEach(file => {
     filesWithButtons++;
     totalButtons += buttons.length;
     const relativePath = path.relative(path.join(__dirname, '..'), file);
-    console.log(`⚠️  ${relativePath}: ${buttons.length} bouton(s) sans onClick`);
+    console.log(`⚠️   DZD{relativePath}:  DZD{buttons.length} bouton(s) sans onClick`);
   }
 });
 
 console.log(`\n📊 Résumé:`);
-console.log(`   - Pages avec boutons sans onClick: ${filesWithButtons}`);
-console.log(`   - Total boutons à corriger: ${totalButtons}`);
+console.log(`   - Pages avec boutons sans onClick:  DZD{filesWithButtons}`);
+console.log(`   - Total boutons à corriger:  DZD{totalButtons}`);
 
 console.log(`\n💡 Pour corriger automatiquement, exécutez:`);
 console.log(`   node scripts/fix-all-buttons.js --fix`);

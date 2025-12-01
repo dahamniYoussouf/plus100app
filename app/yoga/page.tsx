@@ -95,7 +95,7 @@ export default function YogaPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-indigo-600 border-b-2 border-indigo-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -213,7 +213,7 @@ export default function YogaPage() {
                       <Clock className="w-4 h-4 text-gray-400" />
                       <span className="text-sm text-gray-600">{classItem.duration} min</span>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs capitalize ${
+                    <span className={`px-2 py-1 rounded text-xs capitalize  DZD{
                       classItem.level === 'beginner' ? 'bg-green-100 text-green-800' :
                       classItem.level === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-red-100 text-red-800'

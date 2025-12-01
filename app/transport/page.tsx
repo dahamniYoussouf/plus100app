@@ -178,7 +178,7 @@ export default function TransportPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-orange-600 border-b-2 border-orange-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -249,7 +249,7 @@ export default function TransportPage() {
                           <p className="text-xs text-gray-400 mt-1">Chauffeur: {vehicle.driverName}</p>
                         )}
                       </div>
-                      <span className={`ml-4 px-2 py-1 rounded text-xs ${
+                      <span className={`ml-4 px-2 py-1 rounded text-xs  DZD{
                         vehicle.status === 'available' ? 'bg-green-100 text-green-800' :
                         vehicle.status === 'in_use' ? 'bg-blue-100 text-blue-800' :
                         vehicle.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
@@ -272,7 +272,7 @@ export default function TransportPage() {
                         <p className="text-sm text-gray-500">{shipment.senderName} → {shipment.recipientName}</p>
                         <p className="text-xs text-gray-400 mt-1">{new Date(shipment.createdAt).toLocaleDateString('fr-FR')}</p>
                       </div>
-                      <span className={`ml-4 px-2 py-1 rounded text-xs ${
+                      <span className={`ml-4 px-2 py-1 rounded text-xs  DZD{
                         shipment.status === 'delivered' ? 'bg-green-100 text-green-800' :
                         shipment.status === 'in_transit' ? 'bg-blue-100 text-blue-800' :
                         shipment.status === 'cancelled' ? 'bg-red-100 text-red-800' :
@@ -336,7 +336,7 @@ export default function TransportPage() {
                     )}
                     <div className="flex justify-between pt-2 border-t border-gray-200">
                       <span className="text-gray-600">Statut:</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         vehicle.status === 'available' ? 'bg-green-100 text-green-800' :
                         vehicle.status === 'in_use' ? 'bg-blue-100 text-blue-800' :
                         vehicle.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
@@ -399,7 +399,7 @@ export default function TransportPage() {
                     </div>
                     <div className="flex justify-between pt-2 border-t border-gray-200">
                       <span className="text-gray-600">Statut:</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         driver.status === 'available' ? 'bg-green-100 text-green-800' :
                         driver.status === 'on_delivery' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'
@@ -448,7 +448,7 @@ export default function TransportPage() {
                         </span>
                       </div>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                       route.status === 'completed' ? 'bg-green-100 text-green-800' :
                       route.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                       route.status === 'cancelled' ? 'bg-red-100 text-red-800' :
@@ -500,7 +500,7 @@ export default function TransportPage() {
                       <p className="text-sm text-gray-500">Poids: {shipment.weight} kg</p>
                       <p className="text-xs text-gray-400 mt-2">Créé le {new Date(shipment.createdAt).toLocaleDateString('fr-FR')}</p>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                       shipment.status === 'delivered' ? 'bg-green-100 text-green-800' :
                       shipment.status === 'in_transit' ? 'bg-blue-100 text-blue-800' :
                       shipment.status === 'cancelled' ? 'bg-red-100 text-red-800' :
@@ -846,7 +846,7 @@ export default function TransportPage() {
                 if (newShipment.senderName && newShipment.senderAddress && newShipment.recipientName && newShipment.recipientAddress && newShipment.weight > 0) {
                   const shipment: Shipment = {
                     id: Date.now().toString(),
-                    trackingNumber: `TRK-${Date.now().toString().slice(-6)}`,
+                    trackingNumber: `TRK- DZD{Date.now().toString().slice(-6)}`,
                     senderName: newShipment.senderName,
                     senderAddress: newShipment.senderAddress,
                     recipientName: newShipment.recipientName,

@@ -183,7 +183,7 @@ export default function MarketplacePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-green-600 border-b-2 border-green-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -260,7 +260,7 @@ export default function MarketplacePage() {
                       </div>
                       <div className="text-right ml-4">
                         <p className="font-bold text-green-600">DZD{product.price}</p>
-                        <span className={`text-xs px-2 py-1 rounded ${
+                        <span className={`text-xs px-2 py-1 rounded  DZD{
                           product.status === 'active' ? 'bg-green-100 text-green-800' :
                           product.status === 'out_of_stock' ? 'bg-red-100 text-red-800' :
                           'bg-gray-100 text-gray-800'
@@ -285,7 +285,7 @@ export default function MarketplacePage() {
                       </div>
                       <div className="text-right ml-4">
                         <p className="font-bold text-green-600">DZD{order.total}</p>
-                        <span className={`text-xs px-2 py-1 rounded ${
+                        <span className={`text-xs px-2 py-1 rounded  DZD{
                           order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                           order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
                           order.status === 'processing' ? 'bg-yellow-100 text-yellow-800' :
@@ -338,7 +338,7 @@ export default function MarketplacePage() {
                   <div key={product.id} className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                     <div className="aspect-square relative">
                       <Image
-                        src={product.images[0] || productImages[product.id] || `https://images.unsplash.com/photo-${1500000000000 + idx}?w=600&h=600&fit=crop&q=80`}
+                        src={product.images[0] || productImages[product.id] || `https://images.unsplash.com/photo- DZD{1500000000000 + idx}?w=600&h=600&fit=crop&q=80`}
                         alt={product.name}
                         fill
                         className="object-cover"
@@ -363,7 +363,7 @@ export default function MarketplacePage() {
                     </div>
                     <div className="flex items-center justify-between pt-3 border-t border-gray-200">
                       <span className="text-xs text-gray-500">Stock: {product.stock}</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         product.status === 'active' ? 'bg-green-100 text-green-800' :
                         product.status === 'out_of_stock' ? 'bg-red-100 text-red-800' :
                         'bg-gray-100 text-gray-800'
@@ -420,7 +420,7 @@ export default function MarketplacePage() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Statut:</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         seller.status === 'active' ? 'bg-green-100 text-green-800' :
                         seller.status === 'suspended' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -462,7 +462,7 @@ export default function MarketplacePage() {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-lg font-bold text-green-600">DZD{order.total}</span>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                         order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
                         order.status === 'processing' ? 'bg-yellow-100 text-yellow-800' :
@@ -804,7 +804,7 @@ export default function MarketplacePage() {
                   if (product) {
                     const order: Order = {
                       id: Date.now().toString(),
-                      orderNumber: `ORD-${Date.now()}`,
+                      orderNumber: `ORD- DZD{Date.now()}`,
                       productId: newOrder.productId,
                       productName: product.name,
                       sellerId: product.sellerId,

@@ -149,7 +149,7 @@ export default function SchoolPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors relative ${
+                  className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors relative  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'

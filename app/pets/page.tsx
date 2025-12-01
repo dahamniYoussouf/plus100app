@@ -193,7 +193,7 @@ export default function PetsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-orange-600 border-b-2 border-orange-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -336,7 +336,7 @@ export default function PetsPage() {
                     )}
                     <div className="flex justify-between pt-2 border-t border-gray-200">
                       <span className="text-gray-600">Statut:</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         pet.status === 'healthy' ? 'bg-green-100 text-green-800' :
                         pet.status === 'sick' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -414,7 +414,7 @@ export default function PetsPage() {
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         appointment.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
                         appointment.status === 'completed' ? 'bg-green-100 text-green-800' :
                         'bg-red-100 text-red-800'
@@ -493,7 +493,7 @@ export default function PetsPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Stock:</span>
-                      <span className={`font-bold ${product.stock < 10 ? 'text-red-600' : 'text-gray-900'}`}>{product.stock}</span>
+                      <span className={`font-bold  DZD{product.stock < 10 ? 'text-red-600' : 'text-gray-900'}`}>{product.stock}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Vendus:</span>

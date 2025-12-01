@@ -44,7 +44,7 @@ function fixMisplacedOnClick(content) {
       const onClickMatch = match.match(/onClick=\{\(\) => (setShow\w+)\(true\)\}/);
       if (onClickMatch) {
         const setter = onClickMatch[1];
-        return `\n              <button \n                onClick={() => ${setter}(true)}\n                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"\n              >`;
+        return `\n              <button \n                onClick={() =>  DZD{setter}(true)}\n                className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"\n              >`;
       }
       return match;
     }
@@ -77,11 +77,11 @@ pageFiles.forEach(file => {
       fs.writeFileSync(file, fixed, 'utf8');
       fixedCount++;
       const relativePath = path.relative(path.join(__dirname, '..'), file);
-      console.log(`✅ Corrigé: ${relativePath}`);
+      console.log(`✅ Corrigé:  DZD{relativePath}`);
     }
   }
 });
 
-console.log(`\n📊 ${fixedCount} fichier(s) corrigé(s)`);
+console.log(`\n📊  DZD{fixedCount} fichier(s) corrigé(s)`);
 
 

@@ -227,7 +227,7 @@ export default function FinancePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-green-600 border-b-2 border-green-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -361,7 +361,7 @@ export default function FinancePage() {
                   <div key={account.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-lg">{account.name}</h3>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         account.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                       }`}>
                         {account.status === 'active' ? 'Actif' : 'Fermé'}
@@ -388,7 +388,7 @@ export default function FinancePage() {
                     <div className="pt-4 border-t border-gray-200">
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-gray-500">Solde:</span>
-                        <span className={`text-xl font-bold ${
+                        <span className={`text-xl font-bold  DZD{
                           account.balance >= 0 ? 'text-green-600' : 'text-red-600'
                         }`}>
                           {account.balance >= 0 ? '+' : ''}DZD{Math.abs(account.balance).toLocaleString('fr-FR', { minimumFractionDigits: 2 })}
@@ -435,12 +435,12 @@ export default function FinancePage() {
                           </p>
                         </div>
                         <div className="flex flex-col items-end gap-2">
-                          <span className={`text-lg font-bold ${
+                          <span className={`text-lg font-bold  DZD{
                             transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
                           }`}>
                             {transaction.type === 'income' ? '+' : '-'}DZD{Math.abs(transaction.amount).toLocaleString('fr-FR', { minimumFractionDigits: 2 })}
                           </span>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                             transaction.status === 'completed' ? 'bg-green-100 text-green-800' :
                             transaction.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-red-100 text-red-800'
@@ -505,7 +505,7 @@ export default function FinancePage() {
                             {new Date(budget.startDate).toLocaleDateString('fr-FR')} - {new Date(budget.endDate).toLocaleDateString('fr-FR')}
                           </p>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           budget.status === 'over_budget' ? 'bg-red-100 text-red-800' :
                           budget.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                           'bg-green-100 text-green-800'
@@ -519,7 +519,7 @@ export default function FinancePage() {
                         <div>
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-xs text-gray-500">Budget utilisé</span>
-                            <span className={`text-xs font-medium ${
+                            <span className={`text-xs font-medium  DZD{
                               usage > 100 ? 'text-red-600' :
                               usage > 80 ? 'text-yellow-600' : 'text-gray-700'
                             }`}>
@@ -528,18 +528,18 @@ export default function FinancePage() {
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div 
-                              className={`h-2 rounded-full ${
+                              className={`h-2 rounded-full  DZD{
                                 usage > 100 ? 'bg-red-500' :
                                 usage > 80 ? 'bg-yellow-500' : 'bg-green-500'
                               }`}
-                              style={{ width: `${Math.min(usage, 100)}%` }}
+                              style={{ width: ` DZD{Math.min(usage, 100)}%` }}
                             />
                           </div>
                         </div>
 
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-gray-600">Reste:</span>
-                          <span className={`font-bold ${
+                          <span className={`font-bold  DZD{
                             remaining < 0 ? 'text-red-600' : 'text-green-600'
                           }`}>
                             DZD{remaining.toFixed(2)}

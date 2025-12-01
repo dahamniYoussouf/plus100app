@@ -154,7 +154,7 @@ export default function MenuManagement({ menuItems, setMenuItems }: MenuManageme
         {filteredItems.map((item) => (
           <div
             key={item.id}
-            className={`bg-white rounded-lg shadow p-6 transition-transform hover:scale-105 ${
+            className={`bg-white rounded-lg shadow p-6 transition-transform hover:scale-105  DZD{
               !item.available ? 'opacity-60' : ''
             }`}
           >
@@ -182,10 +182,10 @@ export default function MenuManagement({ menuItems, setMenuItems }: MenuManageme
             </div>
             <p className="text-gray-600 text-sm mb-4">{item.description}</p>
             <div className="flex items-center justify-between">
-              <span className="text-xl font-bold text-gray-900">${item.price.toFixed(2)}</span>
+              <span className="text-xl font-bold text-gray-900"> DZD{item.price.toFixed(2)}</span>
               <button
                 onClick={() => toggleAvailability(item.id)}
-                className={`px-3 py-1 rounded-full text-xs font-medium ${
+                className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                   item.available
                     ? 'bg-green-100 text-green-800'
                     : 'bg-gray-100 text-gray-800'

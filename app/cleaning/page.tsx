@@ -67,9 +67,11 @@ export default function CleaningPage() {
   const [showClientModal, setShowClientModal] = useState(false)
   const [showTeamModal, setShowTeamModal] = useState(false)
   const [showMissionModal, setShowMissionModal] = useState(false)
+  const [showEquipmentModal, setShowEquipmentModal] = useState(false)
   const [newClient, setNewClient] = useState({ name: '', contactPerson: '', phone: '', email: '', address: '', serviceFrequency: 'one_time' as 'one_time' | 'weekly' | 'bi_weekly' | 'monthly' })
   const [newTeam, setNewTeam] = useState({ name: '', supervisor: '', members: [] as string[], specializations: [] as string[] })
   const [newMission, setNewMission] = useState({ clientId: '', teamId: '', type: 'regular' as 'regular' | 'deep' | 'window' | 'carpet' | 'post_construction', scheduledDate: '', scheduledTime: '', address: '', notes: '' })
+  const [newEquipment, setNewEquipment] = useState({ name: '', type: '', lastMaintenance: '', nextMaintenance: '' })
 
   useEffect(() => {
     const savedTeams = localStorage.getItem('cleaning-teams')
@@ -533,7 +535,10 @@ export default function CleaningPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Équipements</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowEquipmentModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvel Équipement
               </button>
             </div>
@@ -687,6 +692,90 @@ export default function CleaningPage() {
                   setClients([...clients, client])
                   setShowClientModal(false)
                   setNewClient({ name: '', contactPerson: '', phone: '', email: '', address: '', serviceFrequency: 'one_time' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showEquipmentModal}
+        onClose={() => {
+          setShowEquipmentModal(false)
+          setNewEquipment({ name: '', type: '', lastMaintenance: '', nextMaintenance: '' })
+        }}
+        title="Nouvel Équipement"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newEquipment.name}
+              onChange={(e) => setNewEquipment({ ...newEquipment, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Aspirateur Professionnel"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <input
+              type="text"
+              value={newEquipment.type}
+              onChange={(e) => setNewEquipment({ ...newEquipment, type: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Aspirateur"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Dernière maintenance</label>
+              <input
+                type="date"
+                value={newEquipment.lastMaintenance}
+                onChange={(e) => setNewEquipment({ ...newEquipment, lastMaintenance: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prochaine maintenance</label>
+              <input
+                type="date"
+                value={newEquipment.nextMaintenance}
+                onChange={(e) => setNewEquipment({ ...newEquipment, nextMaintenance: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowEquipmentModal(false)
+                setNewEquipment({ name: '', type: '', lastMaintenance: '', nextMaintenance: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newEquipment.name && newEquipment.type) {
+                  const equipmentItem: Equipment = {
+                    id: Date.now().toString(),
+                    name: newEquipment.name,
+                    type: newEquipment.type,
+                    status: 'available',
+                    lastMaintenance: newEquipment.lastMaintenance ? new Date(newEquipment.lastMaintenance) : undefined,
+                    nextMaintenance: newEquipment.nextMaintenance ? new Date(newEquipment.nextMaintenance) : undefined,
+                  }
+                  setEquipment([...equipment, equipmentItem])
+                  setShowEquipmentModal(false)
+                  setNewEquipment({ name: '', type: '', lastMaintenance: '', nextMaintenance: '' })
                 }
               }}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

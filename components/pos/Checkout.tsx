@@ -66,7 +66,7 @@ export default function Checkout({
       )
     } else {
       const newItem: OrderItem = {
-        id: `item-${Date.now()}-${Math.random()}`,
+        id: `item- DZD{Date.now()}- DZD{Math.random()}`,
         menuItemId: menuItem.id,
         name: menuItem.name,
         price: menuItem.price,
@@ -105,7 +105,7 @@ export default function Checkout({
     }
 
     const order: Order = {
-      id: existingOrder?.id || `order-${Date.now()}`,
+      id: existingOrder?.id || `order- DZD{Date.now()}`,
       tableId: selectedTable,
       items: cart,
       status: existingOrder?.status || 'pending',
@@ -202,7 +202,7 @@ export default function Checkout({
           <div className="flex flex-wrap gap-2 mb-4">
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors  DZD{
                 selectedCategory === 'all'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -214,7 +214,7 @@ export default function Checkout({
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors  DZD{
                   selectedCategory === cat
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -237,7 +237,7 @@ export default function Checkout({
               >
                 <h3 className="font-semibold text-gray-900 mb-1">{item.name}</h3>
                 <p className="text-xs text-gray-500 mb-2 line-clamp-2">{item.description}</p>
-                <p className="text-lg font-bold text-blue-600">${item.price.toFixed(2)}</p>
+                <p className="text-lg font-bold text-blue-600"> DZD{item.price.toFixed(2)}</p>
               </button>
             ))}
           </div>
@@ -262,7 +262,7 @@ export default function Checkout({
                     <div className="flex-1">
                       <p className="font-medium text-gray-900">{item.name}</p>
                       <p className="text-sm text-gray-600">
-                        ${item.price.toFixed(2)} × {item.quantity}
+                         DZD{item.price.toFixed(2)} × {item.quantity}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -293,11 +293,11 @@ export default function Checkout({
               <div className="border-t border-gray-200 pt-4 mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-semibold text-gray-900">${cartTotal.toFixed(2)}</span>
+                  <span className="font-semibold text-gray-900"> DZD{cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-bold text-gray-900">Total</span>
-                  <span className="text-xl font-bold text-blue-600">${cartTotal.toFixed(2)}</span>
+                  <span className="text-xl font-bold text-blue-600"> DZD{cartTotal.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -332,7 +332,7 @@ export default function Checkout({
               <div>
                 <p className="text-sm text-gray-600 mb-1">Order Total</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  ${existingOrder?.total.toFixed(2)}
+                   DZD{existingOrder?.total.toFixed(2)}
                 </p>
               </div>
 
@@ -341,7 +341,7 @@ export default function Checkout({
                 <div className="grid grid-cols-3 gap-3">
                   <button
                     onClick={() => setPaymentMethod('cash')}
-                    className={`p-4 border-2 rounded-lg transition-colors flex flex-col items-center gap-2 ${
+                    className={`p-4 border-2 rounded-lg transition-colors flex flex-col items-center gap-2  DZD{
                       paymentMethod === 'cash'
                         ? 'border-blue-600 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300'
@@ -352,7 +352,7 @@ export default function Checkout({
                   </button>
                   <button
                     onClick={() => setPaymentMethod('card')}
-                    className={`p-4 border-2 rounded-lg transition-colors flex flex-col items-center gap-2 ${
+                    className={`p-4 border-2 rounded-lg transition-colors flex flex-col items-center gap-2  DZD{
                       paymentMethod === 'card'
                         ? 'border-blue-600 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300'
@@ -363,7 +363,7 @@ export default function Checkout({
                   </button>
                   <button
                     onClick={() => setPaymentMethod('digital')}
-                    className={`p-4 border-2 rounded-lg transition-colors flex flex-col items-center gap-2 ${
+                    className={`p-4 border-2 rounded-lg transition-colors flex flex-col items-center gap-2  DZD{
                       paymentMethod === 'digital'
                         ? 'border-blue-600 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300'

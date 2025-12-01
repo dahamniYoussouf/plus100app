@@ -207,7 +207,7 @@ export default function NutritionPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-lime-600 border-b-2 border-lime-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -337,13 +337,13 @@ export default function NutritionPage() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600">Différence:</span>
-                          <span className={`font-bold ${weightDiff > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                          <span className={`font-bold  DZD{weightDiff > 0 ? 'text-red-600' : 'text-green-600'}`}>
                             {weightDiff > 0 ? '+' : ''}{weightDiff.toFixed(1)} kg
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600">IMC:</span>
-                          <span className={`font-bold ${
+                          <span className={`font-bold  DZD{
                             bmi < 18.5 ? 'text-blue-600' :
                             bmi < 25 ? 'text-green-600' :
                             bmi < 30 ? 'text-yellow-600' : 'text-red-600'
@@ -360,7 +360,7 @@ export default function NutritionPage() {
                       <div className="pt-4 border-t border-gray-200 space-y-2">
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-gray-500">Objectif:</span>
-                          <span className={`px-2 py-0.5 rounded capitalize ${
+                          <span className={`px-2 py-0.5 rounded capitalize  DZD{
                             client.goal === 'lose_weight' ? 'bg-red-100 text-red-800' :
                             client.goal === 'gain_weight' ? 'bg-green-100 text-green-800' :
                             client.goal === 'muscle_gain' ? 'bg-blue-100 text-blue-800' :
@@ -438,7 +438,7 @@ export default function NutritionPage() {
                             {new Date(plan.startDate).toLocaleDateString('fr-FR')} - {new Date(plan.endDate).toLocaleDateString('fr-FR')}
                           </p>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           plan.status === 'active' ? 'bg-green-100 text-green-800' :
                           plan.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                           'bg-gray-100 text-gray-800'

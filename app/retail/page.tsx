@@ -126,7 +126,7 @@ export default function RetailPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-purple-600 border-b-2 border-purple-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -246,7 +246,7 @@ export default function RetailPage() {
                 <div key={product.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900 text-base sm:text-lg">{product.name}</h3>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                       product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                     }`}>
                       {product.status === 'active' ? 'Actif' : 'Inactif'}
@@ -259,7 +259,7 @@ export default function RetailPage() {
                       <p className="text-lg sm:text-xl font-bold text-gray-900">DZD{product.price.toFixed(2)}</p>
                       <p className="text-xs text-gray-500">Stock: {product.stock}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                       product.stock < 10 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                     }`}>
                       {product.stock < 10 ? 'Stock faible' : 'En stock'}

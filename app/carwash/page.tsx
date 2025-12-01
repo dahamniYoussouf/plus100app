@@ -251,7 +251,7 @@ export default function CarwashPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-cyan-600 border-b-2 border-cyan-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -384,7 +384,7 @@ export default function CarwashPage() {
                         <Clock className="w-4 h-4 text-gray-400" />
                         <span className="text-sm text-gray-600">{service.duration} min</span>
                       </div>
-                      <span className={`px-2 py-0.5 rounded text-xs capitalize ${
+                      <span className={`px-2 py-0.5 rounded text-xs capitalize  DZD{
                         service.category === 'basic' ? 'bg-blue-100 text-blue-800' :
                         service.category === 'premium' ? 'bg-purple-100 text-purple-800' :
                         service.category === 'deluxe' ? 'bg-yellow-100 text-yellow-800' :
@@ -479,7 +479,7 @@ export default function CarwashPage() {
                           <h3 className="font-semibold text-gray-900 text-lg">{subscription.ownerName}</h3>
                           <p className="text-sm text-gray-600 mt-1">{subscription.licensePlate}</p>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           subscription.status === 'active' ? 'bg-green-100 text-green-800' :
                           subscription.status === 'expired' ? 'bg-red-100 text-red-800' :
                           'bg-gray-100 text-gray-800'
@@ -503,12 +503,12 @@ export default function CarwashPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-2 rounded-full ${
+                            className={`h-2 rounded-full  DZD{
                               usageRate >= 90 ? 'bg-red-500' :
                               usageRate >= 70 ? 'bg-yellow-500' :
                               'bg-green-500'
                             }`}
-                            style={{ width: `${usageRate}%` }}
+                            style={{ width: ` DZD{usageRate}%` }}
                           />
                         </div>
                         <div className="flex items-center justify-between text-xs text-gray-500">
@@ -559,7 +559,7 @@ export default function CarwashPage() {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           apt.status === 'completed' ? 'bg-green-100 text-green-800' :
                           apt.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                           apt.status === 'in_progress' ? 'bg-yellow-100 text-yellow-800' :

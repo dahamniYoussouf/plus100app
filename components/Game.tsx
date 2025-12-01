@@ -131,7 +131,7 @@ export default function Game() {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
+    return ` DZD{mins}: DZD{secs.toString().padStart(2, '0')}`
   }
 
   return (
@@ -212,7 +212,7 @@ export default function Game() {
                 <motion.button
                   key={level}
                   onClick={() => setDifficulty(level)}
-                  className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+                  className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all  DZD{
                     difficulty === level
                       ? 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white shadow-lg'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -242,12 +242,12 @@ export default function Game() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200"
           >
-            <div className={`grid ${difficultyLevels[difficulty].grid} gap-4 mb-6`}>
+            <div className={`grid  DZD{difficultyLevels[difficulty].grid} gap-4 mb-6`}>
               {cards.map((card, index) => (
                 <motion.div
                   key={card.id}
                   onClick={() => handleCardClick(index)}
-                  className={`aspect-square rounded-xl cursor-pointer relative overflow-hidden ${
+                  className={`aspect-square rounded-xl cursor-pointer relative overflow-hidden  DZD{
                     card.matched ? 'opacity-50' : ''
                   }`}
                   whileHover={{ scale: card.flipped || card.matched ? 1 : 1.05 }}

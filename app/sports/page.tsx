@@ -212,7 +212,7 @@ export default function SportsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-orange-600 border-b-2 border-orange-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -300,7 +300,7 @@ export default function SportsPage() {
                            facility.type === 'basketball' ? 'Basketball' : 'Autre'}
                         </p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         facility.status === 'available' ? 'bg-green-100 text-green-800' :
                         facility.status === 'booked' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -356,7 +356,7 @@ export default function SportsPage() {
                            member.membershipType === 'yearly' ? 'Annuel' : 'Journée'}
                         </p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         member.status === 'active' ? 'bg-green-100 text-green-800' :
                         member.status === 'expired' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -370,7 +370,7 @@ export default function SportsPage() {
                       {member.email && <p className="text-sm text-gray-600">📧 {member.email}</p>}
                       <p className="text-sm text-gray-600">
                         📅 {new Date(member.startDate).toLocaleDateString('fr-FR')}
-                        {member.endDate && ` - ${new Date(member.endDate).toLocaleDateString('fr-FR')}`}
+                        {member.endDate && ` -  DZD{new Date(member.endDate).toLocaleDateString('fr-FR')}`}
                       </p>
                     </div>
                   </div>
@@ -402,7 +402,7 @@ export default function SportsPage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{booking.memberName}</h3>
                         <p className="text-sm text-gray-600 mt-1">{booking.facilityName}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         booking.status === 'completed' ? 'bg-green-100 text-green-800' :
                         booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-blue-100 text-blue-800'
@@ -453,7 +453,7 @@ export default function SportsPage() {
                         </p>
                         <p className="text-sm text-gray-600 mt-1">📍 {event.facilityName}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         event.status === 'completed' ? 'bg-green-100 text-green-800' :
                         event.status === 'ongoing' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'

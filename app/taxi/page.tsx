@@ -157,7 +157,7 @@ export default function TaxiPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-yellow-600 border-b-2 border-yellow-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -278,7 +278,7 @@ export default function TaxiPage() {
                     </div>
                   )}
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                       vehicle.status === 'available' ? 'bg-green-100 text-green-800' :
                       vehicle.status === 'on_ride' ? 'bg-blue-100 text-blue-800' :
                       vehicle.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
@@ -323,7 +323,7 @@ export default function TaxiPage() {
                         <p className="text-xs text-gray-500">Courses</p>
                         <p className="font-bold text-yellow-600">{driver.totalRides}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         driver.status === 'available' ? 'bg-green-100 text-green-800' :
                         driver.status === 'on_ride' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'
@@ -368,7 +368,7 @@ export default function TaxiPage() {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <span className="text-lg font-bold text-gray-900">DZD{ride.fare.toFixed(2)}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           ride.status === 'completed' ? 'bg-green-100 text-green-800' :
                           ride.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                           ride.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
@@ -417,7 +417,7 @@ export default function TaxiPage() {
                           </p>
                         </div>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         reservation.status === 'completed' ? 'bg-green-100 text-green-800' :
                         reservation.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         reservation.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :

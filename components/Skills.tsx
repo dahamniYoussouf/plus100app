@@ -77,9 +77,9 @@ export default function Skills() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
                       <motion.div
-                        className={`h-full ${skill.color} rounded-full`}
+                        className={`h-full  DZD{skill.color} rounded-full`}
                         initial={{ width: 0 }}
-                        animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
+                        animate={isInView ? { width: ` DZD{skill.level}%` } : { width: 0 }}
                         transition={{ duration: 1, delay: categoryIndex * 0.2 + skillIndex * 0.1 }}
                       />
                     </div>

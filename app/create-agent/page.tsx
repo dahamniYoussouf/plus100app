@@ -45,7 +45,7 @@ interface AgentConfig {
 export default function CreateAgentPage() {
   const [step, setStep] = useState(1)
   const [agent, setAgent] = useState<AgentConfig>({
-    id: `agent-${Date.now()}`,
+    id: `agent- DZD{Date.now()}`,
     name: '',
     description: '',
     personality: 'friendly',
@@ -207,7 +207,7 @@ export default function CreateAgentPage() {
                 <div key={stepItem.id} className="flex items-center flex-1">
                   <motion.button
                     onClick={() => setStep(stepItem.id)}
-                    className={`flex flex-col items-center gap-2 px-4 py-3 rounded-lg transition-all ${
+                    className={`flex flex-col items-center gap-2 px-4 py-3 rounded-lg transition-all  DZD{
                       isActive
                         ? 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white shadow-lg'
                         : isCompleted
@@ -222,7 +222,7 @@ export default function CreateAgentPage() {
                   </motion.button>
                   {index < steps.length - 1 && (
                     <div
-                      className={`flex-1 h-1 mx-1 rounded ${
+                      className={`flex-1 h-1 mx-1 rounded  DZD{
                         isCompleted ? 'bg-green-500' : 'bg-gray-200'
                       }`}
                     />
@@ -295,7 +295,7 @@ export default function CreateAgentPage() {
                     <motion.button
                       key={personality.id}
                       onClick={() => setAgent({ ...agent, personality: personality.id })}
-                      className={`p-4 rounded-lg border-2 transition-all text-left ${
+                      className={`p-4 rounded-lg border-2 transition-all text-left  DZD{
                         agent.personality === personality.id
                           ? 'border-blue-500 bg-blue-50'
                           : 'border-gray-200 hover:border-gray-300'
@@ -470,7 +470,7 @@ export default function CreateAgentPage() {
                         <motion.button
                           key={avatar}
                           onClick={() => setAgent({ ...agent, avatar })}
-                          className={`p-4 text-3xl rounded-lg border-2 transition-all ${
+                          className={`p-4 text-3xl rounded-lg border-2 transition-all  DZD{
                             agent.avatar === avatar
                               ? 'border-blue-500 bg-blue-50 scale-110'
                               : 'border-gray-200 hover:border-gray-300'
@@ -494,7 +494,7 @@ export default function CreateAgentPage() {
                         <motion.button
                           key={color.value}
                           onClick={() => setAgent({ ...agent, color: color.value })}
-                          className={`p-4 rounded-lg border-2 transition-all ${
+                          className={`p-4 rounded-lg border-2 transition-all  DZD{
                             agent.color === color.value
                               ? 'border-gray-900 scale-110'
                               : 'border-gray-200'
@@ -543,7 +543,7 @@ export default function CreateAgentPage() {
                           },
                         })
                       }
-                      className={`w-full p-4 rounded-lg border-2 transition-all text-left flex items-center justify-between ${
+                      className={`w-full p-4 rounded-lg border-2 transition-all text-left flex items-center justify-between  DZD{
                         agent.features[feature.key as keyof typeof agent.features]
                           ? 'border-blue-500 bg-blue-50'
                           : 'border-gray-200 hover:border-gray-300'
@@ -659,7 +659,7 @@ export default function CreateAgentPage() {
                       className="p-4 border-2 rounded-lg transition-all"
                       style={{
                         borderColor: integration.enabled ? agent.color : '#e5e7eb',
-                        backgroundColor: integration.enabled ? `${agent.color}10` : 'transparent',
+                        backgroundColor: integration.enabled ? ` DZD{agent.color}10` : 'transparent',
                       }}
                     >
                       <div className="flex items-center justify-between">
@@ -685,7 +685,7 @@ export default function CreateAgentPage() {
                       {integration.enabled && (
                         <input
                           type="password"
-                          placeholder={`Clé API ${integration.name}...`}
+                          placeholder={`Clé API  DZD{integration.name}...`}
                           className="mt-3 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                           value={integration.apiKey || ''}
                           onChange={(e) => {
@@ -725,7 +725,7 @@ export default function CreateAgentPage() {
                         >
                           <div className="flex items-center gap-2">
                             <span
-                              className={`px-2 py-1 rounded text-xs font-semibold ${
+                              className={`px-2 py-1 rounded text-xs font-semibold  DZD{
                                 rule.type === 'allow'
                                   ? 'bg-green-100 text-green-700'
                                   : rule.type === 'deny'
@@ -904,7 +904,7 @@ export default function CreateAgentPage() {
                                 memory: { ...agent.memory, type: type.value as any },
                               })
                             }
-                            className={`p-3 rounded-lg border-2 text-left transition-all ${
+                            className={`p-3 rounded-lg border-2 text-left transition-all  DZD{
                               agent.memory.type === type.value
                                 ? 'border-blue-500 bg-blue-50'
                                 : 'border-gray-200 hover:border-gray-300'
@@ -1047,7 +1047,7 @@ export default function CreateAgentPage() {
                           key={template}
                           onClick={() => {
                             // Appliquer un template prédéfini
-                            alert(`Template "${template}" sera appliqué`)
+                            alert(`Template " DZD{template}" sera appliqué`)
                           }}
                           className="p-3 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
                         >
@@ -1069,7 +1069,7 @@ export default function CreateAgentPage() {
                           const url = URL.createObjectURL(dataBlob)
                           const link = document.createElement('a')
                           link.href = url
-                          link.download = `${agent.name || 'agent'}.json`
+                          link.download = ` DZD{agent.name || 'agent'}.json`
                           link.click()
                         }}
                         className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
@@ -1145,14 +1145,14 @@ export default function CreateAgentPage() {
               <div
                 className="rounded-xl p-6 mb-4"
                 style={{
-                  background: `linear-gradient(135deg, ${agent.color}15, ${agent.color}35)`,
-                  border: `2px solid ${agent.color}40`,
+                  background: `linear-gradient(135deg,  DZD{agent.color}15,  DZD{agent.color}35)`,
+                  border: `2px solid  DZD{agent.color}40`,
                 }}
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div
                     className="w-16 h-16 rounded-full flex items-center justify-center text-3xl"
-                    style={{ backgroundColor: `${agent.color}20` }}
+                    style={{ backgroundColor: ` DZD{agent.color}20` }}
                   >
                     {agent.avatar}
                   </div>
@@ -1172,7 +1172,7 @@ export default function CreateAgentPage() {
                       <span
                         key={skill}
                         className="px-2 py-1 text-xs rounded-full"
-                        style={{ backgroundColor: `${agent.color}20`, color: agent.color }}
+                        style={{ backgroundColor: ` DZD{agent.color}20`, color: agent.color }}
                       >
                         {skill}
                       </span>

@@ -182,7 +182,7 @@ export default function CharityPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-green-600 border-b-2 border-green-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -303,7 +303,7 @@ export default function CharityPage() {
                       </div>
                       <div className="flex items-center gap-4">
                         <span className="text-lg font-bold text-gray-900">DZD{donation.amount.toFixed(2)}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           donation.status === 'distributed' ? 'bg-green-100 text-green-800' :
                           donation.status === 'received' ? 'bg-blue-100 text-blue-800' :
                           'bg-yellow-100 text-yellow-800'
@@ -355,7 +355,7 @@ export default function CharityPage() {
                         <p className="text-xs text-gray-500">Assistance</p>
                         <p className="font-bold text-green-600">DZD{beneficiary.assistanceReceived}</p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         beneficiary.status === 'active' ? 'bg-green-100 text-green-800' :
                         beneficiary.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-gray-100 text-gray-800'
@@ -398,11 +398,11 @@ export default function CharityPage() {
                         <span className="text-gray-900 font-semibold">Collecté: DZD{project.collected}</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-green-600 h-2 rounded-full" style={{ width: `${(project.collected / project.budget) * 100}%` }}></div>
+                        <div className="bg-green-600 h-2 rounded-full" style={{ width: ` DZD{(project.collected / project.budget) * 100}%` }}></div>
                       </div>
                     </div>
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         project.status === 'completed' ? 'bg-green-100 text-green-800' :
                         project.status === 'active' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'

@@ -285,7 +285,7 @@ export default function RealEstatePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-slate-600 border-b-2 border-slate-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -358,7 +358,7 @@ export default function RealEstatePage() {
                       </div>
                       <div className="text-right ml-4">
                         <p className="font-bold text-slate-600">{property.price.toLocaleString('fr-DZ')} د.ج</p>
-                        <span className={`text-xs px-2 py-1 rounded ${
+                        <span className={`text-xs px-2 py-1 rounded  DZD{
                           property.status === 'available' ? 'bg-green-100 text-green-800' :
                           property.status === 'rented' ? 'bg-blue-100 text-blue-800' :
                           property.status === 'sold' ? 'bg-gray-100 text-gray-800' :
@@ -382,7 +382,7 @@ export default function RealEstatePage() {
                         <p className="text-sm text-gray-500 line-clamp-1">{request.description}</p>
                         <p className="text-xs text-gray-400 mt-1">{request.tenantName}</p>
                       </div>
-                      <span className={`ml-4 px-2 py-1 rounded text-xs ${
+                      <span className={`ml-4 px-2 py-1 rounded text-xs  DZD{
                         request.priority === 'urgent' ? 'bg-red-100 text-red-800' :
                         request.priority === 'high' ? 'bg-orange-100 text-orange-800' :
                         request.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
@@ -460,7 +460,7 @@ export default function RealEstatePage() {
                   <div key={property.id} className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                     <div className="aspect-video relative">
                       <Image
-                        src={propertyImages[property.id] || property.images[0] || `https://images.unsplash.com/photo-${1500000000000 + idx}?w=800&h=600&fit=crop&q=80`}
+                        src={propertyImages[property.id] || property.images[0] || `https://images.unsplash.com/photo- DZD{1500000000000 + idx}?w=800&h=600&fit=crop&q=80`}
                         alt={property.address}
                         fill
                         className="object-cover"
@@ -495,7 +495,7 @@ export default function RealEstatePage() {
                     </div>
                     <div className="flex items-center justify-between pt-3 border-t border-gray-200">
                       <span className="text-xl font-bold text-slate-600">{property.price.toLocaleString('fr-DZ')} د.ج</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         property.status === 'available' ? 'bg-green-100 text-green-800' :
                         property.status === 'rented' ? 'bg-blue-100 text-blue-800' :
                         property.status === 'sold' ? 'bg-gray-100 text-gray-800' :
@@ -621,7 +621,7 @@ export default function RealEstatePage() {
                     )}
                     <div className="flex justify-between pt-2 border-t border-gray-200">
                       <span className="text-gray-600">Statut:</span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         tenant.status === 'active' ? 'bg-green-100 text-green-800' :
                         tenant.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-gray-100 text-gray-800'
@@ -717,14 +717,14 @@ export default function RealEstatePage() {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         lease.status === 'active' ? 'bg-green-100 text-green-800' :
                         lease.status === 'expired' ? 'bg-gray-100 text-gray-800' :
                         'bg-red-100 text-red-800'
                       }`}>
                         {lease.status === 'active' ? 'Actif' : lease.status === 'expired' ? 'Expiré' : 'Résilié'}
                       </span>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs  DZD{
                         lease.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' :
                         lease.paymentStatus === 'overdue' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -823,7 +823,7 @@ export default function RealEstatePage() {
                       <p className="text-xs text-gray-400 mt-2">Créé le {new Date(request.createdAt).toLocaleDateString('fr-FR')}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         request.priority === 'urgent' ? 'bg-red-100 text-red-800' :
                         request.priority === 'high' ? 'bg-orange-100 text-orange-800' :
                         request.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
@@ -831,7 +831,7 @@ export default function RealEstatePage() {
                       }`}>
                         {request.priority === 'urgent' ? 'Urgent' : request.priority === 'high' ? 'Élevée' : request.priority === 'medium' ? 'Moyenne' : 'Basse'}
                       </span>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         request.status === 'completed' ? 'bg-green-100 text-green-800' :
                         request.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                         request.status === 'cancelled' ? 'bg-red-100 text-red-800' :

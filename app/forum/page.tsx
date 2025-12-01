@@ -165,7 +165,7 @@ export default function ForumPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -263,8 +263,8 @@ export default function ForumPage() {
                   {categories.map((category) => (
                     <div key={category.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg bg-${category.color}-100 flex items-center justify-center`}>
-                          <Tag className={`w-5 h-5 text-${category.color}-600`} />
+                        <div className={`w-10 h-10 rounded-lg bg- DZD{category.color}-100 flex items-center justify-center`}>
+                          <Tag className={`w-5 h-5 text- DZD{category.color}-600`} />
                         </div>
                         <div>
                           <p className="font-medium text-gray-900">{category.name}</p>
@@ -373,8 +373,8 @@ export default function ForumPage() {
                 return (
                   <div key={category.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className={`w-12 h-12 rounded-lg ${colorClass.split(' ')[0]} flex items-center justify-center`}>
-                        <Tag className={`w-6 h-6 ${colorClass.split(' ')[1]}`} />
+                      <div className={`w-12 h-12 rounded-lg  DZD{colorClass.split(' ')[0]} flex items-center justify-center`}>
+                        <Tag className={`w-6 h-6  DZD{colorClass.split(' ')[1]}`} />
                       </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900">{category.name}</h3>
@@ -419,7 +419,7 @@ export default function ForumPage() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Rôle:</span>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         member.role === 'admin' ? 'bg-red-100 text-red-800' :
                         member.role === 'moderator' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'

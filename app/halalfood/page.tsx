@@ -262,7 +262,7 @@ export default function HalalFoodPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-green-600 border-b-2 border-green-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -389,7 +389,7 @@ export default function HalalFoodPage() {
                 <div key={product.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900 text-base sm:text-lg">{product.name}</h3>
-                    <span className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${
+                    <span className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap  DZD{
                       product.halalStatus === 'certified' ? 'bg-green-100 text-green-800' :
                       product.halalStatus === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                       product.halalStatus === 'rejected' ? 'bg-red-100 text-red-800' :
@@ -463,7 +463,7 @@ export default function HalalFoodPage() {
                           </p>
                         )}
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         cert.status === 'active' ? 'bg-green-100 text-green-800' :
                         cert.status === 'expired' ? 'bg-red-100 text-red-800' :
                         'bg-gray-100 text-gray-800'
@@ -520,7 +520,7 @@ export default function HalalFoodPage() {
                           </p>
                         )}
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         control.result === 'passed' ? 'bg-green-100 text-green-800' :
                         control.result === 'failed' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -577,7 +577,7 @@ export default function HalalFoodPage() {
                           </div>
                         )}
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         audit.status === 'completed' ? 'bg-green-100 text-green-800' :
                         audit.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'

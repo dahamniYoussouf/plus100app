@@ -423,7 +423,7 @@ export default function ClinicPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-emerald-600 border-b-2 border-emerald-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -675,7 +675,7 @@ export default function ClinicPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="font-semibold text-gray-900 text-lg">{apt.patientName}</h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                             apt.status === 'completed' ? 'bg-green-100 text-green-800' :
                             apt.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                             apt.status === 'in_progress' ? 'bg-yellow-100 text-yellow-800' :
@@ -707,7 +707,7 @@ export default function ClinicPage() {
                           </div>
                           
                           <div className="flex items-center gap-2">
-                            <span className={`px-2 py-1 rounded text-xs capitalize ${
+                            <span className={`px-2 py-1 rounded text-xs capitalize  DZD{
                               apt.type === 'emergency' ? 'bg-red-100 text-red-800' :
                               apt.type === 'vaccination' ? 'bg-blue-100 text-blue-800' :
                               apt.type === 'checkup' ? 'bg-green-100 text-green-800' :
@@ -783,7 +783,7 @@ export default function ClinicPage() {
                         </p>
                         <div className="flex items-center gap-4 mt-2">
                           <span className="text-sm text-gray-600">👤 {record.doctor}</span>
-                          <span className={`px-2 py-1 rounded text-xs capitalize ${
+                          <span className={`px-2 py-1 rounded text-xs capitalize  DZD{
                             record.visitType === 'emergency' ? 'bg-red-100 text-red-800' :
                             record.visitType === 'vaccination' ? 'bg-blue-100 text-blue-800' :
                             record.visitType === 'checkup' ? 'bg-green-100 text-green-800' :

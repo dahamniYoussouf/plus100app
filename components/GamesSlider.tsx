@@ -254,7 +254,7 @@ export default function GamesSlider() {
                     {/* Icon & Category */}
                     <div className="flex items-center gap-4 mb-6">
                       <motion.div
-                        className={`w-20 h-20 rounded-2xl bg-gradient-to-r ${currentGame.color} flex items-center justify-center shadow-xl`}
+                        className={`w-20 h-20 rounded-2xl bg-gradient-to-r  DZD{currentGame.color} flex items-center justify-center shadow-xl`}
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         transition={{ type: 'spring', stiffness: 300 }}
                       >
@@ -288,7 +288,7 @@ export default function GamesSlider() {
                       onClick={() => setSelectedGame(currentGame.id)}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`px-8 py-4 bg-gradient-to-r ${currentGame.color} text-white rounded-xl font-bold text-lg shadow-xl flex items-center gap-3 hover:shadow-2xl transition-all`}
+                      className={`px-8 py-4 bg-gradient-to-r  DZD{currentGame.color} text-white rounded-xl font-bold text-lg shadow-xl flex items-center gap-3 hover:shadow-2xl transition-all`}
                     >
                       <Play size={24} fill="white" />
                       Jouer Maintenant
@@ -342,12 +342,12 @@ export default function GamesSlider() {
                   goToGame(index)
                 }}
                 onMouseEnter={() => setIsAutoPlaying(false)}
-                className={`transition-all rounded-full ${
+                className={`transition-all rounded-full  DZD{
                   index === currentIndex
                     ? 'w-12 h-3 bg-gradient-to-r from-yellow-400 to-pink-400'
                     : 'w-3 h-3 bg-white/30 hover:bg-white/50'
                 }`}
-                aria-label={`Aller au jeu ${index + 1}`}
+                aria-label={`Aller au jeu  DZD{index + 1}`}
               />
             ))}
           </div>
@@ -363,7 +363,7 @@ export default function GamesSlider() {
                     goToGame(index)
                   }}
                   onMouseEnter={() => setIsAutoPlaying(false)}
-                  className={`relative flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden border-2 transition-all ${
+                  className={`relative flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden border-2 transition-all  DZD{
                     index === currentIndex
                       ? 'border-yellow-400 scale-110 shadow-xl'
                       : 'border-white/30 hover:border-white/50'
@@ -376,7 +376,7 @@ export default function GamesSlider() {
                     alt={game.title}
                     className="w-full h-full object-cover"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-r ${game.color} ${
+                  <div className={`absolute inset-0 bg-gradient-to-r  DZD{game.color}  DZD{
                     index === currentIndex ? 'opacity-30' : 'opacity-50'
                   }`}></div>
                   <div className="absolute inset-0 flex items-center justify-center">

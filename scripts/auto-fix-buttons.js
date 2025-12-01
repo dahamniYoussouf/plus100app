@@ -46,7 +46,7 @@ function generateModalName(buttonText) {
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join('');
-  return `show${cleaned}Modal`;
+  return `show DZD{cleaned}Modal`;
 }
 
 // Fonction pour trouver les boutons sans onClick
@@ -82,7 +82,7 @@ function addModalImport(content) {
   }
   
   // Trouver la dernière ligne d'import
-  const importRegex = /^import\s+.*$/gm;
+  const importRegex = /^import\s+.* DZD/gm;
   const imports = content.match(importRegex);
   
   if (imports && imports.length > 0) {
@@ -113,7 +113,7 @@ function addModalStates(content, modalNames) {
   if (useStateMatch) {
     const insertIndex = useStateMatch.index;
     const statesCode = uniqueModals.map(name => 
-      `  const [${name}, set${name.charAt(0).toUpperCase() + name.slice(1)}] = useState(false)`
+      `  const [ DZD{name}, set DZD{name.charAt(0).toUpperCase() + name.slice(1)}] = useState(false)`
     ).join('\n') + '\n';
     
     // Trouver la ligne avant le premier useState
@@ -127,7 +127,7 @@ function addModalStates(content, modalNames) {
   if (exportDefaultMatch) {
     const insertIndex = exportDefaultMatch.index;
     const statesCode = uniqueModals.map(name => 
-      `  const [${name}, set${name.charAt(0).toUpperCase() + name.slice(1)}] = useState(false)`
+      `  const [ DZD{name}, set DZD{name.charAt(0).toUpperCase() + name.slice(1)}] = useState(false)`
     ).join('\n') + '\n';
     
     const beforeFunc = content.substring(0, insertIndex);
@@ -147,8 +147,8 @@ function addOnClickToButtons(content, buttons) {
   buttons.sort((a, b) => b.index - a.index);
   
   for (const button of buttons) {
-    const setterName = `set${button.modalName.charAt(0).toUpperCase() + button.modalName.slice(1)}`;
-    const onClickAttr = ` onClick={() => ${setterName}(true)}`;
+    const setterName = `set DZD{button.modalName.charAt(0).toUpperCase() + button.modalName.slice(1)}`;
+    const onClickAttr = ` onClick={() =>  DZD{setterName}(true)}`;
     
     // Insérer onClick dans les attributs
     const buttonStart = button.index + offset;
@@ -180,19 +180,19 @@ function addModals(content, modalNames) {
   }
   
   const modalsCode = '\n      {/* Modals */}\n' + uniqueModals.map(name => {
-    const setterName = `set${name.charAt(0).toUpperCase() + name.slice(1)}`;
-    const title = name.replace(/show|Modal/g, '').replace(/([A-Z])/g, ' $1').trim();
+    const setterName = `set DZD{name.charAt(0).toUpperCase() + name.slice(1)}`;
+    const title = name.replace(/show|Modal/g, '').replace(/([A-Z])/g, '  DZD1').trim();
     return `      <Modal
-        isOpen={${name}}
-        onClose={() => ${setterName}(false)}
-        title="${title}"
+        isOpen={ DZD{name}}
+        onClose={() =>  DZD{setterName}(false)}
+        title=" DZD{title}"
         size="lg"
       >
         <div className="space-y-4">
           <p className="text-gray-600">Fonctionnalité en cours de développement.</p>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => ${setterName}(false)}
+              onClick={() =>  DZD{setterName}(false)}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
               Fermer
@@ -246,7 +246,7 @@ function processFile(filePath) {
       modalsAdded: [...new Set(modalNames)].length
     };
   } catch (error) {
-    return { updated: false, reason: `Erreur: ${error.message}` };
+    return { updated: false, reason: `Erreur:  DZD{error.message}` };
   }
 }
 
@@ -254,7 +254,7 @@ function processFile(filePath) {
 console.log('🚀 Démarrage de la correction automatique des boutons...\n');
 const pageFiles = findPageFiles(appDir);
 
-console.log(`📄 ${pageFiles.length} pages trouvées\n`);
+console.log(`📄  DZD{pageFiles.length} pages trouvées\n`);
 
 let updatedCount = 0;
 let totalButtons = 0;
@@ -268,14 +268,14 @@ pageFiles.forEach((file, index) => {
     updatedCount++;
     totalButtons += result.buttonsCount;
     totalModals += result.modalsAdded;
-    console.log(`✅ ${relativePath}: ${result.buttonsCount} bouton(s) corrigé(s), ${result.modalsAdded} modal(s) ajouté(s)`);
+    console.log(`✅  DZD{relativePath}:  DZD{result.buttonsCount} bouton(s) corrigé(s),  DZD{result.modalsAdded} modal(s) ajouté(s)`);
   }
 });
 
 console.log(`\n📊 Résumé:`);
-console.log(`   - Pages mises à jour: ${updatedCount}/${pageFiles.length}`);
-console.log(`   - Total boutons corrigés: ${totalButtons}`);
-console.log(`   - Total modaux ajoutés: ${totalModals}`);
+console.log(`   - Pages mises à jour:  DZD{updatedCount}/ DZD{pageFiles.length}`);
+console.log(`   - Total boutons corrigés:  DZD{totalButtons}`);
+console.log(`   - Total modaux ajoutés:  DZD{totalModals}`);
 console.log(`\n✨ Correction terminée!`);
 
 

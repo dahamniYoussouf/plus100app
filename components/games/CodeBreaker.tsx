@@ -68,7 +68,7 @@ export default function CodeBreaker() {
     if (newFeedback.every(f => f === '✅') && newFeedback.length === 4) {
       setGameWon(true)
     } else if (newAttempts.length >= maxAttempts) {
-      alert(`Perdu ! Le code était: ${code.join(' ')}`)
+      alert(`Perdu ! Le code était:  DZD{code.join(' ')}`)
       generateCode()
     }
 

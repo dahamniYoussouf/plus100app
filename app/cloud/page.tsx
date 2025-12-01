@@ -200,7 +200,7 @@ export default function CloudPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -271,12 +271,12 @@ export default function CloudPage() {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full ${
+                          className={`h-2 rounded-full  DZD{
                             usagePercent >= 90 ? 'bg-red-500' :
                             usagePercent >= 70 ? 'bg-yellow-500' :
                             'bg-green-500'
                           }`}
-                          style={{ width: `${usagePercent}%` }}
+                          style={{ width: ` DZD{usagePercent}%` }}
                         />
                       </div>
                     </div>
@@ -485,12 +485,12 @@ export default function CloudPage() {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
-                    className={`h-3 rounded-full ${
+                    className={`h-3 rounded-full  DZD{
                       (totalStorage / totalLimit) >= 0.9 ? 'bg-red-500' :
                       (totalStorage / totalLimit) >= 0.7 ? 'bg-yellow-500' :
                       'bg-green-500'
                     }`}
-                    style={{ width: `${(totalStorage / totalLimit) * 100}%` }}
+                    style={{ width: ` DZD{(totalStorage / totalLimit) * 100}%` }}
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
@@ -507,7 +507,7 @@ export default function CloudPage() {
                           <p className="font-medium text-gray-900">{user.name}</p>
                           <p className="text-xs text-gray-500">{user.email}</p>
                         </div>
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           user.role === 'admin' ? 'bg-red-100 text-red-800' :
                           user.role === 'user' ? 'bg-blue-100 text-blue-800' :
                           'bg-gray-100 text-gray-800'
@@ -522,12 +522,12 @@ export default function CloudPage() {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full ${
+                          className={`h-2 rounded-full  DZD{
                             usagePercent >= 90 ? 'bg-red-500' :
                             usagePercent >= 70 ? 'bg-yellow-500' :
                             'bg-green-500'
                           }`}
-                          style={{ width: `${usagePercent}%` }}
+                          style={{ width: ` DZD{usagePercent}%` }}
                         />
                       </div>
                     </div>

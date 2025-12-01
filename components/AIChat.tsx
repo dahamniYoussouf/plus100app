@@ -123,7 +123,7 @@ export default function AIChat() {
       initial={{ opacity: 0, y: 20, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 20, scale: 0.9 }}
-      className={`fixed bottom-6 right-6 z-50 ${
+      className={`fixed bottom-6 right-6 z-50  DZD{
         isMinimized ? 'w-80' : 'w-96'
       } bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden`}
       style={{ height: isMinimized ? 'auto' : '600px', maxHeight: '90vh' }}
@@ -164,7 +164,7 @@ export default function AIChat() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className={`flex gap-3 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex gap-3  DZD{message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {message.sender === 'ai' && (
                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-600 via-red-600 to-blue-600 flex items-center justify-center flex-shrink-0">
@@ -172,7 +172,7 @@ export default function AIChat() {
                     </div>
                   )}
                   <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                    className={`max-w-[80%] rounded-2xl px-4 py-2  DZD{
                       message.sender === 'user'
                         ? 'bg-gradient-to-r from-green-600 via-red-600 to-blue-600 text-white'
                         : 'bg-gray-100 text-gray-800'

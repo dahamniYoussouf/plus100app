@@ -429,7 +429,7 @@ export default function GymPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-red-600 border-b-2 border-red-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -575,7 +575,7 @@ export default function GymPage() {
                   <div key={member.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-lg">{member.name}</h3>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         member.status === 'active' ? 'bg-green-100 text-green-800' :
                         member.status === 'expired' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -698,7 +698,7 @@ export default function GymPage() {
                   <div key={classItem.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-lg">{classItem.name}</h3>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                         classItem.level === 'beginner' ? 'bg-green-100 text-green-800' :
                         classItem.level === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
@@ -736,12 +736,12 @@ export default function GymPage() {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className={`h-2 rounded-full ${
+                          className={`h-2 rounded-full  DZD{
                             occupancyRate >= 90 ? 'bg-red-500' :
                             occupancyRate >= 70 ? 'bg-yellow-500' :
                             'bg-green-500'
                           }`}
-                          style={{ width: `${occupancyRate}%` }}
+                          style={{ width: ` DZD{occupancyRate}%` }}
                         />
                       </div>
                       <div className="flex items-center justify-between text-sm">
@@ -772,7 +772,7 @@ export default function GymPage() {
                 <div key={item.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900 text-lg">{item.name}</h3>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                       item.status === 'available' ? 'bg-green-100 text-green-800' :
                       item.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-red-100 text-red-800'
@@ -807,7 +807,7 @@ export default function GymPage() {
                       </div>
                     )}
                     {item.warrantyExpiry && (
-                      <p className={`text-xs ${
+                      <p className={`text-xs  DZD{
                         new Date(item.warrantyExpiry) > new Date() ? 'text-green-600' : 'text-red-600'
                       }`}>
                         🛡️ Garantie: {new Date(item.warrantyExpiry).toLocaleDateString('fr-FR')}

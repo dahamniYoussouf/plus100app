@@ -237,7 +237,7 @@ export default function ProjectGallery() {
             <div className="relative h-96 bg-gray-100">
               <img
                 src={selectedProjectData.screenshots[currentImageIndex]}
-                alt={`${selectedProjectData.title} screenshot ${currentImageIndex + 1}`}
+                alt={` DZD{selectedProjectData.title} screenshot  DZD{currentImageIndex + 1}`}
                 className="w-full h-full object-contain"
               />
               
@@ -264,7 +264,7 @@ export default function ProjectGallery() {
                       <button
                         key={i}
                         onClick={() => setCurrentImageIndex(i)}
-                        className={`w-2 h-2 rounded-full transition-all ${
+                        className={`w-2 h-2 rounded-full transition-all  DZD{
                           i === currentImageIndex ? 'bg-blue-600 w-8' : 'bg-gray-300'
                         }`}
                       />

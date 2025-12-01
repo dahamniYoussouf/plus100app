@@ -161,7 +161,7 @@ export default function GiftPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-purple-600 border-b-2 border-purple-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -237,7 +237,7 @@ export default function GiftPage() {
                       </div>
                       <div className="text-right ml-4">
                         <p className="font-bold text-gray-900">DZD{sale.total.toFixed(2)}</p>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
+                        <span className={`text-xs px-2 py-1 rounded-full  DZD{
                           sale.status === 'completed' ? 'bg-green-100 text-green-800' :
                           sale.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-red-100 text-red-800'
@@ -312,7 +312,7 @@ export default function GiftPage() {
                   <div className="space-y-2 text-sm pt-4 border-t border-gray-200">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Stock:</span>
-                      <span className={`font-bold ${product.stock < 10 ? 'text-red-600' : 'text-gray-900'}`}>{product.stock}</span>
+                      <span className={`font-bold  DZD{product.stock < 10 ? 'text-red-600' : 'text-gray-900'}`}>{product.stock}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Vendus:</span>
@@ -367,7 +367,7 @@ export default function GiftPage() {
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         sale.status === 'completed' ? 'bg-green-100 text-green-800' :
                         sale.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'

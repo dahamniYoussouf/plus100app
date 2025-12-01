@@ -194,7 +194,7 @@ export default function EscapePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-red-600 border-b-2 border-red-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -278,7 +278,7 @@ export default function EscapePage() {
                   {leaderboard.sort((a, b) => a.time - b.time).slice(0, 3).map((entry, idx) => (
                     <div key={entry.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold  DZD{
                           idx === 0 ? 'bg-yellow-100 text-yellow-800' :
                           idx === 1 ? 'bg-gray-100 text-gray-800' :
                           'bg-amber-100 text-amber-800'
@@ -314,7 +314,7 @@ export default function EscapePage() {
               {rooms.map((room) => (
                 <div
                   key={room.id}
-                  className={`bg-white rounded-xl shadow-lg border-2 p-4 sm:p-6 ${
+                  className={`bg-white rounded-xl shadow-lg border-2 p-4 sm:p-6  DZD{
                     room.status === 'available' ? 'border-green-200' :
                     room.status === 'occupied' ? 'border-blue-200' :
                     'border-red-200'
@@ -326,7 +326,7 @@ export default function EscapePage() {
                       <p className="text-sm text-gray-600 mb-2 line-clamp-2">{room.description}</p>
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">{room.theme}</span>
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           room.difficulty === 'easy' ? 'bg-green-100 text-green-800' :
                           room.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800' :
                           room.difficulty === 'hard' ? 'bg-orange-100 text-orange-800' :
@@ -372,7 +372,7 @@ export default function EscapePage() {
                       <span className="font-semibold text-gray-900">Prix:</span>
                       <span className="font-bold text-red-600">DZD{room.price}</span>
                     </div>
-                    <span className={`block text-center mt-2 px-3 py-1 rounded-full text-xs font-medium ${
+                    <span className={`block text-center mt-2 px-3 py-1 rounded-full text-xs font-medium  DZD{
                       room.status === 'available' ? 'bg-green-100 text-green-800' :
                       room.status === 'occupied' ? 'bg-blue-100 text-blue-800' :
                       'bg-red-100 text-red-800'
@@ -409,16 +409,16 @@ export default function EscapePage() {
                       </p>
                       <p className="text-sm text-gray-500 mt-1">{booking.players} joueurs</p>
                       {booking.result && (
-                        <p className={`text-sm font-medium mt-2 ${
+                        <p className={`text-sm font-medium mt-2  DZD{
                           booking.result === 'escaped' ? 'text-green-600' : 'text-red-600'
                         }`}>
                           {booking.result === 'escaped' ? '✓ Évasion réussie' : '✗ Évasion échouée'}
-                          {booking.timeTaken && ` en ${booking.timeTaken} min`}
+                          {booking.timeTaken && ` en  DZD{booking.timeTaken} min`}
                         </p>
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         booking.status === 'completed' ? 'bg-green-100 text-green-800' :
                         booking.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
                         'bg-red-100 text-red-800'
@@ -506,7 +506,7 @@ export default function EscapePage() {
                     {leaderboard.sort((a, b) => a.time - b.time).map((entry, idx) => (
                       <tr key={entry.id} className="hover:bg-gray-50">
                         <td className="px-4 py-3">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold  DZD{
                             idx === 0 ? 'bg-yellow-100 text-yellow-800' :
                             idx === 1 ? 'bg-gray-100 text-gray-800' :
                             idx === 2 ? 'bg-amber-100 text-amber-800' :

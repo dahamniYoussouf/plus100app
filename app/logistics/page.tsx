@@ -59,8 +59,12 @@ export default function LogisticsPage() {
   const [routes, setRoutes] = useState<Route[]>([])
   const [showVehicleModal, setShowVehicleModal] = useState(false)
   const [showDriverModal, setShowDriverModal] = useState(false)
+  const [showShipmentModal, setShowShipmentModal] = useState(false)
+  const [showRouteModal, setShowRouteModal] = useState(false)
   const [newVehicle, setNewVehicle] = useState({ licensePlate: '', type: 'truck' as 'truck' | 'van' | 'container', capacity: 0 })
   const [newDriver, setNewDriver] = useState({ name: '', phone: '', licenseNumber: '' })
+  const [newShipment, setNewShipment] = useState({ trackingNumber: '', origin: '', destination: '', clientName: '', weight: 0, volume: 0, vehicleId: '', driverId: '', estimatedDelivery: '' })
+  const [newRoute, setNewRoute] = useState({ name: '', origin: '', destination: '', distance: 0, estimatedTime: 0 })
 
   useEffect(() => {
     const savedShipments = localStorage.getItem('logistics-shipments')
@@ -274,7 +278,10 @@ export default function LogisticsPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Expéditions</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowShipmentModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Nouvelle Expédition
               </button>
             </div>
@@ -426,7 +433,10 @@ export default function LogisticsPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Itinéraires</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowRouteModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Nouvel Itinéraire
               </button>
             </div>
@@ -617,6 +627,258 @@ export default function LogisticsPage() {
                   setDrivers([...drivers, driver])
                   setShowDriverModal(false)
                   setNewDriver({ name: '', phone: '', licenseNumber: '' })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showShipmentModal}
+        onClose={() => {
+          setShowShipmentModal(false)
+          setNewShipment({ trackingNumber: '', origin: '', destination: '', clientName: '', weight: 0, volume: 0, vehicleId: '', driverId: '', estimatedDelivery: '' })
+        }}
+        title="Nouvelle Expédition"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de suivi</label>
+            <input
+              type="text"
+              value={newShipment.trackingNumber}
+              onChange={(e) => setNewShipment({ ...newShipment, trackingNumber: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: LOG-001"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Origine</label>
+              <input
+                type="text"
+                value={newShipment.origin}
+                onChange={(e) => setNewShipment({ ...newShipment, origin: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Alger"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Destination</label>
+              <input
+                type="text"
+                value={newShipment.destination}
+                onChange={(e) => setNewShipment({ ...newShipment, destination: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Oran"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+            <input
+              type="text"
+              value={newShipment.clientName}
+              onChange={(e) => setNewShipment({ ...newShipment, clientName: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Client ABC"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Poids (kg)</label>
+              <input
+                type="number"
+                value={newShipment.weight}
+                onChange={(e) => setNewShipment({ ...newShipment, weight: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Volume (m³)</label>
+              <input
+                type="number"
+                value={newShipment.volume}
+                onChange={(e) => setNewShipment({ ...newShipment, volume: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+                step="0.1"
+              />
+            </div>
+          </div>
+          {vehicles.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Véhicule (optionnel)</label>
+              <select
+                value={newShipment.vehicleId}
+                onChange={(e) => setNewShipment({ ...newShipment, vehicleId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un véhicule</option>
+                {vehicles.map(v => (
+                  <option key={v.id} value={v.id}>{v.licensePlate} - {v.type}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {drivers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Chauffeur (optionnel)</label>
+              <select
+                value={newShipment.driverId}
+                onChange={(e) => setNewShipment({ ...newShipment, driverId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un chauffeur</option>
+                {drivers.map(d => (
+                  <option key={d.id} value={d.id}>{d.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Livraison estimée</label>
+            <input
+              type="date"
+              value={newShipment.estimatedDelivery}
+              onChange={(e) => setNewShipment({ ...newShipment, estimatedDelivery: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowShipmentModal(false)
+                setNewShipment({ trackingNumber: '', origin: '', destination: '', clientName: '', weight: 0, volume: 0, vehicleId: '', driverId: '', estimatedDelivery: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newShipment.trackingNumber && newShipment.origin && newShipment.destination && newShipment.clientName && newShipment.estimatedDelivery) {
+                  const shipment: Shipment = {
+                    id: Date.now().toString(),
+                    trackingNumber: newShipment.trackingNumber,
+                    origin: newShipment.origin,
+                    destination: newShipment.destination,
+                    status: 'pending',
+                    weight: newShipment.weight,
+                    volume: newShipment.volume,
+                    vehicleId: newShipment.vehicleId || undefined,
+                    driverId: newShipment.driverId || undefined,
+                    estimatedDelivery: new Date(newShipment.estimatedDelivery),
+                    clientName: newShipment.clientName,
+                  }
+                  setShipments([...shipments, shipment])
+                  setShowShipmentModal(false)
+                  setNewShipment({ trackingNumber: '', origin: '', destination: '', clientName: '', weight: 0, volume: 0, vehicleId: '', driverId: '', estimatedDelivery: '' })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showRouteModal}
+        onClose={() => {
+          setShowRouteModal(false)
+          setNewRoute({ name: '', origin: '', destination: '', distance: 0, estimatedTime: 0 })
+        }}
+        title="Nouvel Itinéraire"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newRoute.name}
+              onChange={(e) => setNewRoute({ ...newRoute, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Alger - Oran"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Origine</label>
+              <input
+                type="text"
+                value={newRoute.origin}
+                onChange={(e) => setNewRoute({ ...newRoute, origin: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Alger"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Destination</label>
+              <input
+                type="text"
+                value={newRoute.destination}
+                onChange={(e) => setNewRoute({ ...newRoute, destination: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Oran"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Distance (km)</label>
+              <input
+                type="number"
+                value={newRoute.distance}
+                onChange={(e) => setNewRoute({ ...newRoute, distance: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Temps estimé (heures)</label>
+              <input
+                type="number"
+                value={newRoute.estimatedTime}
+                onChange={(e) => setNewRoute({ ...newRoute, estimatedTime: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowRouteModal(false)
+                setNewRoute({ name: '', origin: '', destination: '', distance: 0, estimatedTime: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newRoute.name && newRoute.origin && newRoute.destination && newRoute.distance > 0) {
+                  const route: Route = {
+                    id: Date.now().toString(),
+                    name: newRoute.name,
+                    origin: newRoute.origin,
+                    destination: newRoute.destination,
+                    distance: newRoute.distance,
+                    estimatedTime: newRoute.estimatedTime,
+                    status: 'active',
+                  }
+                  setRoutes([...routes, route])
+                  setShowRouteModal(false)
+                  setNewRoute({ name: '', origin: '', destination: '', distance: 0, estimatedTime: 0 })
                 }
               }}
               className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"

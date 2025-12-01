@@ -65,7 +65,7 @@ export default function IcecreamPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-cyan-600 border-b-2 border-cyan-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -98,7 +98,7 @@ export default function IcecreamPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Revenus</p>
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2">${totalRevenue.toFixed(0)}</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mt-2"> DZD{totalRevenue.toFixed(0)}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
                 </div>
@@ -190,7 +190,7 @@ export default function IcecreamPage() {
                 <div key={flavor.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900 text-base sm:text-lg">{flavor.name}</h3>
-                    <span className={`px-2 py-1 rounded text-xs whitespace-nowrap ${
+                    <span className={`px-2 py-1 rounded text-xs whitespace-nowrap  DZD{
                       flavor.category === 'halal' ? 'bg-green-100 text-green-800' :
                       flavor.category === 'premium' ? 'bg-purple-100 text-purple-800' :
                       'bg-blue-100 text-blue-800'
@@ -201,7 +201,7 @@ export default function IcecreamPage() {
                   <p className="text-sm text-gray-600 mb-3">{flavor.description}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                     <span className="text-lg sm:text-xl font-bold text-gray-900">DZD{flavor.price.toFixed(2)}</span>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                       flavor.stock < 20 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                     }`}>
                       Stock: {flavor.stock}
@@ -246,7 +246,7 @@ export default function IcecreamPage() {
                     <span className="text-sm text-gray-500 ml-2">({flavor.category})</span>
                   </div>
                   <div className="mt-2 sm:mt-0">
-                    <span className={`font-semibold ${
+                    <span className={`font-semibold  DZD{
                       flavor.stock < 20 ? 'text-red-700' : 'text-green-700'
                     }`}>
                       Stock: {flavor.stock}

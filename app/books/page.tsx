@@ -145,7 +145,7 @@ export default function BooksPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-red-600 border-b-2 border-red-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -277,7 +277,7 @@ export default function BooksPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Stock:</span>
-                      <span className={`font-bold ${book.stock < 20 ? 'text-red-600' : 'text-gray-900'}`}>{book.stock}</span>
+                      <span className={`font-bold  DZD{book.stock < 20 ? 'text-red-600' : 'text-gray-900'}`}>{book.stock}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Vendus:</span>
@@ -319,7 +319,7 @@ export default function BooksPage() {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         sale.status === 'completed' ? 'bg-green-100 text-green-800' :
                         sale.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
@@ -399,7 +399,7 @@ export default function BooksPage() {
                         <td className="px-4 py-3 text-sm text-right text-gray-600">{book.sold}</td>
                         <td className="px-4 py-3 text-sm text-right text-gray-900">DZD{book.price.toFixed(2)}</td>
                         <td className="px-4 py-3 text-sm">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium  DZD{
                             book.stock < 10 ? 'bg-red-100 text-red-800' :
                             book.stock < 20 ? 'bg-yellow-100 text-yellow-800' :
                             'bg-green-100 text-green-800'

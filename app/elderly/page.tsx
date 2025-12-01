@@ -227,7 +227,7 @@ export default function ElderlyPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-purple-600 border-b-2 border-purple-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -407,7 +407,7 @@ export default function ElderlyPage() {
                       <p className="text-gray-600">👨‍⚕️ Prescrit par: {med.doctor}</p>
                       <p className="text-gray-500 text-xs">
                         Début: {new Date(med.startDate).toLocaleDateString('fr-FR')}
-                        {med.endDate && ` - Fin: ${new Date(med.endDate).toLocaleDateString('fr-FR')}`}
+                        {med.endDate && ` - Fin:  DZD{new Date(med.endDate).toLocaleDateString('fr-FR')}`}
                       </p>
                       {med.notes && (
                         <p className="text-gray-500 text-xs mt-1">Note: {med.notes}</p>
@@ -446,7 +446,7 @@ export default function ElderlyPage() {
                            apt.type === 'checkup' ? 'Contrôle' : 'Autre'}
                         </p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         apt.status === 'completed' ? 'bg-green-100 text-green-800' :
                         apt.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-blue-100 text-blue-800'
@@ -508,7 +508,7 @@ export default function ElderlyPage() {
                           )}
                         </div>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         care.completed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                       }`}>
                         {care.completed ? 'Terminé' : 'En attente'}

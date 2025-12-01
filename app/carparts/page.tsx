@@ -251,7 +251,7 @@ export default function CarpartsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -386,7 +386,7 @@ export default function CarpartsPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredParts.map((part) => (
-                  <div key={part.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6 ${
+                  <div key={part.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6  DZD{
                     part.quantity <= part.minStock ? 'border-orange-300 bg-orange-50' : 'border-gray-200'
                   }`}>
                     <div className="flex items-start justify-between mb-3">
@@ -416,7 +416,7 @@ export default function CarpartsPage() {
                     <div className="pt-4 border-t border-gray-200 flex items-center justify-between">
                       <div>
                         <p className="text-xs text-gray-500">Stock</p>
-                        <p className={`text-lg font-bold ${
+                        <p className={`text-lg font-bold  DZD{
                           part.quantity <= part.minStock ? 'text-orange-600' : 'text-gray-900'
                         }`}>
                           {part.quantity}
@@ -461,7 +461,7 @@ export default function CarpartsPage() {
                           📅 {new Date(sale.date).toLocaleDateString('fr-FR')}
                         </p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         sale.status === 'completed' ? 'bg-green-100 text-green-800' :
                         sale.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -603,7 +603,7 @@ export default function CarpartsPage() {
                         </td>
                         <td className="py-3 px-4 text-gray-600">{part.partNumber}</td>
                         <td className="py-3 px-4">
-                          <span className={`font-medium ${
+                          <span className={`font-medium  DZD{
                             part.quantity <= part.minStock ? 'text-orange-600' : 'text-gray-900'
                           }`}>
                             {part.quantity}

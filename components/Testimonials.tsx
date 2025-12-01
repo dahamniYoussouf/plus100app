@@ -112,7 +112,7 @@ export default function Testimonials() {
           <div className="overflow-hidden rounded-2xl">
             <motion.div
               className="flex"
-              animate={{ x: `-${currentIndex * 100}%` }}
+              animate={{ x: `- DZD{currentIndex * 100}%` }}
               transition={{ duration: 0.5, ease: 'easeInOut' }}
             >
               {testimonials.map((testimonial) => (
@@ -144,7 +144,7 @@ export default function Testimonials() {
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className={`${
+                              className={` DZD{
                                 i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'
                               }`}
                               size={16}
@@ -180,7 +180,7 @@ export default function Testimonials() {
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${
+                  className={`w-2 h-2 rounded-full transition-all  DZD{
                   index === currentIndex ? 'bg-blue-600 w-8' : 'bg-gray-300'
                 }`}
               />
@@ -249,7 +249,7 @@ export default function Testimonials() {
                         key={rating}
                         type="button"
                         onClick={() => setFormData({ ...formData, rating })}
-                        className={`${
+                        className={` DZD{
                           formData.rating >= rating
                             ? 'text-yellow-400 fill-yellow-400'
                             : 'text-gray-600'

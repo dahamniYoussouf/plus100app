@@ -145,7 +145,7 @@ export default function LanguagePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-emerald-600 border-b-2 border-emerald-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -254,7 +254,7 @@ export default function LanguagePage() {
                       <h3 className="font-semibold text-gray-900 text-base sm:text-lg">{course.name}</h3>
                       <p className="text-sm text-gray-600">{course.language}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs capitalize whitespace-nowrap ${
+                    <span className={`px-2 py-1 rounded text-xs capitalize whitespace-nowrap  DZD{
                       course.level === 'beginner' ? 'bg-green-100 text-green-800' :
                       course.level === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-red-100 text-red-800'
@@ -313,7 +313,7 @@ export default function LanguagePage() {
                           <span className="font-medium text-gray-700">{student.completedLessons}/{student.totalLessons}</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-emerald-600 h-2 rounded-full" style={{ width: `${progress}%` }}></div>
+                          <div className="bg-emerald-600 h-2 rounded-full" style={{ width: ` DZD{progress}%` }}></div>
                         </div>
                       </div>
                       <div className="flex items-center justify-between pt-4 border-t border-gray-200">
@@ -321,7 +321,7 @@ export default function LanguagePage() {
                           <p className="text-xs text-gray-500">Cours</p>
                           <p className="font-bold text-gray-900">{student.enrolledCourses.length}</p>
                         </div>
-                        <span className={`px-2 py-1 rounded text-xs capitalize ${
+                        <span className={`px-2 py-1 rounded text-xs capitalize  DZD{
                           student.level === 'beginner' ? 'bg-green-100 text-green-800' :
                           student.level === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-red-100 text-red-800'

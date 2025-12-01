@@ -160,7 +160,7 @@ export default function ParkingPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-gray-700 border-b-2 border-gray-700'
                       : 'text-gray-600 hover:text-gray-900'
@@ -252,7 +252,7 @@ export default function ParkingPage() {
                       </div>
                       <div className="text-right ml-4">
                         <p className="font-bold text-green-600">DZD{payment.amount.toFixed(2)}</p>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
+                        <span className={`text-xs px-2 py-1 rounded-full  DZD{
                           payment.status === 'paid' ? 'bg-green-100 text-green-800' :
                           payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-gray-100 text-gray-800'
@@ -284,7 +284,7 @@ export default function ParkingPage() {
                       <h3 className="font-semibold text-gray-900 text-base sm:text-lg mb-1">Place {space.number}</h3>
                       <p className="text-sm text-gray-600 mb-2">Étage {space.floor} • Zone {space.zone}</p>
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           space.status === 'available' ? 'bg-green-100 text-green-800' :
                           space.status === 'occupied' ? 'bg-red-100 text-red-800' :
                           space.status === 'reserved' ? 'bg-blue-100 text-blue-800' :
@@ -367,7 +367,7 @@ export default function ParkingPage() {
                       <p className="text-sm text-gray-500 mt-1 capitalize">Paiement: {payment.paymentMethod === 'cash' ? 'Espèces' : payment.paymentMethod === 'card' ? 'Carte' : 'Mobile'}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         payment.status === 'paid' ? 'bg-green-100 text-green-800' :
                         payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-gray-100 text-gray-800'
@@ -405,7 +405,7 @@ export default function ParkingPage() {
                       <p className="text-sm text-gray-500 mt-1">Durée: {reservation.duration} jours</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap  DZD{
                         reservation.status === 'active' ? 'bg-blue-100 text-blue-800' :
                         reservation.status === 'completed' ? 'bg-green-100 text-green-800' :
                         'bg-red-100 text-red-800'

@@ -151,7 +151,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     
     if (params) {
       return Object.entries(params).reduce(
-        (text, [paramKey, paramValue]) => text.replace(`{${paramKey}}`, String(paramValue)),
+        (text, [paramKey, paramValue]) => text.replace(`{ DZD{paramKey}}`, String(paramValue)),
         translation
       )
     }

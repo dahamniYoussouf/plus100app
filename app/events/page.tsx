@@ -113,7 +113,7 @@ export default function EventsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-violet-600 border-b-2 border-violet-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -234,7 +234,7 @@ export default function EventsPage() {
                     </div>
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                       <span className="text-lg sm:text-xl font-bold text-gray-900">DZD{event.price.toFixed(2)}</span>
-                      <span className={`px-2 py-1 rounded text-xs capitalize ${
+                      <span className={`px-2 py-1 rounded text-xs capitalize  DZD{
                         event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
                         event.status === 'ongoing' ? 'bg-green-100 text-green-800' :
                         event.status === 'completed' ? 'bg-gray-100 text-gray-800' :
@@ -279,7 +279,7 @@ export default function EventsPage() {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <span className="text-lg font-bold text-gray-900">DZD{ticket.totalPrice.toFixed(2)}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           ticket.status === 'confirmed' ? 'bg-green-100 text-green-800' :
                           'bg-red-100 text-red-800'
                         }`}>

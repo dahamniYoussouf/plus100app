@@ -134,7 +134,7 @@ export default function CinemaPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-gray-600 border-b-2 border-gray-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -246,7 +246,7 @@ export default function CinemaPage() {
                     <span className="text-xs text-gray-500">{movie.rating}</span>
                   </div>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <span className={`px-2 py-1 rounded text-xs capitalize ${
+                    <span className={`px-2 py-1 rounded text-xs capitalize  DZD{
                       movie.status === 'now_showing' ? 'bg-green-100 text-green-800' :
                       movie.status === 'coming_soon' ? 'bg-blue-100 text-blue-800' :
                       'bg-gray-100 text-gray-800'
@@ -300,7 +300,7 @@ export default function CinemaPage() {
                         </div>
                         <div className="flex flex-col items-end gap-2">
                           <span className="text-lg font-bold text-gray-900">DZD{session.price.toFixed(2)}</span>
-                          <span className={`px-2 py-1 rounded text-xs ${
+                          <span className={`px-2 py-1 rounded text-xs  DZD{
                             session.seatsAvailable < 10 ? 'bg-red-100 text-red-800' :
                             session.seatsAvailable < 30 ? 'bg-yellow-100 text-yellow-800' :
                             'bg-green-100 text-green-800'
@@ -345,7 +345,7 @@ export default function CinemaPage() {
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <span className="text-lg font-bold text-gray-900">DZD{booking.totalPrice.toFixed(2)}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
                           'bg-red-100 text-red-800'
                         }`}>

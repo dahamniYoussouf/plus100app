@@ -179,7 +179,7 @@ export default function WarehousePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-slate-600 border-b-2 border-slate-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -275,7 +275,7 @@ export default function WarehousePage() {
             ) : (
               <div className="space-y-4">
                 {items.map((item) => (
-                  <div key={item.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6 ${
+                  <div key={item.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6  DZD{
                     item.quantity <= item.minStock ? 'border-orange-300 bg-orange-50' : 'border-gray-200'
                   }`}>
                     <div className="flex items-start justify-between">
@@ -286,7 +286,7 @@ export default function WarehousePage() {
                         {item.supplier && <p className="text-sm text-gray-500 mt-1">Fournisseur: {item.supplier}</p>}
                       </div>
                       <div className="text-right">
-                        <p className={`text-lg font-bold ${
+                        <p className={`text-lg font-bold  DZD{
                           item.quantity <= item.minStock ? 'text-orange-600' : 'text-gray-900'
                         }`}>
                           {item.quantity} {item.unit}
@@ -327,7 +327,7 @@ export default function WarehousePage() {
                         <h3 className="font-semibold text-gray-900 text-lg">{movement.itemName}</h3>
                         <p className="text-sm text-gray-600 mt-1">{movement.reason}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         movement.type === 'in' ? 'bg-green-100 text-green-800' :
                         movement.type === 'out' ? 'bg-red-100 text-red-800' :
                         'bg-blue-100 text-blue-800'
@@ -387,7 +387,7 @@ export default function WarehousePage() {
                              location.type === 'zone' ? 'Zone' : 'Salle'}
                           </p>
                         </div>
-                        <span className={`px-2 py-1 rounded text-xs ${
+                        <span className={`px-2 py-1 rounded text-xs  DZD{
                           location.status === 'available' ? 'bg-green-100 text-green-800' :
                           location.status === 'full' ? 'bg-red-100 text-red-800' :
                           'bg-yellow-100 text-yellow-800'
@@ -404,12 +404,12 @@ export default function WarehousePage() {
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className={`h-2 rounded-full ${
+                              className={`h-2 rounded-full  DZD{
                                 occupancyPercent >= 90 ? 'bg-red-500' :
                                 occupancyPercent >= 70 ? 'bg-yellow-500' :
                                 'bg-green-500'
                               }`}
-                              style={{ width: `${occupancyPercent}%` }}
+                              style={{ width: ` DZD{occupancyPercent}%` }}
                             />
                           </div>
                         </div>

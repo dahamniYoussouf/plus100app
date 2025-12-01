@@ -32,17 +32,17 @@ export default function RoomManagement({ rooms, setRooms }: Props) {
         {rooms.map((room) => (
           <div
             key={room.id}
-            className={`bg-white rounded-lg shadow p-4 ${
+            className={`bg-white rounded-lg shadow p-4  DZD{
               room.status === 'available' ? 'border-green-300' : room.status === 'occupied' ? 'border-red-300' : ''
             } border-2`}
           >
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-semibold text-gray-900">Chambre {room.number}</h3>
-              <Bed className={`w-5 h-5 ${room.status === 'available' ? 'text-green-500' : 'text-red-500'}`} />
+              <Bed className={`w-5 h-5  DZD{room.status === 'available' ? 'text-green-500' : 'text-red-500'}`} />
             </div>
             <p className="text-sm text-gray-600 capitalize">{room.type}</p>
-            <p className="text-sm text-gray-600">${room.price}/nuit</p>
-            <span className={`inline-block mt-2 px-2 py-1 rounded text-xs ${
+            <p className="text-sm text-gray-600"> DZD{room.price}/nuit</p>
+            <span className={`inline-block mt-2 px-2 py-1 rounded text-xs  DZD{
               room.status === 'available' ? 'bg-green-100 text-green-800' :
               room.status === 'occupied' ? 'bg-red-100 text-red-800' :
               'bg-gray-100 text-gray-800'
@@ -138,7 +138,7 @@ export default function RoomManagement({ rooms, setRooms }: Props) {
               onClick={() => {
                 if (newRoom.number) {
                   const room: Room = {
-                    id: `room-${Date.now()}`,
+                    id: `room- DZD{Date.now()}`,
                     number: newRoom.number,
                     type: newRoom.type,
                     floor: newRoom.floor,

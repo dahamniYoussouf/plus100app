@@ -250,7 +250,7 @@ export default function FacilityPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-slate-600 border-b-2 border-slate-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -384,7 +384,7 @@ export default function FacilityPage() {
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="font-semibold text-gray-900 text-lg">{m.title}</h3>
                           <div className="flex items-center gap-2">
-                            <span className={`px-2 py-1 rounded text-xs ${
+                            <span className={`px-2 py-1 rounded text-xs  DZD{
                               m.priority === 'urgent' ? 'bg-red-100 text-red-800' :
                               m.priority === 'high' ? 'bg-orange-100 text-orange-800' :
                               m.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
@@ -394,7 +394,7 @@ export default function FacilityPage() {
                                m.priority === 'high' ? 'Élevée' :
                                m.priority === 'medium' ? 'Moyenne' : 'Basse'}
                             </span>
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                               m.status === 'completed' ? 'bg-green-100 text-green-800' :
                               m.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                               m.status === 'cancelled' ? 'bg-red-100 text-red-800' :
@@ -461,7 +461,7 @@ export default function FacilityPage() {
                           <p className="text-gray-600">👥 {booking.attendees} participants</p>
                         </div>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
                         booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         booking.status === 'completed' ? 'bg-blue-100 text-blue-800' :
@@ -492,7 +492,7 @@ export default function FacilityPage() {
                 <div key={eq.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900 text-lg">{eq.name}</h3>
-                    <span className={`px-2 py-1 rounded text-xs ${
+                    <span className={`px-2 py-1 rounded text-xs  DZD{
                       eq.status === 'operational' ? 'bg-green-100 text-green-800' :
                       eq.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-red-100 text-red-800'

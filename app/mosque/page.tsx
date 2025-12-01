@@ -202,7 +202,7 @@ export default function MosquePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-blue-600 border-b-2 border-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -323,7 +323,7 @@ export default function MosquePage() {
                   <div key={event.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-gray-900 text-base sm:text-lg">{event.title}</h3>
-                      <span className={`px-2 py-1 rounded text-xs whitespace-nowrap ${
+                      <span className={`px-2 py-1 rounded text-xs whitespace-nowrap  DZD{
                         event.type === 'lecture' ? 'bg-purple-100 text-purple-800' :
                         event.type === 'conference' ? 'bg-blue-100 text-blue-800' :
                         event.type === 'course' ? 'bg-green-100 text-green-800' :
@@ -348,7 +348,7 @@ export default function MosquePage() {
                       </div>
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-200">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                         event.status === 'completed' ? 'bg-green-100 text-green-800' :
                         event.status === 'ongoing' ? 'bg-blue-100 text-blue-800' :
                         'bg-yellow-100 text-yellow-800'
@@ -406,7 +406,7 @@ export default function MosquePage() {
                         <p className="text-xs text-gray-400 mt-1">{new Date(service.date).toLocaleDateString('fr-FR')}</p>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           service.status === 'completed' ? 'bg-green-100 text-green-800' :
                           service.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
                           'bg-gray-100 text-gray-800'
@@ -447,7 +447,7 @@ export default function MosquePage() {
                       </div>
                       <div className="flex items-center gap-4">
                         <span className="text-lg font-bold text-gray-900">DZD{donation.amount.toFixed(2)}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium  DZD{
                           donation.type === 'zakat' ? 'bg-green-100 text-green-800' :
                           donation.type === 'sadaqa' ? 'bg-blue-100 text-blue-800' :
                           donation.type === 'monthly' ? 'bg-purple-100 text-purple-800' :
@@ -487,7 +487,7 @@ export default function MosquePage() {
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                       <div>
                         <p className="text-xs text-gray-500">Rôle</p>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        <span className={`px-2 py-1 rounded text-xs font-medium  DZD{
                           member.role === 'imam' ? 'bg-purple-100 text-purple-800' :
                           member.role === 'administrator' ? 'bg-blue-100 text-blue-800' :
                           member.role === 'volunteer' ? 'bg-green-100 text-green-800' :

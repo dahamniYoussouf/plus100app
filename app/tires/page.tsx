@@ -218,7 +218,7 @@ export default function TiresPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-medium text-xs sm:text-sm transition-colors relative whitespace-nowrap  DZD{
                     activeTab === tab.id
                       ? 'text-gray-600 border-b-2 border-gray-600'
                       : 'text-gray-600 hover:text-gray-900'
@@ -335,7 +335,7 @@ export default function TiresPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {tires.map((tire) => (
-                <div key={tire.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6 ${
+                <div key={tire.id} className={`bg-white rounded-xl shadow-lg border p-4 sm:p-6  DZD{
                   tire.quantity <= tire.minStock ? 'border-orange-300 bg-orange-50' : 'border-gray-200'
                 }`}>
                   <div className="flex items-start justify-between mb-3">
@@ -343,7 +343,7 @@ export default function TiresPage() {
                       <h3 className="font-semibold text-gray-900 text-lg">{tire.brand}</h3>
                       <p className="text-sm text-gray-600">{tire.model}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs ${
+                    <span className={`px-2 py-1 rounded text-xs  DZD{
                       tire.type === 'winter' ? 'bg-blue-100 text-blue-800' :
                       tire.type === 'summer' ? 'bg-yellow-100 text-yellow-800' :
                       tire.type === 'all_season' ? 'bg-green-100 text-green-800' :
@@ -362,7 +362,7 @@ export default function TiresPage() {
                   <div className="pt-4 border-t border-gray-200 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-gray-500">Stock</p>
-                      <p className={`text-lg font-bold ${
+                      <p className={`text-lg font-bold  DZD{
                         tire.quantity <= tire.minStock ? 'text-orange-600' : 'text-gray-900'
                       }`}>
                         {tire.quantity}
@@ -482,7 +482,7 @@ export default function TiresPage() {
                         </td>
                         <td className="py-3 px-4 text-gray-600">{tire.size}</td>
                         <td className="py-3 px-4">
-                          <span className={`font-medium ${
+                          <span className={`font-medium  DZD{
                             tire.quantity <= tire.minStock ? 'text-orange-600' : 'text-gray-900'
                           }`}>
                             {tire.quantity}
