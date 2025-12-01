@@ -17,3 +17,4 @@ export function formatCurrencyShort(amount: number): string {
   return `${amount} د.ج`
 }
 
+

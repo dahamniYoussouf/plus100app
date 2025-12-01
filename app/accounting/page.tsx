@@ -44,7 +44,11 @@ export default function AccountingPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [clients, setClients] = useState<Client[]>([])
+  const [showTransactionModal, setShowTransactionModal] = useState(false)
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false)
   const [showClientModal, setShowClientModal] = useState(false)
+  const [newTransaction, setNewTransaction] = useState({ description: '', amount: 0, type: 'income' as 'income' | 'expense', category: 'Ventes', account: 'Compte Principal', date: '', status: 'completed' as 'pending' | 'completed' | 'cancelled' })
+  const [newInvoice, setNewInvoice] = useState({ clientId: '', date: '', dueDate: '', amount: 0, description: '', quantity: 1, price: 0 })
   const [newClient, setNewClient] = useState({ name: '', email: '', phone: '', company: '' })
 
   useEffect(() => {
@@ -223,7 +227,10 @@ export default function AccountingPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Transactions</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowTransactionModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Transaction
               </button>
             </div>
@@ -278,7 +285,10 @@ export default function AccountingPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Factures</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowInvoiceModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Facture
               </button>
             </div>
@@ -405,6 +415,268 @@ export default function AccountingPage() {
       </main>
 
       {/* Modals */}
+      <Modal
+        isOpen={showTransactionModal}
+        onClose={() => {
+          setShowTransactionModal(false)
+          setNewTransaction({ description: '', amount: 0, type: 'income', category: 'Ventes', account: 'Compte Principal', date: '', status: 'completed' })
+        }}
+        title="Nouvelle Transaction"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <input
+              type="text"
+              value={newTransaction.description}
+              onChange={(e) => setNewTransaction({ ...newTransaction, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Vente produit A"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newTransaction.type}
+                onChange={(e) => setNewTransaction({ ...newTransaction, type: e.target.value as 'income' | 'expense' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="income">Revenu</option>
+                <option value="expense">Dépense</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newTransaction.category}
+                onChange={(e) => setNewTransaction({ ...newTransaction, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Ventes"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Montant (DZD)</label>
+              <input
+                type="number"
+                value={newTransaction.amount}
+                onChange={(e) => setNewTransaction({ ...newTransaction, amount: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newTransaction.date}
+                onChange={(e) => setNewTransaction({ ...newTransaction, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Compte</label>
+              <input
+                type="text"
+                value={newTransaction.account}
+                onChange={(e) => setNewTransaction({ ...newTransaction, account: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Compte Principal"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+              <select
+                value={newTransaction.status}
+                onChange={(e) => setNewTransaction({ ...newTransaction, status: e.target.value as 'pending' | 'completed' | 'cancelled' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="completed">Complété</option>
+                <option value="pending">En attente</option>
+                <option value="cancelled">Annulé</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowTransactionModal(false)
+                setNewTransaction({ description: '', amount: 0, type: 'income', category: 'Ventes', account: 'Compte Principal', date: '', status: 'completed' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newTransaction.description && newTransaction.amount > 0 && newTransaction.date) {
+                  const transaction: Transaction = {
+                    id: Date.now().toString(),
+                    date: new Date(newTransaction.date),
+                    description: newTransaction.description,
+                    amount: newTransaction.amount,
+                    type: newTransaction.type,
+                    category: newTransaction.category,
+                    account: newTransaction.account,
+                    status: newTransaction.status,
+                  }
+                  setTransactions([...transactions, transaction])
+                  setShowTransactionModal(false)
+                  setNewTransaction({ description: '', amount: 0, type: 'income', category: 'Ventes', account: 'Compte Principal', date: '', status: 'completed' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showInvoiceModal}
+        onClose={() => {
+          setShowInvoiceModal(false)
+          setNewInvoice({ clientId: '', date: '', dueDate: '', amount: 0, description: '', quantity: 1, price: 0 })
+        }}
+        title="Nouvelle Facture"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {clients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newInvoice.clientId}
+                onChange={(e) => setNewInvoice({ ...newInvoice, clientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un client</option>
+                {clients.map(client => (
+                  <option key={client.id} value={client.id}>{client.name} {client.company ? `- ${client.company}` : ''}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newInvoice.date}
+                onChange={(e) => setNewInvoice({ ...newInvoice, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date d'échéance</label>
+              <input
+                type="date"
+                value={newInvoice.dueDate}
+                onChange={(e) => setNewInvoice({ ...newInvoice, dueDate: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <input
+              type="text"
+              value={newInvoice.description}
+              onChange={(e) => setNewInvoice({ ...newInvoice, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Services conseil"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+              <input
+                type="number"
+                value={newInvoice.quantity}
+                onChange={(e) => {
+                  const qty = parseInt(e.target.value) || 1
+                  const price = newInvoice.price
+                  setNewInvoice({ ...newInvoice, quantity: qty, amount: qty * price })
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix unitaire (DZD)</label>
+              <input
+                type="number"
+                value={newInvoice.price}
+                onChange={(e) => {
+                  const price = parseFloat(e.target.value) || 0
+                  const qty = newInvoice.quantity
+                  setNewInvoice({ ...newInvoice, price, amount: qty * price })
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Montant total (DZD)</label>
+            <input
+              type="number"
+              value={newInvoice.amount}
+              onChange={(e) => setNewInvoice({ ...newInvoice, amount: parseFloat(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+              min="0"
+              step="0.01"
+              readOnly
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowInvoiceModal(false)
+                setNewInvoice({ clientId: '', date: '', dueDate: '', amount: 0, description: '', quantity: 1, price: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newInvoice.clientId && newInvoice.date && newInvoice.dueDate && newInvoice.amount > 0) {
+                  const client = clients.find(c => c.id === newInvoice.clientId)
+                  if (client) {
+                    const invoice: Invoice = {
+                      id: Date.now().toString(),
+                      clientId: newInvoice.clientId,
+                      clientName: client.name,
+                      date: new Date(newInvoice.date),
+                      dueDate: new Date(newInvoice.dueDate),
+                      amount: newInvoice.amount,
+                      status: 'draft',
+                      items: [{ description: newInvoice.description, quantity: newInvoice.quantity, price: newInvoice.price }],
+                    }
+                    setInvoices([...invoices, invoice])
+                    setShowInvoiceModal(false)
+                    setNewInvoice({ clientId: '', date: '', dueDate: '', amount: 0, description: '', quantity: 1, price: 0 })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
       <Modal
         isOpen={showClientModal}
         onClose={() => setShowClientModal(false)}

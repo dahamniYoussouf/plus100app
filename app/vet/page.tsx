@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Heart, Users, Calendar, FileText, BarChart3, Droplet, Activity } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'animals' | 'appointments' | 'vaccinations'
 
@@ -40,6 +41,12 @@ export default function VetPage() {
   const [animals, setAnimals] = useState<Animal[]>([])
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [vaccinations, setVaccinations] = useState<Vaccination[]>([])
+  const [showAnimalModal, setShowAnimalModal] = useState(false)
+  const [showAppointmentModal, setShowAppointmentModal] = useState(false)
+  const [showVaccinationModal, setShowVaccinationModal] = useState(false)
+  const [newAnimal, setNewAnimal] = useState({ name: '', species: 'dog' as 'dog' | 'cat' | 'bird' | 'rabbit' | 'other', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
+  const [newAppointment, setNewAppointment] = useState({ animalId: '', date: '', time: '', reason: '' })
+  const [newVaccination, setNewVaccination] = useState({ animalId: '', vaccine: '', date: '', nextDue: '' })
 
   useEffect(() => {
     const savedAnimals = localStorage.getItem('vet-animals')
@@ -216,7 +223,10 @@ export default function VetPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Animaux</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowAnimalModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Nouvel Animal
               </button>
             </div>
@@ -288,7 +298,10 @@ export default function VetPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Vaccinations</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+              <button 
+                onClick={() => setShowVaccinationModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
                 Nouvelle Vaccination
               </button>
             </div>
@@ -322,6 +335,305 @@ export default function VetPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showAnimalModal}
+        onClose={() => {
+          setShowAnimalModal(false)
+          setNewAnimal({ name: '', species: 'dog', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
+        }}
+        title="Nouvel Animal"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l'animal</label>
+            <input
+              type="text"
+              value={newAnimal.name}
+              onChange={(e) => setNewAnimal({ ...newAnimal, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Ex: Max"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Espèce</label>
+              <select
+                value={newAnimal.species}
+                onChange={(e) => setNewAnimal({ ...newAnimal, species: e.target.value as 'dog' | 'cat' | 'bird' | 'rabbit' | 'other' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="dog">Chien</option>
+                <option value="cat">Chat</option>
+                <option value="bird">Oiseau</option>
+                <option value="rabbit">Lapin</option>
+                <option value="other">Autre</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Race</label>
+              <input
+                type="text"
+                value={newAnimal.breed}
+                onChange={(e) => setNewAnimal({ ...newAnimal, breed: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Ex: Golden Retriever"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom du propriétaire</label>
+              <input
+                type="text"
+                value={newAnimal.ownerName}
+                onChange={(e) => setNewAnimal({ ...newAnimal, ownerName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newAnimal.ownerPhone}
+                onChange={(e) => setNewAnimal({ ...newAnimal, ownerPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
+            <input
+              type="date"
+              value={newAnimal.dateOfBirth}
+              onChange={(e) => setNewAnimal({ ...newAnimal, dateOfBirth: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowAnimalModal(false)
+                setNewAnimal({ name: '', species: 'dog', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newAnimal.name && newAnimal.breed && newAnimal.ownerName && newAnimal.ownerPhone && newAnimal.dateOfBirth) {
+                  const animal: Animal = {
+                    id: Date.now().toString(),
+                    name: newAnimal.name,
+                    species: newAnimal.species,
+                    breed: newAnimal.breed,
+                    ownerName: newAnimal.ownerName,
+                    ownerPhone: newAnimal.ownerPhone,
+                    dateOfBirth: new Date(newAnimal.dateOfBirth),
+                  }
+                  setAnimals([...animals, animal])
+                  setShowAnimalModal(false)
+                  setNewAnimal({ name: '', species: 'dog', breed: '', ownerName: '', ownerPhone: '', dateOfBirth: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showAppointmentModal}
+        onClose={() => {
+          setShowAppointmentModal(false)
+          setNewAppointment({ animalId: '', date: '', time: '', reason: '' })
+        }}
+        title="Nouvelle Consultation"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {animals.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Animal</label>
+              <select
+                value={newAppointment.animalId}
+                onChange={(e) => setNewAppointment({ ...newAppointment, animalId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un animal</option>
+                {animals.map(animal => (
+                  <option key={animal.id} value={animal.id}>{animal.name} - {animal.ownerName}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newAppointment.date}
+                onChange={(e) => setNewAppointment({ ...newAppointment, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newAppointment.time}
+                onChange={(e) => setNewAppointment({ ...newAppointment, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Raison</label>
+            <textarea
+              value={newAppointment.reason}
+              onChange={(e) => setNewAppointment({ ...newAppointment, reason: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={3}
+              placeholder="Ex: Vaccination annuelle, Examen de routine..."
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowAppointmentModal(false)
+                setNewAppointment({ animalId: '', date: '', time: '', reason: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newAppointment.animalId && newAppointment.date && newAppointment.time && newAppointment.reason) {
+                  const animal = animals.find(a => a.id === newAppointment.animalId)
+                  if (animal) {
+                    const appointment: Appointment = {
+                      id: Date.now().toString(),
+                      animalId: newAppointment.animalId,
+                      animalName: animal.name,
+                      date: new Date(newAppointment.date),
+                      time: newAppointment.time,
+                      reason: newAppointment.reason,
+                      status: 'scheduled',
+                    }
+                    setAppointments([...appointments, appointment])
+                    setAnimals(animals.map(a => a.id === newAppointment.animalId ? { ...a, lastVisit: new Date(newAppointment.date) } : a))
+                    setShowAppointmentModal(false)
+                    setNewAppointment({ animalId: '', date: '', time: '', reason: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showVaccinationModal}
+        onClose={() => {
+          setShowVaccinationModal(false)
+          setNewVaccination({ animalId: '', vaccine: '', date: '', nextDue: '' })
+        }}
+        title="Nouvelle Vaccination"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {animals.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Animal</label>
+              <select
+                value={newVaccination.animalId}
+                onChange={(e) => setNewVaccination({ ...newVaccination, animalId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un animal</option>
+                {animals.map(animal => (
+                  <option key={animal.id} value={animal.id}>{animal.name} - {animal.ownerName}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Vaccin</label>
+            <input
+              type="text"
+              value={newVaccination.vaccine}
+              onChange={(e) => setNewVaccination({ ...newVaccination, vaccine: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Ex: Vaccin antirabique, DHPP..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date de vaccination</label>
+              <input
+                type="date"
+                value={newVaccination.date}
+                onChange={(e) => setNewVaccination({ ...newVaccination, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prochaine dose (optionnel)</label>
+              <input
+                type="date"
+                value={newVaccination.nextDue}
+                onChange={(e) => setNewVaccination({ ...newVaccination, nextDue: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowVaccinationModal(false)
+                setNewVaccination({ animalId: '', vaccine: '', date: '', nextDue: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newVaccination.animalId && newVaccination.vaccine && newVaccination.date) {
+                  const animal = animals.find(a => a.id === newVaccination.animalId)
+                  if (animal) {
+                    const vaccination: Vaccination = {
+                      id: Date.now().toString(),
+                      animalId: newVaccination.animalId,
+                      animalName: animal.name,
+                      vaccine: newVaccination.vaccine,
+                      date: new Date(newVaccination.date),
+                      nextDue: newVaccination.nextDue ? new Date(newVaccination.nextDue) : undefined,
+                    }
+                    setVaccinations([...vaccinations, vaccination])
+                    setShowVaccinationModal(false)
+                    setNewVaccination({ animalId: '', vaccine: '', date: '', nextDue: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -58,6 +58,13 @@ export default function BabyPage() {
   const [showRepasModal, setShowRepasModal] = useState(false)
   const [showSommeilModal, setShowSommeilModal] = useState(false)
   const [showEtapeModal, setShowEtapeModal] = useState(false)
+  const [showDiaperModal, setShowDiaperModal] = useState(false)
+  const [showHealthModal, setShowHealthModal] = useState(false)
+  const [newFeeding, setNewFeeding] = useState({ date: '', time: '', type: 'bottle' as 'breast' | 'bottle' | 'solid', amount: 0, food: '', notes: '' })
+  const [newSleep, setNewSleep] = useState({ date: '', startTime: '', endTime: '', type: 'nap' as 'nap' | 'night', notes: '' })
+  const [newDiaper, setNewDiaper] = useState({ date: '', time: '', type: 'wet' as 'wet' | 'dirty' | 'both', notes: '' })
+  const [newHealth, setNewHealth] = useState({ date: '', type: 'temperature' as 'vaccination' | 'medication' | 'temperature' | 'weight' | 'height' | 'other', value: '', notes: '' })
+  const [newMilestone, setNewMilestone] = useState({ date: '', category: 'motor' as 'motor' | 'language' | 'social' | 'cognitive', description: '', notes: '' })
   const [health, setHealth] = useState<Health[]>([])
   const [milestones, setMilestones] = useState<Milestone[]>([])
 
@@ -431,7 +438,10 @@ export default function BabyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Couches</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowDiaperModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Couche
               </button>
             </div>
@@ -471,7 +481,10 @@ export default function BabyPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Santé</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowHealthModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle Entrée
               </button>
             </div>
@@ -564,18 +577,134 @@ export default function BabyPage() {
       {/* Modals */}
       <Modal
         isOpen={showRepasModal}
-        onClose={() => setShowRepasModal(false)}
+        onClose={() => {
+          setShowRepasModal(false)
+          setNewFeeding({ date: '', time: '', type: 'bottle', amount: 0, food: '', notes: '' })
+        }}
         title="Nouveau Repas"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau repas.</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newFeeding.date}
+                onChange={(e) => setNewFeeding({ ...newFeeding, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newFeeding.time}
+                onChange={(e) => setNewFeeding({ ...newFeeding, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select
+              value={newFeeding.type}
+              onChange={(e) => setNewFeeding({ ...newFeeding, type: e.target.value as 'breast' | 'bottle' | 'solid' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            >
+              <option value="breast">Allaitement</option>
+              <option value="bottle">Biberon</option>
+              <option value="solid">Solide</option>
+            </select>
+          </div>
+          {newFeeding.type === 'bottle' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité (ml)</label>
+              <input
+                type="number"
+                value={newFeeding.amount}
+                onChange={(e) => setNewFeeding({ ...newFeeding, amount: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          )}
+          {newFeeding.type === 'solid' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Aliment</label>
+                <input
+                  type="text"
+                  value={newFeeding.food}
+                  onChange={(e) => setNewFeeding({ ...newFeeding, food: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  placeholder="Ex: Purée de carottes"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Quantité (g)</label>
+                <input
+                  type="number"
+                  value={newFeeding.amount}
+                  onChange={(e) => setNewFeeding({ ...newFeeding, amount: parseInt(e.target.value) || 0 })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  min="0"
+                />
+              </div>
+            </>
+          )}
+          {newFeeding.type === 'breast' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (minutes)</label>
+              <input
+                type="number"
+                value={newFeeding.amount}
+                onChange={(e) => setNewFeeding({ ...newFeeding, amount: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optionnel)</label>
+            <textarea
+              value={newFeeding.notes}
+              onChange={(e) => setNewFeeding({ ...newFeeding, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={2}
+              placeholder="Notes supplémentaires..."
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowRepasModal(false)}
+              onClick={() => {
+                setShowRepasModal(false)
+                setNewFeeding({ date: '', time: '', type: 'bottle', amount: 0, food: '', notes: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newFeeding.date && newFeeding.time && (newFeeding.type === 'solid' ? newFeeding.food : true)) {
+                  const feeding: Feeding = {
+                    id: Date.now().toString(),
+                    date: new Date(newFeeding.date),
+                    time: newFeeding.time,
+                    type: newFeeding.type,
+                    amount: newFeeding.amount || undefined,
+                    food: newFeeding.food || undefined,
+                    notes: newFeeding.notes || undefined,
+                  }
+                  setFeedings([...feedings, feeding])
+                  setShowRepasModal(false)
+                  setNewFeeding({ date: '', time: '', type: 'bottle', amount: 0, food: '', notes: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -583,18 +712,99 @@ export default function BabyPage() {
 
       <Modal
         isOpen={showSommeilModal}
-        onClose={() => setShowSommeilModal(false)}
+        onClose={() => {
+          setShowSommeilModal(false)
+          setNewSleep({ date: '', startTime: '', endTime: '', type: 'nap', notes: '' })
+        }}
         title="Nouveau Sommeil"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau sommeil.</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newSleep.date}
+                onChange={(e) => setNewSleep({ ...newSleep, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newSleep.type}
+                onChange={(e) => setNewSleep({ ...newSleep, type: e.target.value as 'nap' | 'night' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="nap">Sieste</option>
+                <option value="night">Nuit</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure de début</label>
+              <input
+                type="time"
+                value={newSleep.startTime}
+                onChange={(e) => setNewSleep({ ...newSleep, startTime: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure de fin (optionnel)</label>
+              <input
+                type="time"
+                value={newSleep.endTime}
+                onChange={(e) => setNewSleep({ ...newSleep, endTime: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optionnel)</label>
+            <textarea
+              value={newSleep.notes}
+              onChange={(e) => setNewSleep({ ...newSleep, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={2}
+              placeholder="Notes supplémentaires..."
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowSommeilModal(false)}
+              onClick={() => {
+                setShowSommeilModal(false)
+                setNewSleep({ date: '', startTime: '', endTime: '', type: 'nap', notes: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newSleep.date && newSleep.startTime) {
+                  const start = new Date(`${newSleep.date}T${newSleep.startTime}`)
+                  const end = newSleep.endTime ? new Date(`${newSleep.date}T${newSleep.endTime}`) : undefined
+                  const duration = end ? Math.round((end.getTime() - start.getTime()) / 60000) : undefined
+                  const sleep: Sleep = {
+                    id: Date.now().toString(),
+                    date: new Date(newSleep.date),
+                    startTime: newSleep.startTime,
+                    endTime: newSleep.endTime || undefined,
+                    duration,
+                    type: newSleep.type,
+                    notes: newSleep.notes || undefined,
+                  }
+                  setSleeps([...sleeps, sleep])
+                  setShowSommeilModal(false)
+                  setNewSleep({ date: '', startTime: '', endTime: '', type: 'nap', notes: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -602,18 +812,260 @@ export default function BabyPage() {
 
       <Modal
         isOpen={showEtapeModal}
-        onClose={() => setShowEtapeModal(false)}
+        onClose={() => {
+          setShowEtapeModal(false)
+          setNewMilestone({ date: '', category: 'motor', description: '', notes: '' })
+        }}
         title="Nouvelle Étape"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter une nouvelle étape.</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newMilestone.date}
+                onChange={(e) => setNewMilestone({ ...newMilestone, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newMilestone.category}
+                onChange={(e) => setNewMilestone({ ...newMilestone, category: e.target.value as 'motor' | 'language' | 'social' | 'cognitive' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="motor">Moteur</option>
+                <option value="language">Langage</option>
+                <option value="social">Social</option>
+                <option value="cognitive">Cognitif</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <input
+              type="text"
+              value={newMilestone.description}
+              onChange={(e) => setNewMilestone({ ...newMilestone, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder="Ex: Premier pas"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optionnel)</label>
+            <textarea
+              value={newMilestone.notes}
+              onChange={(e) => setNewMilestone({ ...newMilestone, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={2}
+              placeholder="Notes supplémentaires..."
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowEtapeModal(false)}
+              onClick={() => {
+                setShowEtapeModal(false)
+                setNewMilestone({ date: '', category: 'motor', description: '', notes: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMilestone.date && newMilestone.description) {
+                  const milestone: Milestone = {
+                    id: Date.now().toString(),
+                    date: new Date(newMilestone.date),
+                    category: newMilestone.category,
+                    description: newMilestone.description,
+                    notes: newMilestone.notes || undefined,
+                  }
+                  setMilestones([...milestones, milestone])
+                  setShowEtapeModal(false)
+                  setNewMilestone({ date: '', category: 'motor', description: '', notes: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showDiaperModal}
+        onClose={() => {
+          setShowDiaperModal(false)
+          setNewDiaper({ date: '', time: '', type: 'wet', notes: '' })
+        }}
+        title="Nouvelle Couche"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newDiaper.date}
+                onChange={(e) => setNewDiaper({ ...newDiaper, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newDiaper.time}
+                onChange={(e) => setNewDiaper({ ...newDiaper, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select
+              value={newDiaper.type}
+              onChange={(e) => setNewDiaper({ ...newDiaper, type: e.target.value as 'wet' | 'dirty' | 'both' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            >
+              <option value="wet">Mouillé</option>
+              <option value="dirty">Sale</option>
+              <option value="both">Mouillé et Sale</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optionnel)</label>
+            <textarea
+              value={newDiaper.notes}
+              onChange={(e) => setNewDiaper({ ...newDiaper, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={2}
+              placeholder="Notes supplémentaires..."
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowDiaperModal(false)
+                setNewDiaper({ date: '', time: '', type: 'wet', notes: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newDiaper.date && newDiaper.time) {
+                  const diaper: Diaper = {
+                    id: Date.now().toString(),
+                    date: new Date(newDiaper.date),
+                    time: newDiaper.time,
+                    type: newDiaper.type,
+                    notes: newDiaper.notes || undefined,
+                  }
+                  setDiapers([...diapers, diaper])
+                  setShowDiaperModal(false)
+                  setNewDiaper({ date: '', time: '', type: 'wet', notes: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showHealthModal}
+        onClose={() => {
+          setShowHealthModal(false)
+          setNewHealth({ date: '', type: 'temperature', value: '', notes: '' })
+        }}
+        title="Nouvelle Entrée Santé"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newHealth.date}
+                onChange={(e) => setNewHealth({ ...newHealth, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newHealth.type}
+                onChange={(e) => setNewHealth({ ...newHealth, type: e.target.value as 'vaccination' | 'medication' | 'temperature' | 'weight' | 'height' | 'other' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              >
+                <option value="temperature">Température</option>
+                <option value="weight">Poids</option>
+                <option value="height">Taille</option>
+                <option value="vaccination">Vaccination</option>
+                <option value="medication">Médicament</option>
+                <option value="other">Autre</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Valeur</label>
+            <input
+              type="text"
+              value={newHealth.value}
+              onChange={(e) => setNewHealth({ ...newHealth, value: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              placeholder={newHealth.type === 'temperature' ? 'Ex: 37.2°C' : newHealth.type === 'weight' ? 'Ex: 8.5 kg' : newHealth.type === 'height' ? 'Ex: 70 cm' : 'Valeur'}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optionnel)</label>
+            <textarea
+              value={newHealth.notes}
+              onChange={(e) => setNewHealth({ ...newHealth, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              rows={2}
+              placeholder="Notes supplémentaires..."
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowHealthModal(false)
+                setNewHealth({ date: '', type: 'temperature', value: '', notes: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newHealth.date) {
+                  const healthEntry: Health = {
+                    id: Date.now().toString(),
+                    date: new Date(newHealth.date),
+                    type: newHealth.type,
+                    value: newHealth.value || undefined,
+                    notes: newHealth.notes || undefined,
+                  }
+                  setHealth([...health, healthEntry])
+                  setShowHealthModal(false)
+                  setNewHealth({ date: '', type: 'temperature', value: '', notes: '' })
+                }
+              }}
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>

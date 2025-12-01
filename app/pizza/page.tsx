@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Pizza, ShoppingCart, Package, BarChart3, TrendingUp, Users, Clock } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'menu' | 'orders' | 'customization'
 
@@ -20,6 +21,10 @@ export default function PizzaPage() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [pizzas, setPizzas] = useState<PizzaItem[]>([])
   const [orders, setOrders] = useState<any[]>([])
+  const [showPizzaModal, setShowPizzaModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
+  const [newPizza, setNewPizza] = useState({ name: '', description: '', basePrice: 0, category: 'halal' as 'classic' | 'premium' | 'halal', sizes: [{ name: 'Petite', price: 0 }, { name: 'Moyenne', price: 0 }, { name: 'Grande', price: 0 }], toppings: [] as string[] })
+  const [newOrder, setNewOrder] = useState({ items: [] as Array<{ pizzaId: string; size: string; quantity: number }>, customerName: '', customerPhone: '', type: 'dine-in' as 'dine-in' | 'delivery' | 'takeaway' })
 
   useEffect(() => {
     const saved = localStorage.getItem('pizza-menu')
@@ -199,7 +204,10 @@ export default function PizzaPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Menu Pizzas</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowPizzaModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Ajouter Pizza
               </button>
             </div>
@@ -249,10 +257,13 @@ export default function PizzaPage() {
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Commandes</h2>
             <p className="text-gray-600 mb-6">Gestion des commandes de pizzas</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="bg-gray-50 rounded-lg p-4">
+              <button
+                onClick={() => setShowOrderModal(true)}
+                className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors text-left w-full"
+              >
                 <h3 className="font-semibold text-gray-900 mb-2">Nouvelle Commande</h3>
                 <p className="text-sm text-gray-600">Créer une nouvelle commande</p>
-              </div>
+              </button>
               <div className="bg-gray-50 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">En Cours</h3>
                 <p className="text-sm text-gray-600">Suivre les commandes en préparation</p>
@@ -286,6 +297,295 @@ export default function PizzaPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showPizzaModal}
+        onClose={() => {
+          setShowPizzaModal(false)
+          setNewPizza({ name: '', description: '', basePrice: 0, category: 'halal', sizes: [{ name: 'Petite', price: 0 }, { name: 'Moyenne', price: 0 }, { name: 'Grande', price: 0 }], toppings: [] })
+        }}
+        title="Ajouter Pizza"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newPizza.name}
+              onChange={(e) => setNewPizza({ ...newPizza, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Ex: Pizza Margherita Halal"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newPizza.description}
+              onChange={(e) => setNewPizza({ ...newPizza, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description de la pizza"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newPizza.category}
+                onChange={(e) => setNewPizza({ ...newPizza, category: e.target.value as 'classic' | 'premium' | 'halal' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="halal">Halal</option>
+                <option value="classic">Classique</option>
+                <option value="premium">Premium</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix de base (DZD)</label>
+              <input
+                type="number"
+                value={newPizza.basePrice}
+                onChange={(e) => setNewPizza({ ...newPizza, basePrice: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Tailles et Prix</label>
+            {newPizza.sizes.map((size, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={size.name}
+                  onChange={(e) => {
+                    const updatedSizes = [...newPizza.sizes]
+                    updatedSizes[index].name = e.target.value
+                    setNewPizza({ ...newPizza, sizes: updatedSizes })
+                  }}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Taille"
+                />
+                <input
+                  type="number"
+                  value={size.price}
+                  onChange={(e) => {
+                    const updatedSizes = [...newPizza.sizes]
+                    updatedSizes[index].price = parseFloat(e.target.value) || 0
+                    setNewPizza({ ...newPizza, sizes: updatedSizes })
+                  }}
+                  className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  min="0"
+                  step="0.01"
+                  placeholder="Prix"
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Garnitures (séparées par virgule)</label>
+            <input
+              type="text"
+              value={newPizza.toppings.join(', ')}
+              onChange={(e) => setNewPizza({ ...newPizza, toppings: e.target.value.split(',').map(t => t.trim()).filter(t => t) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Ex: Tomate, Mozzarella Halal, Basilic"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowPizzaModal(false)
+                setNewPizza({ name: '', description: '', basePrice: 0, category: 'halal', sizes: [{ name: 'Petite', price: 0 }, { name: 'Moyenne', price: 0 }, { name: 'Grande', price: 0 }], toppings: [] })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newPizza.name && newPizza.description && newPizza.basePrice > 0) {
+                  const pizza: PizzaItem = {
+                    id: Date.now().toString(),
+                    name: newPizza.name,
+                    description: newPizza.description,
+                    basePrice: newPizza.basePrice,
+                    category: newPizza.category,
+                    sizes: newPizza.sizes.filter(s => s.name && s.price > 0),
+                    toppings: newPizza.toppings,
+                    available: true,
+                  }
+                  setPizzas([...pizzas, pizza])
+                  setShowPizzaModal(false)
+                  setNewPizza({ name: '', description: '', basePrice: 0, category: 'halal', sizes: [{ name: 'Petite', price: 0 }, { name: 'Moyenne', price: 0 }, { name: 'Grande', price: 0 }], toppings: [] })
+                }
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showOrderModal}
+        onClose={() => {
+          setShowOrderModal(false)
+          setNewOrder({ items: [], customerName: '', customerPhone: '', type: 'dine-in' })
+        }}
+        title="Nouvelle Commande"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom du client</label>
+              <input
+                type="text"
+                value={newOrder.customerName}
+                onChange={(e) => setNewOrder({ ...newOrder, customerName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newOrder.customerPhone}
+                onChange={(e) => setNewOrder({ ...newOrder, customerPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select
+              value={newOrder.type}
+              onChange={(e) => setNewOrder({ ...newOrder, type: e.target.value as 'dine-in' | 'delivery' | 'takeaway' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            >
+              <option value="dine-in">Sur place</option>
+              <option value="delivery">Livraison</option>
+              <option value="takeaway">À emporter</option>
+            </select>
+          </div>
+          {pizzas.filter(p => p.available).length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Pizzas</label>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {pizzas.filter(p => p.available).map(pizza => {
+                  const orderItem = newOrder.items.find(i => i.pizzaId === pizza.id)
+                  return (
+                    <div key={pizza.id} className="border border-gray-200 rounded-lg p-3">
+                      <p className="font-medium text-gray-900 mb-2">{pizza.name}</p>
+                      <div className="space-y-2">
+                        {pizza.sizes.map((size, sizeIndex) => {
+                          const itemKey = `${pizza.id}-${size.name}`
+                          const item = newOrder.items.find(i => i.pizzaId === pizza.id && i.size === size.name)
+                          return (
+                            <div key={sizeIndex} className="flex items-center justify-between">
+                              <span className="text-sm text-gray-600">{size.name} - DZD{size.price.toFixed(2)}</span>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => {
+                                    if (item && item.quantity > 0) {
+                                      setNewOrder({
+                                        ...newOrder,
+                                        items: newOrder.items.map(i => i.pizzaId === pizza.id && i.size === size.name ? { ...i, quantity: i.quantity - 1 } : i).filter(i => i.quantity > 0)
+                                      })
+                                    }
+                                  }}
+                                  className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                                >
+                                  -
+                                </button>
+                                <span className="w-8 text-center">{item?.quantity || 0}</span>
+                                <button
+                                  onClick={() => {
+                                    if (item) {
+                                      setNewOrder({
+                                        ...newOrder,
+                                        items: newOrder.items.map(i => i.pizzaId === pizza.id && i.size === size.name ? { ...i, quantity: i.quantity + 1 } : i)
+                                      })
+                                    } else {
+                                      setNewOrder({
+                                        ...newOrder,
+                                        items: [...newOrder.items, { pizzaId: pizza.id, size: size.name, quantity: 1 }]
+                                      })
+                                    }
+                                  }}
+                                  className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              {newOrder.items.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="font-semibold text-gray-900">
+                    Total: {newOrder.items.reduce((sum, item) => {
+                      const pizza = pizzas.find(p => p.id === item.pizzaId)
+                      const size = pizza?.sizes.find(s => s.name === item.size)
+                      return sum + (size ? size.price * item.quantity : 0)
+                    }, 0).toFixed(2)} DZD
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowOrderModal(false)
+                setNewOrder({ items: [], customerName: '', customerPhone: '', type: 'dine-in' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newOrder.customerName && newOrder.customerPhone && newOrder.items.length > 0) {
+                  const total = newOrder.items.reduce((sum, item) => {
+                    const pizza = pizzas.find(p => p.id === item.pizzaId)
+                    const size = pizza?.sizes.find(s => s.name === item.size)
+                    return sum + (size ? size.price * item.quantity : 0)
+                  }, 0)
+                  const order = {
+                    id: Date.now().toString(),
+                    customerName: newOrder.customerName,
+                    customerPhone: newOrder.customerPhone,
+                    type: newOrder.type,
+                    items: newOrder.items,
+                    total,
+                    status: 'pending',
+                    createdAt: new Date(),
+                  }
+                  setOrders([...orders, order])
+                  setShowOrderModal(false)
+                  setNewOrder({ items: [], customerName: '', customerPhone: '', type: 'dine-in' })
+                }
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { UtensilsCrossed, ShoppingCart, Package, BarChart3, TrendingUp, Truck, Clock } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'menu' | 'orders' | 'drive' | 'stock'
 
@@ -29,6 +30,10 @@ export default function FastfoodPage() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [orders, setOrders] = useState<Order[]>([])
+  const [showMenuModal, setShowMenuModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
+  const [newMenuItem, setNewMenuItem] = useState({ name: '', description: '', price: 0, category: 'burger' as 'burger' | 'sandwich' | 'fries' | 'drink' | 'combo', halal: true, stock: 0 })
+  const [newOrder, setNewOrder] = useState({ items: [] as Array<{ menuItemId: string; quantity: number }>, type: 'dine-in' as 'dine-in' | 'drive-thru' | 'takeaway' })
 
   useEffect(() => {
     const savedMenu = localStorage.getItem('fastfood-menu')
@@ -206,7 +211,10 @@ export default function FastfoodPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Menu</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowMenuModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Ajouter Produit
               </button>
             </div>
@@ -240,7 +248,10 @@ export default function FastfoodPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Commandes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                onClick={() => setShowOrderModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
                 Nouvelle Commande
               </button>
             </div>
@@ -327,6 +338,260 @@ export default function FastfoodPage() {
       </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showMenuModal}
+        onClose={() => {
+          setShowMenuModal(false)
+          setNewMenuItem({ name: '', description: '', price: 0, category: 'burger', halal: true, stock: 0 })
+        }}
+        title="Ajouter Produit"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newMenuItem.name}
+              onChange={(e) => setNewMenuItem({ ...newMenuItem, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Burger Halal"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newMenuItem.description}
+              onChange={(e) => setNewMenuItem({ ...newMenuItem, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du produit"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newMenuItem.category}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, category: e.target.value as 'burger' | 'sandwich' | 'fries' | 'drink' | 'combo' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="burger">Burger</option>
+                <option value="sandwich">Sandwich</option>
+                <option value="fries">Frites</option>
+                <option value="drink">Boisson</option>
+                <option value="combo">Combo</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newMenuItem.price}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+              <input
+                type="number"
+                value={newMenuItem.stock}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, stock: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div className="flex items-end">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={newMenuItem.halal}
+                  onChange={(e) => setNewMenuItem({ ...newMenuItem, halal: e.target.checked })}
+                  className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                />
+                <span className="text-sm text-gray-700">Halal</span>
+              </label>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMenuModal(false)
+                setNewMenuItem({ name: '', description: '', price: 0, category: 'burger', halal: true, stock: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMenuItem.name && newMenuItem.description && newMenuItem.price > 0) {
+                  const menuItem: MenuItem = {
+                    id: Date.now().toString(),
+                    name: newMenuItem.name,
+                    description: newMenuItem.description,
+                    price: newMenuItem.price,
+                    category: newMenuItem.category,
+                    halal: newMenuItem.halal,
+                    available: true,
+                    stock: newMenuItem.stock,
+                  }
+                  setMenuItems([...menuItems, menuItem])
+                  setShowMenuModal(false)
+                  setNewMenuItem({ name: '', description: '', price: 0, category: 'burger', halal: true, stock: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showOrderModal}
+        onClose={() => {
+          setShowOrderModal(false)
+          setNewOrder({ items: [], type: 'dine-in' })
+        }}
+        title="Nouvelle Commande"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select
+              value={newOrder.type}
+              onChange={(e) => setNewOrder({ ...newOrder, type: e.target.value as 'dine-in' | 'drive-thru' | 'takeaway' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            >
+              <option value="dine-in">Sur place</option>
+              <option value="drive-thru">Drive-Thru</option>
+              <option value="takeaway">À emporter</option>
+            </select>
+          </div>
+          {menuItems.filter(item => item.available && item.stock > 0).length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Articles</label>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {menuItems.filter(item => item.available && item.stock > 0).map(item => {
+                  const orderItem = newOrder.items.find(i => i.menuItemId === item.id)
+                  return (
+                    <div key={item.id} className="flex items-center justify-between p-2 border border-gray-200 rounded-lg">
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{item.name}</p>
+                        <p className="text-sm text-gray-500">{item.price.toFixed(2)} DZD</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            if (orderItem && orderItem.quantity > 0) {
+                              setNewOrder({
+                                ...newOrder,
+                                items: newOrder.items.map(i => i.menuItemId === item.id ? { ...i, quantity: i.quantity - 1 } : i).filter(i => i.quantity > 0)
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center">{orderItem?.quantity || 0}</span>
+                        <button
+                          onClick={() => {
+                            if (orderItem) {
+                              setNewOrder({
+                                ...newOrder,
+                                items: newOrder.items.map(i => i.menuItemId === item.id ? { ...i, quantity: i.quantity + 1 } : i)
+                              })
+                            } else {
+                              setNewOrder({
+                                ...newOrder,
+                                items: [...newOrder.items, { menuItemId: item.id, quantity: 1 }]
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              {newOrder.items.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="font-semibold text-gray-900">
+                    Total: {newOrder.items.reduce((sum, item) => {
+                      const menuItem = menuItems.find(m => m.id === item.menuItemId)
+                      return sum + (menuItem ? menuItem.price * item.quantity : 0)
+                    }, 0).toFixed(2)} DZD
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowOrderModal(false)
+                setNewOrder({ items: [], type: 'dine-in' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newOrder.items.length > 0) {
+                  const total = newOrder.items.reduce((sum, item) => {
+                    const menuItem = menuItems.find(m => m.id === item.menuItemId)
+                    return sum + (menuItem ? menuItem.price * item.quantity : 0)
+                  }, 0)
+                  const order: Order = {
+                    id: Date.now().toString(),
+                    items: newOrder.items.map(item => {
+                      const menuItem = menuItems.find(m => m.id === item.menuItemId)
+                      return {
+                        menuItemId: item.menuItemId,
+                        quantity: item.quantity,
+                        price: menuItem ? menuItem.price : 0
+                      }
+                    }),
+                    total,
+                    type: newOrder.type,
+                    status: 'pending',
+                    createdAt: new Date(),
+                  }
+                  setOrders([...orders, order])
+                  // Mettre à jour le stock
+                  setMenuItems(menuItems.map(item => {
+                    const orderItem = newOrder.items.find(i => i.menuItemId === item.id)
+                    if (orderItem) {
+                      return { ...item, stock: Math.max(0, item.stock - orderItem.quantity) }
+                    }
+                    return item
+                  }))
+                  setShowOrderModal(false)
+                  setNewOrder({ items: [], type: 'dine-in' })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

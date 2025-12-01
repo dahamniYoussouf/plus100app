@@ -12,7 +12,9 @@ export default function PharmacyPage() {
   const [medications, setMedications] = useState<Medication[]>([])
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
   const [showMedicationModal, setShowMedicationModal] = useState(false)
+  const [showPrescriptionModal, setShowPrescriptionModal] = useState(false)
   const [newMedication, setNewMedication] = useState({ name: '', genericName: '', category: 'otc' as 'otc' | 'prescription', dosage: '', form: 'tablet' as 'tablet' | 'capsule' | 'syrup' | 'injection', stock: 0, expiryDate: '', price: 0, cost: 0, prescriptionRequired: false, manufacturer: '' })
+  const [newPrescription, setNewPrescription] = useState({ patientName: '', patientPhone: '', doctorName: '', doctorLicense: '', medications: [] as Array<{ medicationId: string; quantity: number; instructions: string }>, date: '' })
 
   useEffect(() => {
     const savedMeds = localStorage.getItem('pharmacy-medications')
@@ -241,10 +243,13 @@ export default function PharmacyPage() {
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Ordonnances</h2>
             <p className="text-gray-600 mb-6">Gestion des ordonnances et délivrance de médicaments</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="bg-gray-50 rounded-lg p-4">
+              <button
+                onClick={() => setShowPrescriptionModal(true)}
+                className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors text-left w-full"
+              >
                 <h3 className="font-semibold text-gray-900 mb-2">Nouvelle Ordonnance</h3>
                 <p className="text-sm text-gray-600">Enregistrer et traiter une nouvelle ordonnance</p>
-              </div>
+              </button>
               <div className="bg-gray-50 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">Historique</h3>
                 <p className="text-sm text-gray-600">Consulter l'historique des ordonnances</p>
@@ -433,6 +438,176 @@ export default function PharmacyPage() {
                   setMedications([...medications, medication])
                   setShowMedicationModal(false)
                   setNewMedication({ name: '', genericName: '', category: 'otc', dosage: '', form: 'tablet', stock: 0, expiryDate: '', price: 0, cost: 0, prescriptionRequired: false, manufacturer: '' })
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showPrescriptionModal}
+        onClose={() => {
+          setShowPrescriptionModal(false)
+          setNewPrescription({ patientName: '', patientPhone: '', doctorName: '', doctorLicense: '', medications: [], date: '' })
+        }}
+        title="Nouvelle Ordonnance"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom du patient</label>
+              <input
+                type="text"
+                value={newPrescription.patientName}
+                onChange={(e) => setNewPrescription({ ...newPrescription, patientName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newPrescription.patientPhone}
+                onChange={(e) => setNewPrescription({ ...newPrescription, patientPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom du médecin</label>
+              <input
+                type="text"
+                value={newPrescription.doctorName}
+                onChange={(e) => setNewPrescription({ ...newPrescription, doctorName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: Dr. Mohamed Ali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">N° Licence</label>
+              <input
+                type="text"
+                value={newPrescription.doctorLicense}
+                onChange={(e) => setNewPrescription({ ...newPrescription, doctorLicense: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: MED-12345"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+            <input
+              type="date"
+              value={newPrescription.date}
+              onChange={(e) => setNewPrescription({ ...newPrescription, date: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+          {medications.filter(m => m.category === 'prescription' && m.stock > 0).length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Médicaments</label>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {medications.filter(m => m.category === 'prescription' && m.stock > 0).map(medication => {
+                  const prescriptionItem = newPrescription.medications.find(m => m.medicationId === medication.id)
+                  return (
+                    <div key={medication.id} className="flex items-start justify-between p-2 border border-gray-200 rounded-lg">
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{medication.name}</p>
+                        <p className="text-sm text-gray-500">{medication.dosage} • Stock: {medication.stock}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            if (prescriptionItem && prescriptionItem.quantity > 0) {
+                              setNewPrescription({
+                                ...newPrescription,
+                                medications: newPrescription.medications.map(m => m.medicationId === medication.id ? { ...m, quantity: m.quantity - 1 } : m).filter(m => m.quantity > 0)
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center">{prescriptionItem?.quantity || 0}</span>
+                        <button
+                          onClick={() => {
+                            if (prescriptionItem) {
+                              if (prescriptionItem.quantity < medication.stock) {
+                                setNewPrescription({
+                                  ...newPrescription,
+                                  medications: newPrescription.medications.map(m => m.medicationId === medication.id ? { ...m, quantity: m.quantity + 1 } : m)
+                                })
+                              }
+                            } else {
+                              setNewPrescription({
+                                ...newPrescription,
+                                medications: [...newPrescription.medications, { medicationId: medication.id, quantity: 1, instructions: '' }]
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                          disabled={prescriptionItem ? prescriptionItem.quantity >= medication.stock : false}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowPrescriptionModal(false)
+                setNewPrescription({ patientName: '', patientPhone: '', doctorName: '', doctorLicense: '', medications: [], date: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newPrescription.patientName && newPrescription.doctorName && newPrescription.date && newPrescription.medications.length > 0) {
+                  const prescription: Prescription = {
+                    id: Date.now().toString(),
+                    patientName: newPrescription.patientName,
+                    patientPhone: newPrescription.patientPhone,
+                    doctorName: newPrescription.doctorName,
+                    medications: newPrescription.medications.map(item => {
+                      const medication = medications.find(m => m.id === item.medicationId)
+                      return {
+                        medicationId: item.medicationId,
+                        medicationName: medication ? medication.name : '',
+                        quantity: item.quantity,
+                        dosage: medication ? medication.dosage : '',
+                        instructions: item.instructions,
+                      }
+                    }),
+                    date: new Date(newPrescription.date),
+                    status: 'pending',
+                  }
+                  setPrescriptions([...prescriptions, prescription])
+                  // Mettre à jour le stock
+                  setMedications(medications.map(medication => {
+                    const prescriptionItem = newPrescription.medications.find(m => m.medicationId === medication.id)
+                    if (prescriptionItem) {
+                      return { ...medication, stock: Math.max(0, medication.stock - prescriptionItem.quantity) }
+                    }
+                    return medication
+                  }))
+                  setShowPrescriptionModal(false)
+                  setNewPrescription({ patientName: '', patientPhone: '', doctorName: '', doctorLicense: '', medications: [], date: '' })
                 }
               }}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"

@@ -58,8 +58,10 @@ export default function BowlingPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [tournaments, setTournaments] = useState<Tournament[]>([])
   const [members, setMembers] = useState<Member[]>([])
+  const [showBookingModal, setShowBookingModal] = useState(false)
   const [showTournamentModal, setShowTournamentModal] = useState(false)
   const [showMemberModal, setShowMemberModal] = useState(false)
+  const [newBooking, setNewBooking] = useState({ customerName: '', phone: '', email: '', laneId: '', date: '', time: '', duration: 60, players: 2, price: 0 })
   const [newTournament, setNewTournament] = useState({ name: '', date: '', maxParticipants: 16, prize: 0 })
   const [newMember, setNewMember] = useState({ name: '', email: '', phone: '', membershipType: 'basic' as 'basic' | 'premium' | 'vip' })
 
@@ -361,7 +363,10 @@ export default function BowlingPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Réservations</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowBookingModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvelle réservation
               </button>
             </div>
@@ -489,6 +494,167 @@ export default function BowlingPage() {
       </main>
 
       {/* Modals */}
+      <Modal
+        isOpen={showBookingModal}
+        onClose={() => {
+          setShowBookingModal(false)
+          setNewBooking({ customerName: '', phone: '', email: '', laneId: '', date: '', time: '', duration: 60, players: 2, price: 0 })
+        }}
+        title="Nouvelle réservation"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du client</label>
+            <input
+              type="text"
+              value={newBooking.customerName}
+              onChange={(e) => setNewBooking({ ...newBooking, customerName: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newBooking.phone}
+                onChange={(e) => setNewBooking({ ...newBooking, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email (optionnel)</label>
+              <input
+                type="email"
+                value={newBooking.email}
+                onChange={(e) => setNewBooking({ ...newBooking, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+          </div>
+          {lanes.filter(l => l.status === 'available').length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Piste</label>
+              <select
+                value={newBooking.laneId}
+                onChange={(e) => {
+                  const lane = lanes.find(l => l.id === e.target.value)
+                  setNewBooking({ ...newBooking, laneId: e.target.value, price: lane ? (newBooking.duration / 60) * 10 : 0 })
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner une piste</option>
+                {lanes.filter(l => l.status === 'available').map(lane => (
+                  <option key={lane.id} value={lane.id}>Piste {lane.number}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newBooking.date}
+                onChange={(e) => setNewBooking({ ...newBooking, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newBooking.time}
+                onChange={(e) => setNewBooking({ ...newBooking, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (minutes)</label>
+              <input
+                type="number"
+                value={newBooking.duration}
+                onChange={(e) => {
+                  const duration = parseInt(e.target.value) || 60
+                  const lane = lanes.find(l => l.id === newBooking.laneId)
+                  setNewBooking({ ...newBooking, duration, price: lane ? (duration / 60) * 10 : 0 })
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="30"
+                step="30"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de joueurs</label>
+              <input
+                type="number"
+                value={newBooking.players}
+                onChange={(e) => setNewBooking({ ...newBooking, players: parseInt(e.target.value) || 2 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="1"
+                max="8"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+            <input
+              type="number"
+              value={newBooking.price}
+              onChange={(e) => setNewBooking({ ...newBooking, price: parseFloat(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowBookingModal(false)
+                setNewBooking({ customerName: '', phone: '', email: '', laneId: '', date: '', time: '', duration: 60, players: 2, price: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newBooking.customerName && newBooking.phone && newBooking.laneId && newBooking.date && newBooking.time) {
+                  const lane = lanes.find(l => l.id === newBooking.laneId)
+                  if (lane) {
+                    const booking: Booking = {
+                      id: Date.now().toString(),
+                      customerName: newBooking.customerName,
+                      phone: newBooking.phone,
+                      email: newBooking.email || undefined,
+                      laneId: newBooking.laneId,
+                      laneNumber: lane.number,
+                      date: new Date(newBooking.date),
+                      time: newBooking.time,
+                      duration: newBooking.duration,
+                      players: newBooking.players,
+                      price: newBooking.price,
+                      status: 'confirmed',
+                    }
+                    setBookings([...bookings, booking])
+                    setShowBookingModal(false)
+                    setNewBooking({ customerName: '', phone: '', email: '', laneId: '', date: '', time: '', duration: 60, players: 2, price: 0 })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
       <Modal
         isOpen={showTournamentModal}
         onClose={() => {

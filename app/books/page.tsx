@@ -46,6 +46,8 @@ export default function BooksPage() {
   const [customers, setCustomers] = useState<Customer[]>([])
   const [showLivreModal, setShowLivreModal] = useState(false)
   const [showClientModal, setShowClientModal] = useState(false)
+  const [newBook, setNewBook] = useState({ title: '', author: '', isbn: '', category: '', price: 0, stock: 0, publishedYear: new Date().getFullYear() })
+  const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '', favoriteCategory: '' })
 
   useEffect(() => {
     const savedBooks = localStorage.getItem('books-catalog')
@@ -418,18 +420,123 @@ export default function BooksPage() {
       {/* Modals */}
       <Modal
         isOpen={showLivreModal}
-        onClose={() => setShowLivreModal(false)}
+        onClose={() => {
+          setShowLivreModal(false)
+          setNewBook({ title: '', author: '', isbn: '', category: '', price: 0, stock: 0, publishedYear: new Date().getFullYear() })
+        }}
         title="Ajouter un livre"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau livre.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+            <input
+              type="text"
+              value={newBook.title}
+              onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Le Petit Prince"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
+              <input
+                type="text"
+                value={newBook.author}
+                onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Antoine de Saint-Exupéry"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
+              <input
+                type="text"
+                value={newBook.isbn}
+                onChange={(e) => setNewBook({ ...newBook, isbn: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: 978-2070612758"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newBook.category}
+                onChange={(e) => setNewBook({ ...newBook, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Littérature"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newBook.price}
+                onChange={(e) => setNewBook({ ...newBook, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Année</label>
+              <input
+                type="number"
+                value={newBook.publishedYear}
+                onChange={(e) => setNewBook({ ...newBook, publishedYear: parseInt(e.target.value) || new Date().getFullYear() })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="1000"
+                max={new Date().getFullYear() + 1}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+            <input
+              type="number"
+              value={newBook.stock}
+              onChange={(e) => setNewBook({ ...newBook, stock: parseInt(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowLivreModal(false)}
+              onClick={() => {
+                setShowLivreModal(false)
+                setNewBook({ title: '', author: '', isbn: '', category: '', price: 0, stock: 0, publishedYear: new Date().getFullYear() })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newBook.title && newBook.author && newBook.isbn && newBook.category && newBook.price > 0) {
+                  const book: BookItem = {
+                    id: Date.now().toString(),
+                    title: newBook.title,
+                    author: newBook.author,
+                    isbn: newBook.isbn,
+                    category: newBook.category,
+                    price: newBook.price,
+                    stock: newBook.stock,
+                    sold: 0,
+                    rating: 0,
+                    publishedYear: newBook.publishedYear,
+                  }
+                  setBooks([...books, book])
+                  setShowLivreModal(false)
+                  setNewBook({ title: '', author: '', isbn: '', category: '', price: 0, stock: 0, publishedYear: new Date().getFullYear() })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -437,18 +544,86 @@ export default function BooksPage() {
 
       <Modal
         isOpen={showClientModal}
-        onClose={() => setShowClientModal(false)}
+        onClose={() => {
+          setShowClientModal(false)
+          setNewCustomer({ name: '', email: '', phone: '', favoriteCategory: '' })
+        }}
         title="Nouveau client"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau client.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newCustomer.name}
+              onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newCustomer.email}
+                onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newCustomer.phone}
+                onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie préférée (optionnel)</label>
+            <input
+              type="text"
+              value={newCustomer.favoriteCategory}
+              onChange={(e) => setNewCustomer({ ...newCustomer, favoriteCategory: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Littérature"
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowClientModal(false)}
+              onClick={() => {
+                setShowClientModal(false)
+                setNewCustomer({ name: '', email: '', phone: '', favoriteCategory: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCustomer.name && newCustomer.email && newCustomer.phone) {
+                  const customer: Customer = {
+                    id: Date.now().toString(),
+                    name: newCustomer.name,
+                    email: newCustomer.email,
+                    phone: newCustomer.phone,
+                    totalPurchases: 0,
+                    totalSpent: 0,
+                    favoriteCategory: newCustomer.favoriteCategory || undefined,
+                  }
+                  setCustomers([...customers, customer])
+                  setShowClientModal(false)
+                  setNewCustomer({ name: '', email: '', phone: '', favoriteCategory: '' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>

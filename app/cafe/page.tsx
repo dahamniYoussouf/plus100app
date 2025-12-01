@@ -44,6 +44,9 @@ export default function CafePage() {
   const [showMenuModal, setShowMenuModal] = useState(false)
   const [showOrderModal, setShowOrderModal] = useState(false)
   const [showCustomerModal, setShowCustomerModal] = useState(false)
+  const [newMenuItem, setNewMenuItem] = useState({ name: '', description: '', price: 0, category: 'coffee' as 'coffee' | 'tea' | 'juice' | 'pastry', halal: true })
+  const [newOrder, setNewOrder] = useState({ customerId: '', items: [] as Array<{ menuItemId: string; quantity: number }> })
+  const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '' })
 
   useEffect(() => {
     const savedMenu = localStorage.getItem('cafe-menu')
@@ -404,18 +407,101 @@ export default function CafePage() {
       {/* Modals */}
       <Modal
         isOpen={showMenuModal}
-        onClose={() => setShowMenuModal(false)}
+        onClose={() => {
+          setShowMenuModal(false)
+          setNewMenuItem({ name: '', description: '', price: 0, category: 'coffee', halal: true })
+        }}
         title="Ajouter un produit"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau produit au menu.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newMenuItem.name}
+              onChange={(e) => setNewMenuItem({ ...newMenuItem, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Café Turc"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newMenuItem.description}
+              onChange={(e) => setNewMenuItem({ ...newMenuItem, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du produit"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={newMenuItem.category}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, category: e.target.value as 'coffee' | 'tea' | 'juice' | 'pastry' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="coffee">Café</option>
+                <option value="tea">Thé</option>
+                <option value="juice">Jus</option>
+                <option value="pastry">Pâtisserie</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newMenuItem.price}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={newMenuItem.halal}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, halal: e.target.checked })}
+                className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+              />
+              <span className="text-sm text-gray-700">Halal</span>
+            </label>
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowMenuModal(false)}
+              onClick={() => {
+                setShowMenuModal(false)
+                setNewMenuItem({ name: '', description: '', price: 0, category: 'coffee', halal: true })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMenuItem.name && newMenuItem.description && newMenuItem.price > 0) {
+                  const menuItem: MenuItem = {
+                    id: Date.now().toString(),
+                    name: newMenuItem.name,
+                    description: newMenuItem.description,
+                    price: newMenuItem.price,
+                    category: newMenuItem.category,
+                    halal: newMenuItem.halal,
+                    available: true,
+                  }
+                  setMenuItems([...menuItems, menuItem])
+                  setShowMenuModal(false)
+                  setNewMenuItem({ name: '', description: '', price: 0, category: 'coffee', halal: true })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -423,18 +509,134 @@ export default function CafePage() {
 
       <Modal
         isOpen={showOrderModal}
-        onClose={() => setShowOrderModal(false)}
+        onClose={() => {
+          setShowOrderModal(false)
+          setNewOrder({ customerId: '', items: [] })
+        }}
         title="Nouvelle commande"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra de créer une nouvelle commande.</p>
+          {customers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newOrder.customerId}
+                onChange={(e) => setNewOrder({ ...newOrder, customerId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un client</option>
+                {customers.map(customer => (
+                  <option key={customer.id} value={customer.id}>{customer.name} - {customer.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {menuItems.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Articles</label>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {menuItems.filter(item => item.available).map(item => {
+                  const orderItem = newOrder.items.find(i => i.menuItemId === item.id)
+                  return (
+                    <div key={item.id} className="flex items-center justify-between p-2 border border-gray-200 rounded-lg">
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{item.name}</p>
+                        <p className="text-sm text-gray-500">{item.price.toFixed(2)} DZD</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            if (orderItem && orderItem.quantity > 0) {
+                              setNewOrder({
+                                ...newOrder,
+                                items: newOrder.items.map(i => i.menuItemId === item.id ? { ...i, quantity: i.quantity - 1 } : i).filter(i => i.quantity > 0)
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center">{orderItem?.quantity || 0}</span>
+                        <button
+                          onClick={() => {
+                            if (orderItem) {
+                              setNewOrder({
+                                ...newOrder,
+                                items: newOrder.items.map(i => i.menuItemId === item.id ? { ...i, quantity: i.quantity + 1 } : i)
+                              })
+                            } else {
+                              setNewOrder({
+                                ...newOrder,
+                                items: [...newOrder.items, { menuItemId: item.id, quantity: 1 }]
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              {newOrder.items.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="font-semibold text-gray-900">
+                    Total: {newOrder.items.reduce((sum, item) => {
+                      const menuItem = menuItems.find(m => m.id === item.menuItemId)
+                      return sum + (menuItem ? menuItem.price * item.quantity : 0)
+                    }, 0).toFixed(2)} DZD
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowOrderModal(false)}
+              onClick={() => {
+                setShowOrderModal(false)
+                setNewOrder({ customerId: '', items: [] })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newOrder.customerId && newOrder.items.length > 0) {
+                  const customer = customers.find(c => c.id === newOrder.customerId)
+                  if (customer) {
+                    const total = newOrder.items.reduce((sum, item) => {
+                      const menuItem = menuItems.find(m => m.id === item.menuItemId)
+                      return sum + (menuItem ? menuItem.price * item.quantity : 0)
+                    }, 0)
+                    const order: Order = {
+                      id: Date.now().toString(),
+                      customerId: newOrder.customerId,
+                      items: newOrder.items.map(item => {
+                        const menuItem = menuItems.find(m => m.id === item.menuItemId)
+                        return {
+                          menuItemId: item.menuItemId,
+                          quantity: item.quantity,
+                          price: menuItem ? menuItem.price : 0
+                        }
+                      }),
+                      total,
+                      status: 'pending',
+                      createdAt: new Date(),
+                    }
+                    setOrders([...orders, order])
+                    setShowOrderModal(false)
+                    setNewOrder({ customerId: '', items: [] })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -442,18 +644,76 @@ export default function CafePage() {
 
       <Modal
         isOpen={showCustomerModal}
-        onClose={() => setShowCustomerModal(false)}
+        onClose={() => {
+          setShowCustomerModal(false)
+          setNewCustomer({ name: '', email: '', phone: '' })
+        }}
         title="Nouveau client"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau client.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newCustomer.name}
+              onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newCustomer.email}
+                onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newCustomer.phone}
+                onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowCustomerModal(false)}
+              onClick={() => {
+                setShowCustomerModal(false)
+                setNewCustomer({ name: '', email: '', phone: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCustomer.name && newCustomer.email && newCustomer.phone) {
+                  const customer: Customer = {
+                    id: Date.now().toString(),
+                    name: newCustomer.name,
+                    email: newCustomer.email,
+                    phone: newCustomer.phone,
+                    loyaltyPoints: 0,
+                    totalOrders: 0,
+                    createdAt: new Date(),
+                  }
+                  setCustomers([...customers, customer])
+                  setShowCustomerModal(false)
+                  setNewCustomer({ name: '', email: '', phone: '' })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>

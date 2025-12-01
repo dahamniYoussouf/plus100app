@@ -76,9 +76,11 @@ export default function RealEstatePage() {
   const [showPropertyModal, setShowPropertyModal] = useState(false)
   const [showTenantModal, setShowTenantModal] = useState(false)
   const [showLeaseModal, setShowLeaseModal] = useState(false)
+  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false)
   const [newProperty, setNewProperty] = useState({ address: '', type: 'apartment' as 'apartment' | 'house' | 'commercial' | 'land', bedrooms: 0, bathrooms: 0, area: 0, price: 0, ownerName: '' })
   const [newTenant, setNewTenant] = useState({ name: '', email: '', phone: '' })
   const [newLease, setNewLease] = useState({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
+  const [newMaintenance, setNewMaintenance] = useState({ propertyId: '', tenantId: '', description: '', priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent' })
 
   useEffect(() => {
     const savedProperties = localStorage.getItem('realestate-properties')
@@ -489,7 +491,10 @@ export default function RealEstatePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Maintenance</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              <button 
+                onClick={() => setShowMaintenanceModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+              >
                 Nouvelle demande
               </button>
             </div>
@@ -855,6 +860,110 @@ export default function RealEstatePage() {
                     setLeases([...leases, lease])
                     setShowLeaseModal(false)
                     setNewLease({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: 0, deposit: 0 })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showMaintenanceModal}
+        onClose={() => {
+          setShowMaintenanceModal(false)
+          setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium' })
+        }}
+        title="Nouvelle demande de maintenance"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {properties.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Bien</label>
+              <select
+                value={newMaintenance.propertyId}
+                onChange={(e) => setNewMaintenance({ ...newMaintenance, propertyId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un bien</option>
+                {properties.map(property => (
+                  <option key={property.id} value={property.id}>{property.address}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {tenants.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Locataire</label>
+              <select
+                value={newMaintenance.tenantId}
+                onChange={(e) => setNewMaintenance({ ...newMaintenance, tenantId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un locataire</option>
+                {tenants.map(tenant => (
+                  <option key={tenant.id} value={tenant.id}>{tenant.name} - {tenant.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newMaintenance.description}
+              onChange={(e) => setNewMaintenance({ ...newMaintenance, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              rows={4}
+              placeholder="Décrivez le problème..."
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
+            <select
+              value={newMaintenance.priority}
+              onChange={(e) => setNewMaintenance({ ...newMaintenance, priority: e.target.value as 'low' | 'medium' | 'high' | 'urgent' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+            >
+              <option value="low">Basse</option>
+              <option value="medium">Moyenne</option>
+              <option value="high">Élevée</option>
+              <option value="urgent">Urgente</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMaintenanceModal(false)
+                setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMaintenance.propertyId && newMaintenance.tenantId && newMaintenance.description) {
+                  const property = properties.find(p => p.id === newMaintenance.propertyId)
+                  const tenant = tenants.find(t => t.id === newMaintenance.tenantId)
+                  if (property && tenant) {
+                    const maintenance: MaintenanceRequest = {
+                      id: Date.now().toString(),
+                      propertyId: newMaintenance.propertyId,
+                      propertyAddress: property.address,
+                      tenantId: newMaintenance.tenantId,
+                      tenantName: tenant.name,
+                      description: newMaintenance.description,
+                      priority: newMaintenance.priority,
+                      status: 'pending',
+                      createdAt: new Date(),
+                    }
+                    setMaintenanceRequests([...maintenanceRequests, maintenance])
+                    setShowMaintenanceModal(false)
+                    setNewMaintenance({ propertyId: '', tenantId: '', description: '', priority: 'medium' })
                   }
                 }
               }}

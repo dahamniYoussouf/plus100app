@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { School, Users, BookOpen, Calendar, BarChart3, GraduationCap, Award, FileText } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'students' | 'courses' | 'exams' | 'faculty'
 
@@ -63,6 +64,14 @@ export default function UniversityPage() {
   const [courses, setCourses] = useState<Course[]>([])
   const [exams, setExams] = useState<Exam[]>([])
   const [faculty, setFaculty] = useState<Faculty[]>([])
+  const [showStudentModal, setShowStudentModal] = useState(false)
+  const [showCourseModal, setShowCourseModal] = useState(false)
+  const [showExamModal, setShowExamModal] = useState(false)
+  const [showFacultyModal, setShowFacultyModal] = useState(false)
+  const [newStudent, setNewStudent] = useState({ firstName: '', lastName: '', email: '', phone: '', studentId: '', program: '', year: 1 })
+  const [newCourse, setNewCourse] = useState({ code: '', name: '', credits: 3, professor: '', schedule: '', room: '', capacity: 30, department: '', semester: 'fall' as 'fall' | 'spring' | 'summer' })
+  const [newExam, setNewExam] = useState({ courseId: '', type: 'midterm' as 'midterm' | 'final' | 'quiz' | 'assignment', date: '', time: '', duration: 60, room: '' })
+  const [newFaculty, setNewFaculty] = useState({ name: '', email: '', phone: '', department: '', title: '', office: '', courses: [] as string[] })
 
   useEffect(() => {
     const savedStudents = localStorage.getItem('university-students')
@@ -354,7 +363,10 @@ export default function UniversityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Étudiants</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowStudentModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvel Étudiant
               </button>
             </div>
@@ -415,7 +427,10 @@ export default function UniversityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Cours</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowCourseModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Cours
               </button>
             </div>
@@ -459,7 +474,10 @@ export default function UniversityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Examens</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowExamModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouvel Examen
               </button>
             </div>
@@ -508,7 +526,10 @@ export default function UniversityPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Corps Enseignant</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => setShowFacultyModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Nouveau Membre
               </button>
             </div>
@@ -539,6 +560,511 @@ export default function UniversityPage() {
       </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showStudentModal}
+        onClose={() => {
+          setShowStudentModal(false)
+          setNewStudent({ firstName: '', lastName: '', email: '', phone: '', studentId: '', program: '', year: 1 })
+        }}
+        title="Nouvel Étudiant"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+              <input
+                type="text"
+                value={newStudent.firstName}
+                onChange={(e) => setNewStudent({ ...newStudent, firstName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Ahmed"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+              <input
+                type="text"
+                value={newStudent.lastName}
+                onChange={(e) => setNewStudent({ ...newStudent, lastName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Benali"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newStudent.email}
+                onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: ahmed@univ.edu"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newStudent.phone}
+                onChange={(e) => setNewStudent({ ...newStudent, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">N° Étudiant</label>
+              <input
+                type="text"
+                value={newStudent.studentId}
+                onChange={(e) => setNewStudent({ ...newStudent, studentId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: STU-2024-001"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Année</label>
+              <input
+                type="number"
+                value={newStudent.year}
+                onChange={(e) => setNewStudent({ ...newStudent, year: parseInt(e.target.value) || 1 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="1"
+                max="5"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Programme</label>
+            <input
+              type="text"
+              value={newStudent.program}
+              onChange={(e) => setNewStudent({ ...newStudent, program: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Informatique"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowStudentModal(false)
+                setNewStudent({ firstName: '', lastName: '', email: '', phone: '', studentId: '', program: '', year: 1 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newStudent.firstName && newStudent.lastName && newStudent.email && newStudent.phone && newStudent.studentId && newStudent.program) {
+                  const student: Student = {
+                    id: Date.now().toString(),
+                    firstName: newStudent.firstName,
+                    lastName: newStudent.lastName,
+                    email: newStudent.email,
+                    phone: newStudent.phone,
+                    studentId: newStudent.studentId,
+                    program: newStudent.program,
+                    year: newStudent.year,
+                    enrollmentDate: new Date(),
+                    status: 'active',
+                    courses: [],
+                  }
+                  setStudents([...students, student])
+                  setShowStudentModal(false)
+                  setNewStudent({ firstName: '', lastName: '', email: '', phone: '', studentId: '', program: '', year: 1 })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showCourseModal}
+        onClose={() => {
+          setShowCourseModal(false)
+          setNewCourse({ code: '', name: '', credits: 3, professor: '', schedule: '', room: '', capacity: 30, department: '', semester: 'fall' })
+        }}
+        title="Nouveau Cours"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Code</label>
+              <input
+                type="text"
+                value={newCourse.code}
+                onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: CS301"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Crédits</label>
+              <input
+                type="number"
+                value={newCourse.credits}
+                onChange={(e) => setNewCourse({ ...newCourse, credits: parseInt(e.target.value) || 3 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="1"
+                max="6"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du cours</label>
+            <input
+              type="text"
+              value={newCourse.name}
+              onChange={(e) => setNewCourse({ ...newCourse, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Algorithmes et Structures de Données"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Professeur</label>
+              <input
+                type="text"
+                value={newCourse.professor}
+                onChange={(e) => setNewCourse({ ...newCourse, professor: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Dr. Mohamed Ali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Département</label>
+              <input
+                type="text"
+                value={newCourse.department}
+                onChange={(e) => setNewCourse({ ...newCourse, department: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Informatique"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Horaire</label>
+              <input
+                type="text"
+                value={newCourse.schedule}
+                onChange={(e) => setNewCourse({ ...newCourse, schedule: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Lun-Mer 10h-12h"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Salle</label>
+              <input
+                type="text"
+                value={newCourse.room}
+                onChange={(e) => setNewCourse({ ...newCourse, room: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: A101"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Capacité</label>
+              <input
+                type="number"
+                value={newCourse.capacity}
+                onChange={(e) => setNewCourse({ ...newCourse, capacity: parseInt(e.target.value) || 30 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="1"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Semestre</label>
+            <select
+              value={newCourse.semester}
+              onChange={(e) => setNewCourse({ ...newCourse, semester: e.target.value as 'fall' | 'spring' | 'summer' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="fall">Automne</option>
+              <option value="spring">Printemps</option>
+              <option value="summer">Été</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowCourseModal(false)
+                setNewCourse({ code: '', name: '', credits: 3, professor: '', schedule: '', room: '', capacity: 30, department: '', semester: 'fall' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newCourse.code && newCourse.name && newCourse.professor && newCourse.department) {
+                  const course: Course = {
+                    id: Date.now().toString(),
+                    code: newCourse.code,
+                    name: newCourse.name,
+                    credits: newCourse.credits,
+                    professor: newCourse.professor,
+                    schedule: newCourse.schedule,
+                    room: newCourse.room,
+                    enrolled: 0,
+                    capacity: newCourse.capacity,
+                    department: newCourse.department,
+                    semester: newCourse.semester,
+                  }
+                  setCourses([...courses, course])
+                  setShowCourseModal(false)
+                  setNewCourse({ code: '', name: '', credits: 3, professor: '', schedule: '', room: '', capacity: 30, department: '', semester: 'fall' })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showExamModal}
+        onClose={() => {
+          setShowExamModal(false)
+          setNewExam({ courseId: '', type: 'midterm', date: '', time: '', duration: 60, room: '' })
+        }}
+        title="Nouvel Examen"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {courses.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Cours</label>
+              <select
+                value={newExam.courseId}
+                onChange={(e) => setNewExam({ ...newExam, courseId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un cours</option>
+                {courses.map(course => (
+                  <option key={course.id} value={course.id}>{course.code} - {course.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <select
+                value={newExam.type}
+                onChange={(e) => setNewExam({ ...newExam, type: e.target.value as 'midterm' | 'final' | 'quiz' | 'assignment' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="midterm">Partiel</option>
+                <option value="final">Examen Final</option>
+                <option value="quiz">Quiz</option>
+                <option value="assignment">Devoir</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Durée (minutes)</label>
+              <input
+                type="number"
+                value={newExam.duration}
+                onChange={(e) => setNewExam({ ...newExam, duration: parseInt(e.target.value) || 60 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min="15"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newExam.date}
+                onChange={(e) => setNewExam({ ...newExam, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newExam.time}
+                onChange={(e) => setNewExam({ ...newExam, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Salle</label>
+            <input
+              type="text"
+              value={newExam.room}
+              onChange={(e) => setNewExam({ ...newExam, room: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: A101"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowExamModal(false)
+                setNewExam({ courseId: '', type: 'midterm', date: '', time: '', duration: 60, room: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newExam.courseId && newExam.date && newExam.time && newExam.room) {
+                  const course = courses.find(c => c.id === newExam.courseId)
+                  if (course) {
+                    const exam: Exam = {
+                      id: Date.now().toString(),
+                      courseId: newExam.courseId,
+                      courseName: course.name,
+                      type: newExam.type,
+                      date: new Date(newExam.date),
+                      time: newExam.time,
+                      duration: newExam.duration,
+                      room: newExam.room,
+                      students: [],
+                    }
+                    setExams([...exams, exam])
+                    setShowExamModal(false)
+                    setNewExam({ courseId: '', type: 'midterm', date: '', time: '', duration: 60, room: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showFacultyModal}
+        onClose={() => {
+          setShowFacultyModal(false)
+          setNewFaculty({ name: '', email: '', phone: '', department: '', title: '', office: '', courses: [] })
+        }}
+        title="Nouveau Membre"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newFaculty.name}
+              onChange={(e) => setNewFaculty({ ...newFaculty, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: Dr. Mohamed Ali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newFaculty.email}
+                onChange={(e) => setNewFaculty({ ...newFaculty, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: mohamed@univ.edu"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newFaculty.phone}
+                onChange={(e) => setNewFaculty({ ...newFaculty, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Département</label>
+              <input
+                type="text"
+                value={newFaculty.department}
+                onChange={(e) => setNewFaculty({ ...newFaculty, department: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Informatique"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+              <input
+                type="text"
+                value={newFaculty.title}
+                onChange={(e) => setNewFaculty({ ...newFaculty, title: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ex: Professeur, Maître de conférences"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Bureau</label>
+            <input
+              type="text"
+              value={newFaculty.office}
+              onChange={(e) => setNewFaculty({ ...newFaculty, office: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Ex: B201"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowFacultyModal(false)
+                setNewFaculty({ name: '', email: '', phone: '', department: '', title: '', office: '', courses: [] })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newFaculty.name && newFaculty.email && newFaculty.department && newFaculty.title) {
+                  const facultyMember: Faculty = {
+                    id: Date.now().toString(),
+                    name: newFaculty.name,
+                    email: newFaculty.email,
+                    phone: newFaculty.phone,
+                    department: newFaculty.department,
+                    title: newFaculty.title,
+                    office: newFaculty.office,
+                    courses: newFaculty.courses,
+                  }
+                  setFaculty([...faculty, facultyMember])
+                  setShowFacultyModal(false)
+                  setNewFaculty({ name: '', email: '', phone: '', department: '', title: '', office: '', courses: [] })
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

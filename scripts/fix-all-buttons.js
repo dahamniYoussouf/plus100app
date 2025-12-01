@@ -85,3 +85,4 @@ console.log(`   - Total boutons à corriger: ${totalButtons}`);
 console.log(`\n💡 Pour corriger automatiquement, exécutez:`);
 console.log(`   node scripts/fix-all-buttons.js --fix`);
 
+

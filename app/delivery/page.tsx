@@ -66,6 +66,7 @@ export default function DeliveryPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [showDeliveryModal, setShowDeliveryModal] = useState(false)
   const [showDriverModal, setShowDriverModal] = useState(false)
+  const [newDelivery, setNewDelivery] = useState({ orderId: '', driverId: '', customerName: '', customerPhone: '', customerAddress: '', restaurantName: '', restaurantAddress: '', distance: 0, notes: '' })
   const [newDriver, setNewDriver] = useState({ name: '', phone: '', email: '', vehicleType: 'bike' as 'bike' | 'motorcycle' | 'car' | 'van', vehiclePlate: '', licenseNumber: '' })
 
   useEffect(() => {
@@ -575,18 +576,172 @@ export default function DeliveryPage() {
       {/* Modals */}
       <Modal
         isOpen={showDeliveryModal}
-        onClose={() => setShowDeliveryModal(false)}
+        onClose={() => {
+          setShowDeliveryModal(false)
+          setNewDelivery({ orderId: '', driverId: '', customerName: '', customerPhone: '', customerAddress: '', restaurantName: '', restaurantAddress: '', distance: 0, notes: '' })
+        }}
         title="Nouvelle Livraison"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra de créer une nouvelle livraison.</p>
+          {orders.filter(o => o.status === 'ready').length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Commande</label>
+              <select
+                value={newDelivery.orderId}
+                onChange={(e) => {
+                  const order = orders.find(o => o.id === e.target.value)
+                  if (order) {
+                    setNewDelivery({
+                      ...newDelivery,
+                      orderId: e.target.value,
+                      customerName: order.customerName,
+                      customerPhone: order.customerPhone,
+                      customerAddress: order.customerAddress,
+                      restaurantName: order.restaurantName,
+                    })
+                  }
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner une commande</option>
+                {orders.filter(o => o.status === 'ready').map(order => (
+                  <option key={order.id} value={order.id}>Commande #{order.orderNumber} - {order.customerName}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {drivers.filter(d => d.status === 'available').length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Livreur</label>
+              <select
+                value={newDelivery.driverId}
+                onChange={(e) => setNewDelivery({ ...newDelivery, driverId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un livreur</option>
+                {drivers.filter(d => d.status === 'available').map(driver => (
+                  <option key={driver.id} value={driver.id}>{driver.name} - {driver.vehicleType}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom du client</label>
+              <input
+                type="text"
+                value={newDelivery.customerName}
+                onChange={(e) => setNewDelivery({ ...newDelivery, customerName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone client</label>
+              <input
+                type="tel"
+                value={newDelivery.customerPhone}
+                onChange={(e) => setNewDelivery({ ...newDelivery, customerPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse du client</label>
+            <input
+              type="text"
+              value={newDelivery.customerAddress}
+              onChange={(e) => setNewDelivery({ ...newDelivery, customerAddress: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Ex: 123 Rue Didouche Mourad, Alger"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Restaurant</label>
+              <input
+                type="text"
+                value={newDelivery.restaurantName}
+                onChange={(e) => setNewDelivery({ ...newDelivery, restaurantName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Ex: Restaurant ABC"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Distance (km)</label>
+              <input
+                type="number"
+                value={newDelivery.distance}
+                onChange={(e) => setNewDelivery({ ...newDelivery, distance: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                min="0"
+                step="0.1"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optionnel)</label>
+            <textarea
+              value={newDelivery.notes}
+              onChange={(e) => setNewDelivery({ ...newDelivery, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              rows={2}
+              placeholder="Notes supplémentaires..."
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowDeliveryModal(false)}
+              onClick={() => {
+                setShowDeliveryModal(false)
+                setNewDelivery({ orderId: '', driverId: '', customerName: '', customerPhone: '', customerAddress: '', restaurantName: '', restaurantAddress: '', distance: 0, notes: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newDelivery.driverId && newDelivery.customerName && newDelivery.customerAddress && newDelivery.restaurantName) {
+                  const order = orders.find(o => o.id === newDelivery.orderId)
+                  const driver = drivers.find(d => d.id === newDelivery.driverId)
+                  if (driver) {
+                    const estimatedTime = Math.round(newDelivery.distance * 3) // ~3 min par km
+                    const delivery: Delivery = {
+                      id: Date.now().toString(),
+                      orderId: newDelivery.orderId || Date.now().toString(),
+                      orderNumber: order?.orderNumber || `ORD-${Date.now()}`,
+                      driverId: newDelivery.driverId,
+                      driverName: driver.name,
+                      customerName: newDelivery.customerName,
+                      customerPhone: newDelivery.customerPhone,
+                      customerAddress: newDelivery.customerAddress,
+                      restaurantName: newDelivery.restaurantName,
+                      restaurantAddress: newDelivery.restaurantAddress,
+                      items: order?.items.map(i => `${i.name} x${i.quantity}`) || [],
+                      total: order?.total || 0,
+                      distance: newDelivery.distance,
+                      estimatedTime,
+                      status: 'assigned',
+                      createdAt: new Date(),
+                      notes: newDelivery.notes || undefined,
+                    }
+                    setDeliveries([...deliveries, delivery])
+                    // Mettre à jour le statut du livreur
+                    setDrivers(drivers.map(d => d.id === newDelivery.driverId ? { ...d, status: 'busy' as const } : d))
+                    // Mettre à jour le statut de la commande si elle existe
+                    if (order) {
+                      setOrders(orders.map(o => o.id === newDelivery.orderId ? { ...o, status: 'assigned' as const } : o))
+                    }
+                    setShowDeliveryModal(false)
+                    setNewDelivery({ orderId: '', driverId: '', customerName: '', customerPhone: '', customerAddress: '', restaurantName: '', restaurantAddress: '', distance: 0, notes: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>

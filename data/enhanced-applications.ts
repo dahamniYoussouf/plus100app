@@ -48,3 +48,4 @@ export interface EnhancedApp {
 // This file contains enhanced data for all applications
 // Due to size, we'll import and use this in ApplicationsShowcase
 
+

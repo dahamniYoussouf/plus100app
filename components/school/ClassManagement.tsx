@@ -33,3 +33,4 @@ export default function ClassManagement({ classes }: Props) {
   )
 }
 
+

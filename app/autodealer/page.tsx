@@ -66,6 +66,11 @@ export default function AutodealerPage() {
   const [showVehiculeModal, setShowVehiculeModal] = useState(false)
   const [showClientModal, setShowClientModal] = useState(false)
   const [showRdvModal, setShowRdvModal] = useState(false)
+  const [showSaleModal, setShowSaleModal] = useState(false)
+  const [newVehicle, setNewVehicle] = useState({ make: '', model: '', year: new Date().getFullYear(), mileage: 0, price: 0, condition: 'new' as 'new' | 'used' | 'certified', fuelType: 'gasoline' as 'gasoline' | 'diesel' | 'electric' | 'hybrid', transmission: 'manual' as 'manual' | 'automatic', color: '', vin: '' })
+  const [newClient, setNewClient] = useState({ name: '', email: '', phone: '', address: '' })
+  const [newRdv, setNewRdv] = useState({ clientId: '', vehicleId: '', type: 'consultation' as 'test_drive' | 'consultation' | 'service' | 'delivery', date: '', time: '', notes: '' })
+  const [newSale, setNewSale] = useState({ vehicleId: '', clientId: '', salePrice: 0, downPayment: 0, financing: false, salesperson: '' })
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [clients, setClients] = useState<Client[]>([])
   const [sales, setSales] = useState<Sale[]>([])
@@ -445,7 +450,10 @@ export default function AutodealerPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Ventes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              <button 
+                onClick={() => setShowSaleModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
                 Nouvelle Vente
               </button>
             </div>
@@ -578,18 +586,165 @@ export default function AutodealerPage() {
       {/* Modals */}
       <Modal
         isOpen={showVehiculeModal}
-        onClose={() => setShowVehiculeModal(false)}
+        onClose={() => {
+          setShowVehiculeModal(false)
+          setNewVehicle({ make: '', model: '', year: new Date().getFullYear(), mileage: 0, price: 0, condition: 'new', fuelType: 'gasoline', transmission: 'manual', color: '', vin: '' })
+        }}
         title="Nouveau Véhicule"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau véhicule.</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Marque</label>
+              <input
+                type="text"
+                value={newVehicle.make}
+                onChange={(e) => setNewVehicle({ ...newVehicle, make: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Renault"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Modèle</label>
+              <input
+                type="text"
+                value={newVehicle.model}
+                onChange={(e) => setNewVehicle({ ...newVehicle, model: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Clio V"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Année</label>
+              <input
+                type="number"
+                value={newVehicle.year}
+                onChange={(e) => setNewVehicle({ ...newVehicle, year: parseInt(e.target.value) || new Date().getFullYear() })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                min="1900"
+                max={new Date().getFullYear() + 1}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Kilométrage</label>
+              <input
+                type="number"
+                value={newVehicle.mileage}
+                onChange={(e) => setNewVehicle({ ...newVehicle, mileage: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newVehicle.price}
+                onChange={(e) => setNewVehicle({ ...newVehicle, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">État</label>
+              <select
+                value={newVehicle.condition}
+                onChange={(e) => setNewVehicle({ ...newVehicle, condition: e.target.value as 'new' | 'used' | 'certified' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="new">Neuf</option>
+                <option value="used">Occasion</option>
+                <option value="certified">Certifié</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Carburant</label>
+              <select
+                value={newVehicle.fuelType}
+                onChange={(e) => setNewVehicle({ ...newVehicle, fuelType: e.target.value as 'gasoline' | 'diesel' | 'electric' | 'hybrid' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="gasoline">Essence</option>
+                <option value="diesel">Diesel</option>
+                <option value="electric">Électrique</option>
+                <option value="hybrid">Hybride</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Transmission</label>
+              <select
+                value={newVehicle.transmission}
+                onChange={(e) => setNewVehicle({ ...newVehicle, transmission: e.target.value as 'manual' | 'automatic' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="manual">Manuelle</option>
+                <option value="automatic">Automatique</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Couleur</label>
+              <input
+                type="text"
+                value={newVehicle.color}
+                onChange={(e) => setNewVehicle({ ...newVehicle, color: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: Blanc"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">VIN</label>
+              <input
+                type="text"
+                value={newVehicle.vin}
+                onChange={(e) => setNewVehicle({ ...newVehicle, vin: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: VF1RFA0E123456789"
+              />
+            </div>
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowVehiculeModal(false)}
+              onClick={() => {
+                setShowVehiculeModal(false)
+                setNewVehicle({ make: '', model: '', year: new Date().getFullYear(), mileage: 0, price: 0, condition: 'new', fuelType: 'gasoline', transmission: 'manual', color: '', vin: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newVehicle.make && newVehicle.model && newVehicle.vin) {
+                  const vehicle: Vehicle = {
+                    id: Date.now().toString(),
+                    make: newVehicle.make,
+                    model: newVehicle.model,
+                    year: newVehicle.year,
+                    mileage: newVehicle.mileage,
+                    price: newVehicle.price,
+                    condition: newVehicle.condition,
+                    fuelType: newVehicle.fuelType,
+                    transmission: newVehicle.transmission,
+                    color: newVehicle.color,
+                    vin: newVehicle.vin,
+                    status: 'available',
+                    features: [],
+                  }
+                  setVehicles([...vehicles, vehicle])
+                  setShowVehiculeModal(false)
+                  setNewVehicle({ make: '', model: '', year: new Date().getFullYear(), mileage: 0, price: 0, condition: 'new', fuelType: 'gasoline', transmission: 'manual', color: '', vin: '' })
+                }
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -597,18 +752,85 @@ export default function AutodealerPage() {
 
       <Modal
         isOpen={showClientModal}
-        onClose={() => setShowClientModal(false)}
+        onClose={() => {
+          setShowClientModal(false)
+          setNewClient({ name: '', email: '', phone: '', address: '' })
+        }}
         title="Nouveau Client"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra d'ajouter un nouveau client.</p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newClient.name}
+              onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Ex: Ahmed Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={newClient.email}
+                onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: ahmed@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newClient.phone}
+                onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse (optionnel)</label>
+            <input
+              type="text"
+              value={newClient.address}
+              onChange={(e) => setNewClient({ ...newClient, address: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Ex: 123 Rue des Fleurs, Alger"
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowClientModal(false)}
+              onClick={() => {
+                setShowClientModal(false)
+                setNewClient({ name: '', email: '', phone: '', address: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newClient.name && newClient.email && newClient.phone) {
+                  const client: Client = {
+                    id: Date.now().toString(),
+                    name: newClient.name,
+                    email: newClient.email,
+                    phone: newClient.phone,
+                    address: newClient.address || undefined,
+                    totalPurchases: 0,
+                  }
+                  setClients([...clients, client])
+                  setShowClientModal(false)
+                  setNewClient({ name: '', email: '', phone: '', address: '' })
+                }
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>
@@ -616,18 +838,255 @@ export default function AutodealerPage() {
 
       <Modal
         isOpen={showRdvModal}
-        onClose={() => setShowRdvModal(false)}
+        onClose={() => {
+          setShowRdvModal(false)
+          setNewRdv({ clientId: '', vehicleId: '', type: 'consultation', date: '', time: '', notes: '' })
+        }}
         title="Nouveau RDV"
         size="lg"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">Fonctionnalité en cours de développement. Cette fonctionnalité permettra de créer un nouveau rendez-vous.</p>
+          {clients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newRdv.clientId}
+                onChange={(e) => setNewRdv({ ...newRdv, clientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un client</option>
+                {clients.map(client => (
+                  <option key={client.id} value={client.id}>{client.name} - {client.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {vehicles.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Véhicule (optionnel)</label>
+              <select
+                value={newRdv.vehicleId}
+                onChange={(e) => setNewRdv({ ...newRdv, vehicleId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="">Aucun véhicule</option>
+                {vehicles.filter(v => v.status === 'available').map(vehicle => (
+                  <option key={vehicle.id} value={vehicle.id}>{vehicle.make} {vehicle.model} ({vehicle.year})</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select
+              value={newRdv.type}
+              onChange={(e) => setNewRdv({ ...newRdv, type: e.target.value as 'test_drive' | 'consultation' | 'service' | 'delivery' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            >
+              <option value="consultation">Consultation</option>
+              <option value="test_drive">Essai routier</option>
+              <option value="service">Service</option>
+              <option value="delivery">Livraison</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={newRdv.date}
+                onChange={(e) => setNewRdv({ ...newRdv, date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input
+                type="time"
+                value={newRdv.time}
+                onChange={(e) => setNewRdv({ ...newRdv, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optionnel)</label>
+            <textarea
+              value={newRdv.notes}
+              onChange={(e) => setNewRdv({ ...newRdv, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              rows={3}
+              placeholder="Notes supplémentaires..."
+            />
+          </div>
           <div className="flex justify-end gap-2">
             <button
-              onClick={() => setShowRdvModal(false)}
+              onClick={() => {
+                setShowRdvModal(false)
+                setNewRdv({ clientId: '', vehicleId: '', type: 'consultation', date: '', time: '', notes: '' })
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Fermer
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newRdv.clientId && newRdv.date && newRdv.time) {
+                  const client = clients.find(c => c.id === newRdv.clientId)
+                  const vehicle = vehicles.find(v => v.id === newRdv.vehicleId)
+                  if (client) {
+                    const appointment: Appointment = {
+                      id: Date.now().toString(),
+                      clientId: newRdv.clientId,
+                      clientName: client.name,
+                      vehicleId: newRdv.vehicleId || undefined,
+                      vehicleInfo: vehicle ? `${vehicle.make} ${vehicle.model}` : undefined,
+                      type: newRdv.type,
+                      date: new Date(newRdv.date),
+                      time: newRdv.time,
+                      status: 'scheduled',
+                      notes: newRdv.notes || undefined,
+                    }
+                    setAppointments([...appointments, appointment])
+                    setShowRdvModal(false)
+                    setNewRdv({ clientId: '', vehicleId: '', type: 'consultation', date: '', time: '', notes: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSaleModal}
+        onClose={() => {
+          setShowSaleModal(false)
+          setNewSale({ vehicleId: '', clientId: '', salePrice: 0, downPayment: 0, financing: false, salesperson: '' })
+        }}
+        title="Nouvelle Vente"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {vehicles.filter(v => v.status === 'available' || v.status === 'reserved').length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Véhicule</label>
+              <select
+                value={newSale.vehicleId}
+                onChange={(e) => {
+                  const vehicle = vehicles.find(v => v.id === e.target.value)
+                  setNewSale({ ...newSale, vehicleId: e.target.value, salePrice: vehicle?.price || 0 })
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un véhicule</option>
+                {vehicles.filter(v => v.status === 'available' || v.status === 'reserved').map(vehicle => (
+                  <option key={vehicle.id} value={vehicle.id}>{vehicle.make} {vehicle.model} ({vehicle.year}) - DZD{vehicle.price.toLocaleString()}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {clients.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newSale.clientId}
+                onChange={(e) => setNewSale({ ...newSale, clientId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un client</option>
+                {clients.map(client => (
+                  <option key={client.id} value={client.id}>{client.name} - {client.phone}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Vendeur</label>
+            <input
+              type="text"
+              value={newSale.salesperson}
+              onChange={(e) => setNewSale({ ...newSale, salesperson: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Ex: Karim Benali"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix de vente (DZD)</label>
+              <input
+                type="number"
+                value={newSale.salePrice}
+                onChange={(e) => setNewSale({ ...newSale, salePrice: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Acompte (DZD)</label>
+              <input
+                type="number"
+                value={newSale.downPayment}
+                onChange={(e) => setNewSale({ ...newSale, downPayment: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={newSale.financing}
+                onChange={(e) => setNewSale({ ...newSale, financing: e.target.checked })}
+                className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+              />
+              <span className="text-sm text-gray-700">Financement</span>
+            </label>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowSaleModal(false)
+                setNewSale({ vehicleId: '', clientId: '', salePrice: 0, downPayment: 0, financing: false, salesperson: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newSale.vehicleId && newSale.clientId && newSale.salePrice > 0 && newSale.salesperson) {
+                  const vehicle = vehicles.find(v => v.id === newSale.vehicleId)
+                  const client = clients.find(c => c.id === newSale.clientId)
+                  if (vehicle && client) {
+                    const sale: Sale = {
+                      id: Date.now().toString(),
+                      vehicleId: newSale.vehicleId,
+                      vehicleInfo: `${vehicle.make} ${vehicle.model} (${vehicle.year})`,
+                      clientId: newSale.clientId,
+                      clientName: client.name,
+                      salePrice: newSale.salePrice,
+                      downPayment: newSale.downPayment,
+                      financing: newSale.financing || undefined,
+                      saleDate: new Date(),
+                      salesperson: newSale.salesperson,
+                      status: 'completed',
+                    }
+                    setSales([...sales, sale])
+                    // Mettre à jour le statut du véhicule
+                    setVehicles(vehicles.map(v => v.id === newSale.vehicleId ? { ...v, status: 'sold' as const } : v))
+                    setShowSaleModal(false)
+                    setNewSale({ vehicleId: '', clientId: '', salePrice: 0, downPayment: 0, financing: false, salesperson: '' })
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Ajouter
             </button>
           </div>
         </div>

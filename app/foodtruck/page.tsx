@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Truck, UtensilsCrossed, MapPin, Calendar, BarChart3, TrendingUp, ShoppingCart, Package } from 'lucide-react'
+import Modal from '@/components/Modal'
 
 type TabType = 'dashboard' | 'menu' | 'orders' | 'locations' | 'stock'
 
@@ -42,6 +43,10 @@ export default function FoodtruckPage() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [locations, setLocations] = useState<Location[]>([])
+  const [showMenuModal, setShowMenuModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
+  const [newMenuItem, setNewMenuItem] = useState({ name: '', description: '', price: 0, category: '', halal: true, stock: 0 })
+  const [newOrder, setNewOrder] = useState({ items: [] as Array<{ menuItemId: string; quantity: number }>, customerName: '', customerPhone: '', location: '' })
 
   useEffect(() => {
     const savedMenu = localStorage.getItem('foodtruck-menu')
@@ -240,7 +245,10 @@ export default function FoodtruckPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Menu</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+              <button 
+                onClick={() => setShowMenuModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
                 Ajouter Produit
               </button>
             </div>
@@ -272,7 +280,10 @@ export default function FoodtruckPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Commandes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+              <button 
+                onClick={() => setShowOrderModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
                 Nouvelle Commande
               </button>
             </div>
@@ -367,6 +378,287 @@ export default function FoodtruckPage() {
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <Modal
+        isOpen={showMenuModal}
+        onClose={() => {
+          setShowMenuModal(false)
+          setNewMenuItem({ name: '', description: '', price: 0, category: '', halal: true, stock: 0 })
+        }}
+        title="Ajouter Produit"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input
+              type="text"
+              value={newMenuItem.name}
+              onChange={(e) => setNewMenuItem({ ...newMenuItem, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Ex: Burger Halal"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              value={newMenuItem.description}
+              onChange={(e) => setNewMenuItem({ ...newMenuItem, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              rows={3}
+              placeholder="Description du produit"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <input
+                type="text"
+                value={newMenuItem.category}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Ex: Burgers"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (DZD)</label>
+              <input
+                type="number"
+                value={newMenuItem.price}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, price: parseFloat(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+              <input
+                type="number"
+                value={newMenuItem.stock}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, stock: parseInt(e.target.value) || 0 })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                min="0"
+              />
+            </div>
+            <div className="flex items-end">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={newMenuItem.halal}
+                  onChange={(e) => setNewMenuItem({ ...newMenuItem, halal: e.target.checked })}
+                  className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
+                />
+                <span className="text-sm text-gray-700">Halal</span>
+              </label>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowMenuModal(false)
+                setNewMenuItem({ name: '', description: '', price: 0, category: '', halal: true, stock: 0 })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newMenuItem.name && newMenuItem.description && newMenuItem.price > 0 && newMenuItem.category) {
+                  const menuItem: MenuItem = {
+                    id: Date.now().toString(),
+                    name: newMenuItem.name,
+                    description: newMenuItem.description,
+                    price: newMenuItem.price,
+                    category: newMenuItem.category,
+                    halal: newMenuItem.halal,
+                    available: true,
+                    stock: newMenuItem.stock,
+                  }
+                  setMenuItems([...menuItems, menuItem])
+                  setShowMenuModal(false)
+                  setNewMenuItem({ name: '', description: '', price: 0, category: '', halal: true, stock: 0 })
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showOrderModal}
+        onClose={() => {
+          setShowOrderModal(false)
+          setNewOrder({ items: [], customerName: '', customerPhone: '', location: '' })
+        }}
+        title="Nouvelle Commande"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom du client</label>
+              <input
+                type="text"
+                value={newOrder.customerName}
+                onChange={(e) => setNewOrder({ ...newOrder, customerName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <input
+                type="tel"
+                value={newOrder.customerPhone}
+                onChange={(e) => setNewOrder({ ...newOrder, customerPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Ex: +213 555 1234"
+              />
+            </div>
+          </div>
+          {locations.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Emplacement</label>
+              <select
+                value={newOrder.location}
+                onChange={(e) => setNewOrder({ ...newOrder, location: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un emplacement</option>
+                {locations.map(location => (
+                  <option key={location.id} value={location.id}>{location.name} - {location.address}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {menuItems.filter(item => item.available && item.stock > 0).length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Articles</label>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {menuItems.filter(item => item.available && item.stock > 0).map(item => {
+                  const orderItem = newOrder.items.find(i => i.menuItemId === item.id)
+                  return (
+                    <div key={item.id} className="flex items-center justify-between p-2 border border-gray-200 rounded-lg">
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{item.name}</p>
+                        <p className="text-sm text-gray-500">{item.price.toFixed(2)} DZD • Stock: {item.stock}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            if (orderItem && orderItem.quantity > 0) {
+                              setNewOrder({
+                                ...newOrder,
+                                items: newOrder.items.map(i => i.menuItemId === item.id ? { ...i, quantity: i.quantity - 1 } : i).filter(i => i.quantity > 0)
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center">{orderItem?.quantity || 0}</span>
+                        <button
+                          onClick={() => {
+                            if (orderItem) {
+                              if (orderItem.quantity < item.stock) {
+                                setNewOrder({
+                                  ...newOrder,
+                                  items: newOrder.items.map(i => i.menuItemId === item.id ? { ...i, quantity: i.quantity + 1 } : i)
+                                })
+                              }
+                            } else {
+                              setNewOrder({
+                                ...newOrder,
+                                items: [...newOrder.items, { menuItemId: item.id, quantity: 1 }]
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                          disabled={orderItem ? orderItem.quantity >= item.stock : false}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              {newOrder.items.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="font-semibold text-gray-900">
+                    Total: {newOrder.items.reduce((sum, item) => {
+                      const menuItem = menuItems.find(m => m.id === item.menuItemId)
+                      return sum + (menuItem ? menuItem.price * item.quantity : 0)
+                    }, 0).toFixed(2)} DZD
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowOrderModal(false)
+                setNewOrder({ items: [], customerName: '', customerPhone: '', location: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newOrder.customerName && newOrder.customerPhone && newOrder.items.length > 0) {
+                  const locationObj = locations.find(l => l.id === newOrder.location)
+                  const total = newOrder.items.reduce((sum, item) => {
+                    const menuItem = menuItems.find(m => m.id === item.menuItemId)
+                    return sum + (menuItem ? menuItem.price * item.quantity : 0)
+                  }, 0)
+                  const order: Order = {
+                    id: Date.now().toString(),
+                    items: newOrder.items.map(item => {
+                      const menuItem = menuItems.find(m => m.id === item.menuItemId)
+                      return {
+                        menuItemId: item.menuItemId,
+                        quantity: item.quantity,
+                        price: menuItem ? menuItem.price : 0
+                      }
+                    }),
+                    total,
+                    customerName: newOrder.customerName,
+                    customerPhone: newOrder.customerPhone,
+                    location: locationObj ? locationObj.name : newOrder.location,
+                    status: 'pending',
+                    createdAt: new Date(),
+                  }
+                  setOrders([...orders, order])
+                  // Mettre à jour le stock
+                  setMenuItems(menuItems.map(menuItem => {
+                    const orderItem = newOrder.items.find(i => i.menuItemId === menuItem.id)
+                    if (orderItem) {
+                      return { ...menuItem, stock: Math.max(0, menuItem.stock - orderItem.quantity) }
+                    }
+                    return menuItem
+                  }))
+                  setShowOrderModal(false)
+                  setNewOrder({ items: [], customerName: '', customerPhone: '', location: '' })
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

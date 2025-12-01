@@ -73,6 +73,8 @@ export default function TransportPage() {
   const [shipments, setShipments] = useState<Shipment[]>([])
   const [showVehicleModal, setShowVehicleModal] = useState(false)
   const [showDriverModal, setShowDriverModal] = useState(false)
+  const [showShipmentModal, setShowShipmentModal] = useState(false)
+  const [newShipment, setNewShipment] = useState({ senderName: '', senderAddress: '', recipientName: '', recipientAddress: '', weight: 0, routeId: '', vehicleId: '', driverId: '' })
   const [newVehicle, setNewVehicle] = useState({ plateNumber: '', type: 'truck' as 'truck' | 'van' | 'car' | 'motorcycle', brand: '', model: '', capacity: 0, mileage: 0 })
   const [newDriver, setNewDriver] = useState({ name: '', phone: '', email: '', licenseNumber: '' })
 
@@ -466,7 +468,12 @@ export default function TransportPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Expéditions</h2>
               <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
-                Nouvelle expédition
+                <button
+                  onClick={() => setShowShipmentModal(true)}
+                  className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Nouvelle expédition
+                </button>
               </button>
             </div>
             <div className="space-y-4">
@@ -702,6 +709,165 @@ export default function TransportPage() {
                   setDrivers([...drivers, driver])
                   setShowDriverModal(false)
                   setNewDriver({ name: '', phone: '', email: '', licenseNumber: '' })
+                }
+              }}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showShipmentModal}
+        onClose={() => {
+          setShowShipmentModal(false)
+          setNewShipment({ senderName: '', senderAddress: '', recipientName: '', recipientAddress: '', weight: 0, routeId: '', vehicleId: '', driverId: '' })
+        }}
+        title="Nouvelle expédition"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom expéditeur</label>
+              <input
+                type="text"
+                value={newShipment.senderName}
+                onChange={(e) => setNewShipment({ ...newShipment, senderName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Ahmed Benali"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Adresse expéditeur</label>
+              <input
+                type="text"
+                value={newShipment.senderAddress}
+                onChange={(e) => setNewShipment({ ...newShipment, senderAddress: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Alger"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom destinataire</label>
+              <input
+                type="text"
+                value={newShipment.recipientName}
+                onChange={(e) => setNewShipment({ ...newShipment, recipientName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Fatima Kadri"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Adresse destinataire</label>
+              <input
+                type="text"
+                value={newShipment.recipientAddress}
+                onChange={(e) => setNewShipment({ ...newShipment, recipientAddress: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="Ex: Oran"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {routes.length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Route</label>
+                <select
+                  value={newShipment.routeId}
+                  onChange={(e) => setNewShipment({ ...newShipment, routeId: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                >
+                  <option value="">Sélectionner</option>
+                  {routes.map(route => (
+                    <option key={route.id} value={route.id}>{route.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            {vehicles.filter(v => v.status === 'available').length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Véhicule</label>
+                <select
+                  value={newShipment.vehicleId}
+                  onChange={(e) => setNewShipment({ ...newShipment, vehicleId: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                >
+                  <option value="">Sélectionner</option>
+                  {vehicles.filter(v => v.status === 'available').map(vehicle => (
+                    <option key={vehicle.id} value={vehicle.id}>{vehicle.plateNumber} - {vehicle.type}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            {drivers.filter(d => d.status === 'available').length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Chauffeur</label>
+                <select
+                  value={newShipment.driverId}
+                  onChange={(e) => setNewShipment({ ...newShipment, driverId: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                >
+                  <option value="">Sélectionner</option>
+                  {drivers.filter(d => d.status === 'available').map(driver => (
+                    <option key={driver.id} value={driver.id}>{driver.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Poids (kg)</label>
+            <input
+              type="number"
+              value={newShipment.weight}
+              onChange={(e) => setNewShipment({ ...newShipment, weight: parseFloat(e.target.value) || 0 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              min="0"
+              step="0.1"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowShipmentModal(false)
+                setNewShipment({ senderName: '', senderAddress: '', recipientName: '', recipientAddress: '', weight: 0, routeId: '', vehicleId: '', driverId: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newShipment.senderName && newShipment.senderAddress && newShipment.recipientName && newShipment.recipientAddress && newShipment.weight > 0) {
+                  const shipment: Shipment = {
+                    id: Date.now().toString(),
+                    trackingNumber: `TRK-${Date.now().toString().slice(-6)}`,
+                    senderName: newShipment.senderName,
+                    senderAddress: newShipment.senderAddress,
+                    recipientName: newShipment.recipientName,
+                    recipientAddress: newShipment.recipientAddress,
+                    weight: newShipment.weight,
+                    routeId: newShipment.routeId || undefined,
+                    vehicleId: newShipment.vehicleId || undefined,
+                    driverId: newShipment.driverId || undefined,
+                    status: 'pending',
+                    createdAt: new Date(),
+                  }
+                  setShipments([...shipments, shipment])
+                  // Mettre à jour le statut du véhicule et du chauffeur si assignés
+                  if (newShipment.vehicleId) {
+                    setVehicles(vehicles.map(v => v.id === newShipment.vehicleId ? { ...v, status: 'in_use' as const } : v))
+                  }
+                  if (newShipment.driverId) {
+                    setDrivers(drivers.map(d => d.id === newShipment.driverId ? { ...d, status: 'busy' as const } : d))
+                  }
+                  setShowShipmentModal(false)
+                  setNewShipment({ senderName: '', senderAddress: '', recipientName: '', recipientAddress: '', weight: 0, routeId: '', vehicleId: '', driverId: '' })
                 }
               }}
               className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"

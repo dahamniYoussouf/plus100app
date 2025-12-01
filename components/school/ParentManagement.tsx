@@ -37,3 +37,4 @@ export default function ParentManagement({ parents }: Props) {
   )
 }
 
+

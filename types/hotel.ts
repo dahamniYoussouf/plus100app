@@ -33,3 +33,4 @@ export interface Service {
   category: 'food' | 'spa' | 'cleaning' | 'concierge' | 'other'
 }
 
+

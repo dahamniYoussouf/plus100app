@@ -68,3 +68,4 @@ grep -r "button className" app/ --include="*.tsx" | grep -v "onClick"
 - Utiliser le composant Modal pour les actions de création/ajout
 - Les modaux peuvent être améliorés plus tard avec des formulaires complets
 
+

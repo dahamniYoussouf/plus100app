@@ -46,8 +46,10 @@ export default function EcommercePage() {
   const [customers, setCustomers] = useState<Customer[]>([])
   const [showProductModal, setShowProductModal] = useState(false)
   const [showCustomerModal, setShowCustomerModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
   const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, category: '', stock: 0, sku: '' })
   const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '' })
+  const [newOrder, setNewOrder] = useState({ customerId: '', items: [] as Array<{ productId: string; quantity: number }>, shippingAddress: '' })
 
   useEffect(() => {
     const savedProducts = localStorage.getItem('ecommerce-products')
@@ -302,7 +304,10 @@ export default function EcommercePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Commandes</h2>
-              <button className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+              <button 
+                onClick={() => setShowOrderModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
                 Nouvelle Commande
               </button>
             </div>
@@ -562,6 +567,165 @@ export default function EcommercePage() {
                   setCustomers([...customers, customer])
                   setShowCustomerModal(false)
                   setNewCustomer({ name: '', email: '', phone: '' })
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showOrderModal}
+        onClose={() => {
+          setShowOrderModal(false)
+          setNewOrder({ customerId: '', items: [], shippingAddress: '' })
+        }}
+        title="Nouvelle Commande"
+        size="lg"
+      >
+        <div className="space-y-4">
+          {customers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+              <select
+                value={newOrder.customerId}
+                onChange={(e) => setNewOrder({ ...newOrder, customerId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              >
+                <option value="">Sélectionner un client</option>
+                {customers.map(customer => (
+                  <option key={customer.id} value={customer.id}>{customer.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {products.filter(p => p.status === 'active' && p.stock > 0).length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Articles</label>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {products.filter(p => p.status === 'active' && p.stock > 0).map(product => {
+                  const orderItem = newOrder.items.find(i => i.productId === product.id)
+                  return (
+                    <div key={product.id} className="flex items-center justify-between p-2 border border-gray-200 rounded-lg">
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{product.name}</p>
+                        <p className="text-sm text-gray-500">{product.price.toFixed(2)} DZD • Stock: {product.stock}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            if (orderItem && orderItem.quantity > 0) {
+                              setNewOrder({
+                                ...newOrder,
+                                items: newOrder.items.map(i => i.productId === product.id ? { ...i, quantity: i.quantity - 1 } : i).filter(i => i.quantity > 0)
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center">{orderItem?.quantity || 0}</span>
+                        <button
+                          onClick={() => {
+                            if (orderItem) {
+                              if (orderItem.quantity < product.stock) {
+                                setNewOrder({
+                                  ...newOrder,
+                                  items: newOrder.items.map(i => i.productId === product.id ? { ...i, quantity: i.quantity + 1 } : i)
+                                })
+                              }
+                            } else {
+                              setNewOrder({
+                                ...newOrder,
+                                items: [...newOrder.items, { productId: product.id, quantity: 1 }]
+                              })
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                          disabled={orderItem ? orderItem.quantity >= product.stock : false}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              {newOrder.items.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="font-semibold text-gray-900">
+                    Total: {newOrder.items.reduce((sum, item) => {
+                      const product = products.find(p => p.id === item.productId)
+                      return sum + (product ? product.price * item.quantity : 0)
+                    }, 0).toFixed(2)} DZD
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse de livraison</label>
+            <textarea
+              value={newOrder.shippingAddress}
+              onChange={(e) => setNewOrder({ ...newOrder, shippingAddress: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              rows={2}
+              placeholder="Adresse complète de livraison"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setShowOrderModal(false)
+                setNewOrder({ customerId: '', items: [], shippingAddress: '' })
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                if (newOrder.customerId && newOrder.items.length > 0 && newOrder.shippingAddress) {
+                  const customer = customers.find(c => c.id === newOrder.customerId)
+                  if (customer) {
+                    const total = newOrder.items.reduce((sum, item) => {
+                      const product = products.find(p => p.id === item.productId)
+                      return sum + (product ? product.price * item.quantity : 0)
+                    }, 0)
+                    const order: Order = {
+                      id: Date.now().toString(),
+                      customerId: newOrder.customerId,
+                      customerName: customer.name,
+                      items: newOrder.items.map(item => {
+                        const product = products.find(p => p.id === item.productId)
+                        return {
+                          productId: item.productId,
+                          name: product ? product.name : '',
+                          quantity: item.quantity,
+                          price: product ? product.price : 0
+                        }
+                      }),
+                      total,
+                      status: 'pending',
+                      createdAt: new Date(),
+                      shippingAddress: newOrder.shippingAddress,
+                    }
+                    setOrders([...orders, order])
+                    // Mettre à jour le stock
+                    setProducts(products.map(product => {
+                      const orderItem = newOrder.items.find(i => i.productId === product.id)
+                      if (orderItem) {
+                        return { ...product, stock: Math.max(0, product.stock - orderItem.quantity) }
+                      }
+                      return product
+                    }))
+                    setShowOrderModal(false)
+                    setNewOrder({ customerId: '', items: [], shippingAddress: '' })
+                  }
                 }
               }}
               className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
