@@ -71,3 +71,4 @@ image: 'https://votre-domaine.com/image.jpg',  // Au lieu de '/images/...'
 
 
 
+
